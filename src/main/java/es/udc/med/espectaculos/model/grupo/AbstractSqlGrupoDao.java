@@ -18,7 +18,7 @@ public abstract class AbstractSqlGrupoDao implements GrupoDao{
 	public List<Grupo> getGrupos(Connection connection) {
 
 		/* Create "queryString". */
-		String queryString = "SELECT ID_GRUPO, NOMBRE_ORQUESTA, SALARIO_ACTUACION,"
+		String queryString = "SELECT ID_GRUPO, NOMBRE_ORQUESTA, SALARIO_ACTUACION"
 				+ " FROM GRUPO";
 
 		try (PreparedStatement preparedStatement = connection

@@ -1,13 +1,14 @@
 package es.udc.med.espectaculos.vista;
 
+import java.lang.reflect.Array;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TableTree;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -17,6 +18,7 @@ import org.eclipse.swt.widgets.TreeItem;
 import es.udc.med.espectaculos.model.evento.Evento;
 import es.udc.med.espectaculos.model.eventoservice.EventoService;
 import es.udc.med.espectaculos.model.eventoservice.EventoServiceImpl;
+import es.udc.med.espectaculos.model.grupo.Grupo;
 import es.udc.med.espectaculos.utils.ConvertidorFechas;
 import es.udc.med.espectaculos.utils.InstanceNotFoundException;
 
@@ -26,7 +28,7 @@ public class VentanaPrincipalV2 {
 	private DateTime dateTime;
 	private int day, month, year;
 	private String strDate;
-	private Tree tree, tree2;
+	private Tree tree, tree2,tree3;
 	private TableTree tableTree;
 	private String eventName;
 	private EventoService eventoService;
@@ -101,6 +103,22 @@ public class VentanaPrincipalV2 {
 		});
 		tree2 = new Tree(shell, SWT.BORDER);
 		tree2.setBounds(196, 149, 238, 238);
+		
+		Combo c1 = new Combo(shell, SWT.DEFAULT);
+	    c1.setBounds(195, 0, 240, 105);
+	    
+	    
+	    String[] grupos = new String[100];
+	    		
+	    		List<Grupo> gruposList = eventoService.getGrupos();
+//	    for (int i = 0; i<gruposList.size() ; i++) {
+//	    	c1.setItem(i, gruposList.get(i).getNombreOrquesta());
+//	    }
+//	    	c1.setItem(0,"Combo Dominicano");
+	    	
+	    		String items[] = { "Combo Dominicano" };
+	        c1.setItems(items);
+		
 
 	}
 
