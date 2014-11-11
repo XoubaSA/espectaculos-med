@@ -92,11 +92,6 @@ public class EventoServiceImpl implements EventoService {
 	}
 
 	@Override
-	public List<Grupo> getGrupos() {
-		return grupoDao.getGrupos(conexion);
-	}
-
-	@Override
 	public List<Evento> obtenerEventosFecha(Calendar fecha) {
 		try {
 			return eventoDao.getEventoByDate(conexion, fecha);

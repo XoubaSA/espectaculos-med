@@ -22,30 +22,22 @@ public class MusicoGrupoServiceImpl implements MusicoGrupoService {
 	private GrupoDao grupoDao = new Jdbc3CcSqlGrupoDao();
 	private MusicoDao musicoDao = new Jdbc3CcSqlMusicoDao();
 	private Connection conexion = ConexionManager.getConnection();
+	private static List<Musico> musicos;
 
-	//TODO en la clase músico, añadir atributo TELEFONO
+	// TODO en la clase músico, añadir atributo TELEFONO
 	private static final Map<Grupo, List<Musico>> asociacion;
 	static {
-		List<Musico> musicosOrquestaMusical = new ArrayList<Musico>();
-		List<Musico> musicosOrquestaTemporal = new ArrayList<Musico>();
-		musicosOrquestaMusical.add(new Musico("Pepe Pérez", "Calle Falsa 123",
-				"Guitarra"));
-		musicosOrquestaMusical.add(new Musico("Manolo Gómez",
-				"Calle Falsa 321", "Batería"));
-		musicosOrquestaMusical.add(new Musico("Juan González",
-				"Calle Falsa 231", "Bajo"));
-		musicosOrquestaMusical.add(new Musico("Pedro García",
-				"Calle Falsa 696", "Voz"));
+		musicos = new ArrayList<Musico>();
+		musicos.add(new Musico("Pepe Pérez", "Calle Falsa 123", "Guitarra"));
+		musicos.add(new Musico("Manolo Gómez", "Calle Falsa 321", "Batería"));
+		musicos.add(new Musico("Juan González", "Calle Falsa 231", "Bajo"));
+		musicos.add(new Musico("Pedro García", "Calle Falsa 696", "Voz"));
 		asociacion = new HashMap<Grupo, List<Musico>>();
-		asociacion.put(new Grupo("Orquesta Musical", 3000.0F),
-				musicosOrquestaMusical);
-		asociacion.put(new Grupo("Orquesta Temporal", 1000.0F),
-				musicosOrquestaTemporal);
 	}
 
-	//TODO los datos se guardan en variables en tiempo de ejecución, una vez
-	// 	   el cliente de el visto bueno, se cambiará el Map asociación
-	//	   por persistencia en BD
+	// TODO los datos se guardan en variables en tiempo de ejecución, una vez
+	// el cliente de el visto bueno, se cambiará el Map asociación
+	// por persistencia en BD
 	@Override
 	public void asociarMusicoGrupo(List<Musico> musicos, Grupo grupo)
 			throws InputValidationException {
@@ -73,9 +65,10 @@ public class MusicoGrupoServiceImpl implements MusicoGrupoService {
 		}
 		return formacionFinal;
 	}
-	
+
 	@Override
-	public Musico crearMusico(String nombreMusico, String direccion, String instrumento) {
+	public Musico crearMusico(String nombreMusico, String direccion,
+			String instrumento) {
 		Musico musico = new Musico(nombreMusico, direccion, instrumento);
 		try {
 			try {
@@ -106,14 +99,25 @@ public class MusicoGrupoServiceImpl implements MusicoGrupoService {
 	}
 	
 	@Override
-	public List<Musico> getFormacion(Grupo grupo) throws InputValidationException, InstanceNotFoundException{
-		if (grupo == null) throw new InputValidationException("El grupo no debe ser null");
-		
+	public List<Grupo> getGrupos() {
+		return grupoDao.getGrupos(conexion);
+	}
+	
+	@Override
+	public List<Musico> getMusicos() {
+		return this.musicos;
+	}
+
+	@Override
+	public List<Musico> getFormacion(Grupo grupo)
+			throws InputValidationException, InstanceNotFoundException {
+		if (grupo == null)
+			throw new InputValidationException("El grupo no debe ser null");
+
 		if (asociacion.containsKey(grupo)) {
 			return asociacion.get(grupo);
 		} else {
 			throw new InstanceNotFoundException(grupo, "Grupo");
 		}
 	}
-	
 }

@@ -31,6 +31,7 @@ import es.udc.med.espectaculos.model.evento.Evento;
 import es.udc.med.espectaculos.model.eventoservice.EventoService;
 import es.udc.med.espectaculos.model.eventoservice.EventoServiceImpl;
 import es.udc.med.espectaculos.model.grupo.Grupo;
+import es.udc.med.espectaculos.model.musicogruposervice.MusicoGrupoService;
 import es.udc.med.espectaculos.utils.ConvertidorFechas;
 import es.udc.med.espectaculos.utils.InstanceNotFoundException;
 
@@ -43,6 +44,7 @@ public class VentanaPrincipalV2 implements MouseListener {
 	private TableTree tableTree;
 	private String eventName;
 	private EventoService eventoService;
+	private MusicoGrupoService musicoGrupoService;
 
 	private Date nowDate = null; // current date
 	private String selectedDate = null; // selected date
@@ -249,7 +251,7 @@ public class VentanaPrincipalV2 implements MouseListener {
 		
 		String[] grupos = new String[100];
 
-		List<Grupo> gruposList = eventoService.getGrupos();
+		List<Grupo> gruposList = musicoGrupoService.getGrupos();
 		// for (int i = 0; i<gruposList.size() ; i++) {
 		// c1.setItem(i, gruposList.get(i).getNombreOrquesta());
 		// }

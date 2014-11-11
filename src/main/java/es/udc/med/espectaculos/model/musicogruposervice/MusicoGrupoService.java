@@ -15,6 +15,10 @@ public interface MusicoGrupoService {
 
 	public void borrarMusico(Integer idMusico) throws InstanceNotFoundException;
 
+	public List<Musico> getMusicos();
+	
+	public List<Grupo> getGrupos();
+	
 	public List<Musico> getFormacion(Grupo grupo) throws InputValidationException, InstanceNotFoundException;
 	
 }
