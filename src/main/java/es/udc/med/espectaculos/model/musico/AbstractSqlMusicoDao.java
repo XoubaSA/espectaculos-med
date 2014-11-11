@@ -44,7 +44,7 @@ public abstract class AbstractSqlMusicoDao implements MusicoDao{
 	}
 
 	@Override
-	public void remove(Connection connection, Long IdMusico)
+	public void remove(Connection connection, Integer IdMusico)
 			throws InstanceNotFoundException {
 		
 		/* Create "queryString". */
@@ -54,7 +54,7 @@ public abstract class AbstractSqlMusicoDao implements MusicoDao{
 
             /* Fill "preparedStatement". */
             int i = 1;
-            preparedStatement.setLong(i++, IdMusico);
+            preparedStatement.setInt(i++, IdMusico);
 
             /* Execute query. */
             int removedRows = preparedStatement.executeUpdate();

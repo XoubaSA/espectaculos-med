@@ -10,7 +10,7 @@ public interface MusicoDao {
 	public void update(Connection connection, Musico musico)
 			throws InstanceNotFoundException;
 
-	public void remove(Connection connection, Long musicoId)
+	public void remove(Connection connection, Integer musicoId)
 			throws InstanceNotFoundException;
 
 	public Musico create(Connection connection, Musico musico) 
