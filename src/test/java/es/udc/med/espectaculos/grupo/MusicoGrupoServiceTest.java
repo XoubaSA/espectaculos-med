@@ -3,11 +3,13 @@ package es.udc.med.espectaculos.grupo;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import es.udc.med.espectaculos.model.evento.Evento;
 import es.udc.med.espectaculos.model.eventoservice.EventoService;
 import es.udc.med.espectaculos.model.eventoservice.EventoServiceImpl;
 import es.udc.med.espectaculos.model.grupo.Grupo;
@@ -47,13 +49,55 @@ public class MusicoGrupoServiceTest {
 		musicos.add(musico2);
 		musicos.add(musico3);
 		
+		Grupo grupo = new Grupo("Orquesta Musical", 3000.0F);
+		musicoGrupoService.asociarMusicoGrupo(musicos, grupo);
+		
+		List<Musico> m = musicoGrupoService.getFormacion(grupo);
+		
+		assertEquals(3, m.size());
+		assertTrue(m.containsAll(musicos));
+	}
+	
+	@Test
+	public void asociarOtroMusicoGrupo() throws InputValidationException, InstanceNotFoundException {
+		Musico musico1 = new Musico("paco", "coruña", "bateria");
+		Musico musico2 = new Musico("Pepe", "lugo", "guitarra");
+		Musico musico3 = new Musico("manolo", "ourense", "bajo");
+		List<Musico> musicos = new ArrayList<Musico>();
+		musicos.add(musico1);
+		musicos.add(musico2);
+		musicos.add(musico3);
+		
 		Grupo grupo = new Grupo("Los Chichos" , 2000.0F);
 		musicoGrupoService.asociarMusicoGrupo(musicos, grupo);
 		
 		List<Musico> m = musicoGrupoService.getFormacion(grupo);
 		
+		assertEquals(3, m.size());
+		
+		Musico musico4 = new Musico("uxia", "coruña", "guitarra");
+		musicos.add(musico4);
+		
+		musicoGrupoService.asociarMusicoGrupo(musicos, grupo);
+		
+		List<Musico> m2 = musicoGrupoService.getFormacion(grupo);
+		
+		assertEquals(4, m2.size());
 		assertTrue(m.containsAll(musicos));
 	}
-	//asociar dos veces. queda guardado el update
+	
+	@Test(expected = InputValidationException.class)
+	public void nombreGrupoNulo() throws InputValidationException {
+		Musico musico1 = new Musico("paco", "coruña", "bateria");
+		Musico musico2 = new Musico("Pepe", "lugo", "guitarra");
+		Musico musico3 = new Musico("manolo", "ourense", "bajo");
+		List<Musico> musicos = new ArrayList<Musico>();
+		musicos.add(musico1);
+		musicos.add(musico2);
+		musicos.add(musico3);
+		
+		Grupo grupo = new Grupo(null , 2000.0F);
+		musicoGrupoService.asociarMusicoGrupo(musicos, grupo);
+	}
 
 }
