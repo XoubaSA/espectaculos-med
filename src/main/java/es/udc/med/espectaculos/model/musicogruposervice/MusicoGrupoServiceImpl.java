@@ -26,6 +26,7 @@ public class MusicoGrupoServiceImpl implements MusicoGrupoService {
 	
 	// TODO en la clase músico, añadir atributo TELEFONO
 	private static final Map<String, List<Musico>> asociacion;
+	
 	static {
 		musicos.add(new Musico("Pepe Pérez", "Calle Falsa 123", "Guitarra"));
 		musicos.add(new Musico("Manolo Gómez", "Calle Falsa 321", "Batería"));
@@ -110,19 +111,15 @@ public class MusicoGrupoServiceImpl implements MusicoGrupoService {
 
 		if (asociacion.containsKey(grupo.getNombreOrquesta())) {
 			return asociacion.get(grupo.getNombreOrquesta());
-		} else {
-			throw new InstanceNotFoundException(grupo, "Grupo");
-		}
+		} else throw new InstanceNotFoundException(grupo, grupo.getNombreOrquesta());
 	}
-
+	
+	public List<Grupo> getGrupos() {
+		return grupoDao.getGrupos(conexion);
+	}
+	
 	@Override
 	public List<Musico> getMusicos() {
-		return musicos;
+		return this.musicos;
 	}
-
-	@Override
-	public List<Grupo> getGrupos() {
-		return null;
-	}
-
 }
