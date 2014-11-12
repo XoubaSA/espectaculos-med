@@ -23,6 +23,7 @@ import es.udc.med.espectaculos.model.grupoevento.GrupoEvento;
 import es.udc.med.espectaculos.model.grupoevento.GrupoEventoDao;
 import es.udc.med.espectaculos.model.grupoevento.Jdbc3CcSqlGrupoEventoDao;
 import es.udc.med.espectaculos.utils.AsignarGrupoEventoException;
+import es.udc.med.espectaculos.utils.ConvertidorFechas;
 import es.udc.med.espectaculos.utils.InputValidationException;
 import es.udc.med.espectaculos.utils.InstanceNotFoundException;
 
@@ -258,19 +259,26 @@ public class EventoServiceTest {
 	}
 
 	@Test
-	public void filterEventsByGroup() throws InputValidationException, AsignarGrupoEventoException {
+	public void filterEventsByGroup() throws InputValidationException,
+			AsignarGrupoEventoException {
 		Calendar fecha = Calendar.getInstance();
+		String fechaString = ConvertidorFechas.convertirCalendarString(fecha);
+
 		Evento eventInMonth = createEventoInDate(fecha);
 		Calendar fechaMesSiguiente = Calendar.getInstance();
 		fechaMesSiguiente.add(Calendar.MONTH, 1);
+		String fechaMesSiguienteString = ConvertidorFechas
+				.convertirCalendarString(fechaMesSiguiente);
 		Calendar fechaDosMesesDespues = Calendar.getInstance();
 		fechaDosMesesDespues.add(Calendar.MONTH, 2);
+		String fechaDosmesesDespuesString = ConvertidorFechas
+				.convertirCalendarString(fechaDosMesesDespues);
 		Evento eventInNextMonth = createEventoInDate(fechaMesSiguiente);
 		Grupo group = createGrupoWithName("Orquesta Panorama");
 
-		eventService.asignarGrupoEvento(group, eventInMonth, fecha);
+		eventService.asignarGrupoEvento(group, eventInMonth, fechaString);
 		eventService.asignarGrupoEvento(group, eventInNextMonth,
-				fechaMesSiguiente);
+				fechaMesSiguienteString);
 
 		List<Evento> eventosMes = eventService.filtrarEventosGrupo(group,
 				fecha, fechaMesSiguiente);
@@ -286,8 +294,12 @@ public class EventoServiceTest {
 				eventInMonth.getNombreEvento());
 		assertEquals(eventosMes.get(0).getLocalidad(),
 				eventInMonth.getLocalidad());
-		assertEquals(eventosMes.get(0).getFechaInicioEvento(),
-				eventInMonth.getFechaInicioEvento());
+		String fechaInicio = ConvertidorFechas
+				.convertirCalendarString(eventosMes.get(0)
+						.getFechaInicioEvento());
+		String fechaEventoMes = ConvertidorFechas
+				.convertirCalendarString(eventInMonth.getFechaInicioEvento());
+		assertTrue(fechaInicio.equalsIgnoreCase(fechaEventoMes));
 
 		assertEquals(eventosMesSiguiente.get(0).getIdEvento(),
 				eventInNextMonth.getIdEvento());
@@ -309,18 +321,24 @@ public class EventoServiceTest {
 
 	/**
 	 * Test asignarGrupoEvento
-	 * @throws AsignarGrupoEventoException 
+	 * 
+	 * @throws AsignarGrupoEventoException
 	 */
 	@Test
-	public void asignarGrupoEventoTest() throws InputValidationException, AsignarGrupoEventoException {
+	public void asignarGrupoEventoTest() throws InputValidationException,
+			AsignarGrupoEventoException {
+		Calendar fecha = Calendar.getInstance();
+		String fechaString = ConvertidorFechas.convertirCalendarString(fecha);
+
 		Evento evento = eventService.crearEvento("evento1",
 				Calendar.getInstance(), "direccion evento 1");
 		Grupo grupo = eventService.crearGrupo("grupo1", Float.valueOf(5000));
 		GrupoEvento grupoEvento = eventService.asignarGrupoEvento(grupo,
-				evento, Calendar.getInstance());
+				evento, fechaString);
 		assertNotNull(grupoEvento);
 		assertEquals(evento.getIdEvento(), grupoEvento.getIdEvento());
-		assertTrue(evento.getFechaInicioEvento().before(
+		assertTrue(ConvertidorFechas.convertirCalendarString(
+				evento.getFechaInicioEvento()).equalsIgnoreCase(
 				grupoEvento.getFechaActuacion()));
 		assertEquals(Long.valueOf(grupo.getIdGrupo()),
 				Long.valueOf(grupoEvento.getIdGrupo().toString()));
@@ -341,11 +359,13 @@ public class EventoServiceTest {
 	@Test(expected = InputValidationException.class)
 	public void asignarGrupoEventoGrupoNuloTest()
 			throws InputValidationException, AsignarGrupoEventoException {
+		Calendar fecha = Calendar.getInstance();
+		String fechaString = ConvertidorFechas.convertirCalendarString(fecha);
+
 		Evento evento = eventService.crearEvento("evento1",
 				Calendar.getInstance(), "direccion evento 1");
 		Grupo grupo = null;
-		eventService.asignarGrupoEvento(grupo, evento, Calendar.getInstance());
-
+		eventService.asignarGrupoEvento(grupo, evento, fechaString);
 		try {
 			eventService.borrarEvento(evento.getIdEvento());
 		} catch (InstanceNotFoundException e) {
@@ -357,14 +377,17 @@ public class EventoServiceTest {
 	 * Test asignarGrupoEventoNulosException
 	 * 
 	 * @throws InputValidationException
-	 * @throws AsignarGrupoEventoException 
+	 * @throws AsignarGrupoEventoException
 	 */
 	@Test(expected = InputValidationException.class)
 	public void asignarGrupoEventoEventoNuloTest()
 			throws InputValidationException, AsignarGrupoEventoException {
+		Calendar fecha = Calendar.getInstance();
+		String fechaString = ConvertidorFechas.convertirCalendarString(fecha);
+
 		Evento evento = null;
 		Grupo grupo = eventService.crearGrupo("grupo1", Float.valueOf(5000));
-		eventService.asignarGrupoEvento(grupo, evento, Calendar.getInstance());
+		eventService.asignarGrupoEvento(grupo, evento, fechaString);
 
 		try {
 			eventService.borrarGrupo(grupo.getIdGrupo());
@@ -372,9 +395,19 @@ public class EventoServiceTest {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Test(expected = AsignarGrupoEventoException.class)
-	public void asignarGrupoVariosEventosTest() {
-		
+	public void asignarGrupoVariosEventosTest()
+			throws InputValidationException, AsignarGrupoEventoException {
+		Calendar fecha = Calendar.getInstance();
+		String fechaString = ConvertidorFechas.convertirCalendarString(fecha);
+
+		Evento evento = eventService.crearEvento("evento1",
+				Calendar.getInstance(), "direccion evento 1");
+		Grupo grupo = eventService.crearGrupo("grupo1", Float.valueOf(5000));
+		GrupoEvento ge = eventService.asignarGrupoEvento(grupo, evento,
+				fechaString);
+		GrupoEvento ge2 = eventService.asignarGrupoEvento(grupo, evento,
+				fechaString);
 	}
 }

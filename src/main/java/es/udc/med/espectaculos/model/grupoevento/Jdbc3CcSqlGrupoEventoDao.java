@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 
 public class Jdbc3CcSqlGrupoEventoDao extends AbstractSqlGrupoEventoDao {
 
@@ -15,8 +14,8 @@ public class Jdbc3CcSqlGrupoEventoDao extends AbstractSqlGrupoEventoDao {
 		
 		try(PreparedStatement preparedStatement = conexion.prepareStatement(queryString)) {
 			int i = 1;
-			preparedStatement.setTimestamp(i++, new Timestamp(grupoEvento
-					.getFechaActuacion().getTime().getTime()));
+			preparedStatement.setString(i++, grupoEvento
+					.getFechaActuacion());
 			preparedStatement.setLong(i++, grupoEvento.getIdEvento());
 			preparedStatement.setLong(i++, grupoEvento.getIdGrupo());
 			

@@ -1,16 +1,14 @@
 package es.udc.med.espectaculos.model.grupoevento;
 
-import java.util.Calendar;
-
 public class GrupoEvento {
 
 	private Integer idGrupoEvento;
-	private Calendar fechaActuacion;
+	private String fechaActuacion;
 	private Integer idEvento;
 	private Integer idGrupo;
 
-	public GrupoEvento(Calendar fechaActuacion, Integer idEvento, Integer idGrupo) {
-		this.fechaActuacion = fechaActuacion;
+	public GrupoEvento(String fecha, Integer idEvento, Integer idGrupo) {
+		this.fechaActuacion = fecha;
 		this.idEvento = idEvento;
 		this.idGrupo = idGrupo;
 	}
@@ -23,11 +21,11 @@ public class GrupoEvento {
 		this.idGrupoEvento = idGrupoEvento;
 	}
 
-	public Calendar getFechaActuacion() {
+	public String getFechaActuacion() {
 		return fechaActuacion;
 	}
 
-	public void setFechaActuacion(Calendar fechaActuacion) {
+	public void setFechaActuacion(String fechaActuacion) {
 		this.fechaActuacion = fechaActuacion;
 	}
 

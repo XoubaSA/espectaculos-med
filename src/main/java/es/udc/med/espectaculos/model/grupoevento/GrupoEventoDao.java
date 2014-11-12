@@ -23,5 +23,5 @@ public interface GrupoEventoDao {
 	 */
 	public List<Evento> obtenerEventosGrupoFecha(Connection conexion, Grupo grupo, Calendar fechaInicio, Calendar fechaFin);
 	
-	public boolean grupoAsignadoFecha(Connection conexion, Grupo grupo, Calendar fecha);
+	public boolean grupoAsignadoFecha(Connection conexion, Grupo grupo, String fecha);
 }

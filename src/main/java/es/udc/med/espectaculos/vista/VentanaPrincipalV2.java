@@ -251,7 +251,7 @@ public class VentanaPrincipalV2 implements MouseListener {
 		
 		String[] grupos = new String[100];
 
-		List<Grupo> gruposList = musicoGrupoService.getGrupos();
+		// List<Grupo> gruposList = musicoGrupoService.getGrupos();
 		// for (int i = 0; i<gruposList.size() ; i++) {
 		// c1.setItem(i, gruposList.get(i).getNombreOrquesta());
 		// }

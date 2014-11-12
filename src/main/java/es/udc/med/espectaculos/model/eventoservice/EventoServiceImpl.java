@@ -79,13 +79,18 @@ public class EventoServiceImpl implements EventoService {
 
 	@Override
 	public GrupoEvento asignarGrupoEvento(Grupo grupo, Evento evento,
-			Calendar fecha) throws InputValidationException, AsignarGrupoEventoException {
+			String fecha) throws InputValidationException,
+			AsignarGrupoEventoException {
+
 		if ((grupo == null) || (evento == null))
 			throw new InputValidationException("Evento o Grupo nulo");
 
-		// comprobar si ese grupo ya esta asignado a un evento en la misma fecha
-		
-		
+		if (grupoEventoDao.grupoAsignadoFecha(conexion, grupo, fecha)) {
+			throw new AsignarGrupoEventoException("El grupo "
+					+ grupo.getNombreOrquesta()
+					+ " ya esta asignado en otro lugar la misma fecha");
+		}
+
 		GrupoEvento grupoEvento = new GrupoEvento(fecha, evento.getIdEvento(),
 				grupo.getIdGrupo());
 		return grupoEventoDao.create(conexion, grupoEvento);
@@ -106,13 +111,16 @@ public class EventoServiceImpl implements EventoService {
 	}
 
 	@Override
-	public List<Evento> filtrarEventosGrupo(Grupo grupo, Calendar fechaInicio, Calendar fechaFin) throws InputValidationException {
-		if((grupo == null) || (fechaInicio == null) || (fechaFin == null))
-			throw new InputValidationException("Grupo y fecha no pueden ser nulos");
-		
-		return grupoEventoDao.obtenerEventosGrupoFecha(conexion, grupo, fechaInicio, fechaFin);
+	public List<Evento> filtrarEventosGrupo(Grupo grupo, Calendar fechaInicio,
+			Calendar fechaFin) throws InputValidationException {
+		if ((grupo == null) || (fechaInicio == null) || (fechaFin == null))
+			throw new InputValidationException(
+					"Grupo y fecha no pueden ser nulos");
+
+		return grupoEventoDao.obtenerEventosGrupoFecha(conexion, grupo,
+				fechaInicio, fechaFin);
 	}
-	
+
 	@Override
 	public void borrarEvento(Integer idEvento) throws InstanceNotFoundException {
 		try {
@@ -155,5 +163,5 @@ public class EventoServiceImpl implements EventoService {
 			throw new RuntimeException(e);
 		}
 	}
-	
+
 }
