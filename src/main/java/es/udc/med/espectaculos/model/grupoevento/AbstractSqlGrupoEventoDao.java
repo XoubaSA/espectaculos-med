@@ -108,9 +108,8 @@ public abstract class AbstractSqlGrupoEventoDao implements GrupoEventoDao {
 				i = 1;
 				Integer id = resultSet.getInt(i++);
 				String nombre = resultSet.getString(i++);
-				Date fecha = resultSet.getDate(i++);
-				Calendar calendar = Calendar.getInstance();
-				calendar.setTimeInMillis(fecha.getTime());
+				String fecha = resultSet.getString(i++);
+				Calendar calendar = ConvertidorFechas.convertirStringCalendar(fecha);
 				String localidad = resultSet.getString(i++);
 				Evento evento = new Evento(id, nombre, calendar, localidad);
 				eventos.add(evento);

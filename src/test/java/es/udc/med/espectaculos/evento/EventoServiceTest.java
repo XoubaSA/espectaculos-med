@@ -299,8 +299,6 @@ public class EventoServiceTest {
 						.getFechaInicioEvento());
 		String fechaEventoMes = ConvertidorFechas
 				.convertirCalendarString(eventInMonth.getFechaInicioEvento());
-		//System.out.println("FECHA INICIO :" + fechaInicio);
-		//System.out.println("FECHA EVENTO MES :" + fechaEventoMes);
 		assertTrue(fechaInicio.equalsIgnoreCase(fechaEventoMes));
 
 		assertEquals(eventosMesSiguiente.get(0).getIdEvento(),
