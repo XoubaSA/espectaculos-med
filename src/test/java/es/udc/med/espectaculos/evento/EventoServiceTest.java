@@ -299,6 +299,8 @@ public class EventoServiceTest {
 						.getFechaInicioEvento());
 		String fechaEventoMes = ConvertidorFechas
 				.convertirCalendarString(eventInMonth.getFechaInicioEvento());
+		//System.out.println("FECHA INICIO :" + fechaInicio);
+		//System.out.println("FECHA EVENTO MES :" + fechaEventoMes);
 		assertTrue(fechaInicio.equalsIgnoreCase(fechaEventoMes));
 
 		assertEquals(eventosMesSiguiente.get(0).getIdEvento(),
@@ -307,8 +309,9 @@ public class EventoServiceTest {
 				eventInNextMonth.getNombreEvento());
 		assertEquals(eventosMesSiguiente.get(0).getLocalidad(),
 				eventInNextMonth.getLocalidad());
-		assertEquals(eventosMesSiguiente.get(0).getFechaInicioEvento(),
-				eventInNextMonth.getFechaInicioEvento());
+		String ini = ConvertidorFechas.convertirCalendarString(eventosMesSiguiente.get(0).getFechaInicioEvento());
+		String fin = ConvertidorFechas.convertirCalendarString(eventInNextMonth.getFechaInicioEvento());
+		assertEquals(ini,fin);
 
 		// Clean data base
 		try {

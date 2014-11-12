@@ -99,5 +99,25 @@ public class MusicoGrupoServiceTest {
 		Grupo grupo = new Grupo(null , 2000.0F);
 		musicoGrupoService.asociarMusicoGrupo(musicos, grupo);
 	}
+	
+	@Test(expected = InputValidationException.class)
+	public void grupoNulo() throws InputValidationException {
+		Musico musico1 = new Musico("paco", "coruña", "bateria");
+		Musico musico2 = new Musico("Pepe", "lugo", "guitarra");
+		Musico musico3 = new Musico("manolo", "ourense", "bajo");
+		List<Musico> musicos = new ArrayList<Musico>();
+		musicos.add(musico1);
+		musicos.add(musico2);
+		musicos.add(musico3);
+		
+		musicoGrupoService.asociarMusicoGrupo(musicos, null);
+	}
+	
+	@Test(expected = InputValidationException.class)
+	public void musicosVacio() throws InputValidationException {
+		List<Musico> musicos = new ArrayList<Musico>();
+		Grupo grupo = new Grupo("Los Chichos" , 2000.0F);
+		musicoGrupoService.asociarMusicoGrupo(musicos, grupo);
+	}
 
 }
