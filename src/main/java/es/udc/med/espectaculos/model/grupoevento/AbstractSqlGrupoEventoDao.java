@@ -129,7 +129,8 @@ public abstract class AbstractSqlGrupoEventoDao implements GrupoEventoDao {
 
 		String queryString = "SELECT count(*)"
 				+ " FROM GRUPO_EVENTO ge"
-				+ " WHERE (ge.ID_GRUPO = ?) AND (substr(ge.FECHA_ACTUACION,1,8) LIKE ?) ";
+				+ " WHERE (ge.ID_GRUPO = ?)"
+				+ " AND (substr(ge.FECHA_ACTUACION,1,10) LIKE ?) ";
 		try (PreparedStatement preparedStatement = conexion
 				.prepareStatement(queryString)) {
 			int i = 1;
