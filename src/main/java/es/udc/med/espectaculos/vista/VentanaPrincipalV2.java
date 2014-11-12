@@ -13,6 +13,7 @@ import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
@@ -31,7 +32,9 @@ import es.udc.med.espectaculos.model.evento.Evento;
 import es.udc.med.espectaculos.model.eventoservice.EventoService;
 import es.udc.med.espectaculos.model.eventoservice.EventoServiceImpl;
 import es.udc.med.espectaculos.model.grupo.Grupo;
+import es.udc.med.espectaculos.model.musico.Musico;
 import es.udc.med.espectaculos.model.musicogruposervice.MusicoGrupoService;
+import es.udc.med.espectaculos.model.musicogruposervice.MusicoGrupoServiceImpl;
 import es.udc.med.espectaculos.utils.ConvertidorFechas;
 import es.udc.med.espectaculos.utils.InstanceNotFoundException;
 
@@ -85,6 +88,7 @@ public class VentanaPrincipalV2 implements MouseListener {
 
 	public VentanaPrincipalV2() {
 		this.eventoService = new EventoServiceImpl();
+		this.musicoGrupoService= new MusicoGrupoServiceImpl();
 	}
 
 	/**
@@ -219,8 +223,11 @@ public class VentanaPrincipalV2 implements MouseListener {
 		Calendar now = Calendar.getInstance(); //
 		nowDate = new Date(now.getTimeInMillis());
 		setDayForDisplay(now, display);
-
+		pinta(now,display);
+		
 		getDate();
+		
+		//TODO: Labels por todos lados
 		
 		tree = new Tree(shell, SWT.BORDER);
 		gridData = new GridData(GridData.FILL_HORIZONTAL);
@@ -249,9 +256,79 @@ public class VentanaPrincipalV2 implements MouseListener {
 		gridData.verticalAlignment = SWT.TOP;
 		c1.setLayoutData(gridData);
 		
-		String[] grupos = new String[100];
 
-		// List<Grupo> gruposList = musicoGrupoService.getGrupos();
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+		
+		List<Grupo> gruposList = musicoGrupoService.getGrupos();
+		for (Grupo grupo : gruposList) {
+			c1.add(grupo.getNombreOrquesta());
+		}
+		// for (int i = 0; i<gruposList.size() ; i++) {
+		// c1.setItem(i, gruposList.get(i).getNombreOrquesta());
+		// }
+		// c1.setItem(0,"Combo Dominicano");
+
+//		String items[] = { "Combo Dominicano", "Prueba" };
+//		c1.setItems(items);
+		
+		c1.addSelectionListener(new SelectionAdapter() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				Combo c = (Combo) arg0.widget;
+				tree3.removeAll();
+				TreeItem treeItem = new TreeItem(tree3, SWT.NONE);
+				
+				//TODO: For que recorra los componentes de un grupo y LLamada al servicio cuando este
+					
+				
+				treeItem.setText(c.getItem(c.getSelectionIndex()));
+			}
+		});
+		
+		tree3 = new Tree(shell, SWT.BORDER);
+		gridData = new GridData(GridData.FILL_HORIZONTAL);
+		gridData.widthHint = 20;
+		gridData.heightHint = 200;
+		tree3.setLayoutData(gridData);
+		
+		Combo c2 = new Combo(shell, SWT.DEFAULT);
+		gridData = new GridData(GridData.FILL_HORIZONTAL);
+		gridData.widthHint = 20;
+		gridData.verticalAlignment = SWT.TOP;
+		c2.setLayoutData(gridData);
+		
+		List<Musico> musicos = musicoGrupoService.getMusicos();
+		for (Musico musico : musicos) {
+			c2.add(musico.getNombreMusico());
+		}
+		
+		
+		gridData = new GridData(GridData.FILL_HORIZONTAL);
+		Button botonAnadirGrupoEvento = new Button(shell,0);
+		botonAnadirGrupoEvento.setText("AnadirGrupoEvento");
+		gridData.verticalAlignment = SWT.TOP;
+		FillLayout fillLayout = new FillLayout();
+		botonAnadirGrupoEvento.setLayoutData(gridData);
+		
+		botonAnadirGrupoEvento.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				//TODO: Recuperar las 3 cosas que faltan
+				//eventoService.asignarGrupoEvento(grupo, evento, fecha);
+			}
+		});
+		
+	
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX		
+		
+		
+		
+		
+//		String[] grupos = new String[100];
+//		List<Grupo> grupos = musicoGrupoService.getGrupos();
+//		String[] gruposStr = new String[grupos.size()];
+
+//		List<Grupo> gruposList = musicoGrupoService.getGrupos();
 		// for (int i = 0; i<gruposList.size() ; i++) {
 		// c1.setItem(i, gruposList.get(i).getNombreOrquesta());
 		// }
@@ -260,6 +337,8 @@ public class VentanaPrincipalV2 implements MouseListener {
 		String items[] = { "Combo Dominicano" };
 		c1.setItems(items);
 
+		//TODO: Leyenda con los colores y hacer que dependiendo del eventos.size un color u otro
+		
 		shell.open();
 		shell.layout();
 		while (!shell.isDisposed()) {
@@ -270,20 +349,16 @@ public class VentanaPrincipalV2 implements MouseListener {
 	}
 
 	private void getDate() {
-		System.out.println("Hola");
-		System.out.println(this.selectedDate);
-
-		day = Integer.valueOf(this.selectedDate.substring(0, 4));
-		System.out.println(day);
+		try {
+			day = Integer.valueOf(this.selectedDate.substring(8, 10));
+		} catch(Exception e) {
+			day = Integer.valueOf(this.selectedDate.substring(8, 9));
+		}
 		month = Integer.valueOf(this.selectedDate.substring(5, 7));
-		System.out.println(month);
-		year = Integer.valueOf(this.selectedDate.substring(8, 10));
-		System.out.println(year);
+		year = Integer.valueOf(this.selectedDate.substring(0, 4));
 		strDate = Integer.toString(year) + "/";
 		strDate += (month < 10) ? "0" + month + "/" : month + "/";
 		strDate += (day < 10) ? "0" + day : day;
-
-		System.out.println(strDate);
 		Calendar fecha = Calendar.getInstance();
 		fecha.set(Calendar.YEAR, year);
 		fecha.set(Calendar.MONTH, month - 1);
@@ -291,12 +366,11 @@ public class VentanaPrincipalV2 implements MouseListener {
 		List<Evento> eventos = eventoService.obtenerEventosFecha(fecha);
 		System.out.println(eventos.size());
 		setEvents(eventos);
-
 	}
 
 	private void setEvents(List<Evento> events) {
 		// tree.removeAll();
-		// tree2.removeAll();
+//		 tree2.removeAll();
 		TreeItem treeItem;
 		for (int i = 0; i < events.size(); i++) {
 			treeItem = new TreeItem(tree, SWT.NONE);
@@ -306,7 +380,6 @@ public class VentanaPrincipalV2 implements MouseListener {
 
 	private void setEvent(String eventName) {
 		try {
-
 			Evento event = eventoService.obtenerEventoPorNombre(eventName);
 			tree2.removeAll();
 			TreeItem treeItem, treeItem2, treeItem3, treeItem4;
@@ -357,6 +430,7 @@ public class VentanaPrincipalV2 implements MouseListener {
 																		// date
 		nowLabel.setText(formatter.format(nowDate)); // set to label
 		setDayForDisplay(now, display);
+		pinta(now,display);
 	}
 
 	private void setDayForDisplay(Calendar now, Display display) {
@@ -370,13 +444,15 @@ public class VentanaPrincipalV2 implements MouseListener {
 		int startday = 1;
 		for (int i = 0; i < 42; i++) {
 			Color temp = days[i].getBackground();
-			if (temp.equals(display.getSystemColor(SWT.COLOR_BLUE))) {
+			if (!temp.equals(display.getSystemColor(SWT.COLOR_WHITE))) {
 				days[i].setBackground(display.getSystemColor(SWT.COLOR_WHITE));
 			}
 		}
 		for (int i = 0; i < 42; i++) {
 			if (i >= startIndex && i <= endIndex) {
+				
 				days[i].setText("" + startday);
+				System.out.println(days[i]);
 				if (startday == currentDay) {
 					days[i].setBackground(display
 							.getSystemColor(SWT.COLOR_BLUE)); //
@@ -386,8 +462,42 @@ public class VentanaPrincipalV2 implements MouseListener {
 				days[i].setText("");
 			}
 		}
+		
 	}
 
+	public void pinta (Calendar now, Display display) {
+		int currentDay = now.get(Calendar.DATE);
+		now.add(Calendar.DAY_OF_MONTH, -(now.get(Calendar.DATE) - 1)); //
+		int startIndex = now.get(Calendar.DAY_OF_WEEK) - 1; //
+		int year = now.get(Calendar.YEAR); //
+		int month = now.get(Calendar.MONTH) + 1; //
+		int lastDay = this.getLastDayOfMonth(year, month); //
+		int endIndex = startIndex + lastDay - 1; //
+		int startday = 1;
+		for (int i = 0; i < 42; i++) {
+			if (i >= startIndex && i <= endIndex) {
+				days[i].setText("" + startday);
+
+				//if (startday == currentDay) {
+					days[i].setBackground(display
+							.getSystemColor(SWT.COLOR_BLUE)); //
+				//}
+					
+					Calendar fecha = Calendar.getInstance();
+					fecha.set(Calendar.YEAR, year);
+					fecha.set(Calendar.MONTH, month - 1);
+					fecha.set(Calendar.DATE, startday);
+					List<Evento> eventos = eventoService.obtenerEventosFecha(fecha);
+					if (eventos.size()==0) {
+						days[i].setBackground(display.getSystemColor(SWT.COLOR_GREEN));
+					}
+				startday++;
+			} else {
+				days[i].setText("");
+			}
+		}
+	}
+	
 	public void previousYear(Display display) {
 		moveTo(Calendar.YEAR, -1, display);
 	}
