@@ -7,23 +7,24 @@ import java.util.List;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
+import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.TableTree;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.layout.FormAttachment;
-import org.eclipse.swt.layout.FormData;
-import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.ExpandBar;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
@@ -32,7 +33,6 @@ import es.udc.med.espectaculos.model.evento.Evento;
 import es.udc.med.espectaculos.model.eventoservice.EventoService;
 import es.udc.med.espectaculos.model.eventoservice.EventoServiceImpl;
 import es.udc.med.espectaculos.model.grupo.Grupo;
-import es.udc.med.espectaculos.model.musico.Musico;
 import es.udc.med.espectaculos.model.musicogruposervice.MusicoGrupoService;
 import es.udc.med.espectaculos.model.musicogruposervice.MusicoGrupoServiceImpl;
 import es.udc.med.espectaculos.utils.ConvertidorFechas;
@@ -43,7 +43,7 @@ public class VentanaPrincipalV2 implements MouseListener {
 	private Shell shell;
 	private int day, month, year;
 	private String strDate;
-	private Tree tree, tree2, tree3;
+	private Tree tree_1, tree2, tree3;
 	private TableTree tableTree;
 	private String eventName;
 	private EventoService eventoService;
@@ -53,6 +53,7 @@ public class VentanaPrincipalV2 implements MouseListener {
 	private String selectedDate = null; // selected date
 	private GridLayout gridLayout = null;
 	private GridData gridData = null;
+	private GridData gridData2 = null;
 
 	private CLabel sunday = null;
 	private CLabel monday = null;
@@ -93,22 +94,27 @@ public class VentanaPrincipalV2 implements MouseListener {
 
 	/**
 	 * Open the window.
+	 * @wbp.parser.entryPoint
 	 */
 	public void open() {
 		final Display display = Display.getDefault();
 
-		shell = new Shell(SWT.TOP);
+		shell = new Shell(display);
+		shell.setMinimumSize(new Point(80, 28));
+		shell.setSize(697, 363);
 		// FillLayout fillLayout = new FillLayout();
 		// shell.setLayout(fillLayout);
 		// shell.setText("Aplicacion espectaculos");
-		shell.setLayout(new RowLayout(SWT.VERTICAL));
+		//shell.setLayout(new RowLayout(SWT.VERTICAL));
 		this.selectedDate = "2014/11/01";
 
 		gridLayout = new GridLayout(7, true);
-		shell.setLayout(gridLayout);
-
+		shell.setLayout(new FillLayout());
+		SashForm sashForm = new SashForm(shell, SWT.VERTICAL);
+		Composite composite = new Composite(sashForm, SWT.NONE);
+		composite.setLayout(gridLayout);
 		gridData = new GridData(GridData.FILL_HORIZONTAL);
-		yearUp = new Button(shell, SWT.PUSH | SWT.FLAT);
+		yearUp = new Button(composite, SWT.PUSH | SWT.FLAT);
 		yearUp.setText("<");
 		yearUp.setLayoutData(gridData);
 		yearUp.addSelectionListener(new SelectionAdapter() {
@@ -118,7 +124,7 @@ public class VentanaPrincipalV2 implements MouseListener {
 		});
 
 		gridData = new GridData(GridData.FILL_HORIZONTAL);
-		monthUp = new Button(shell, SWT.PUSH | SWT.FLAT);
+		monthUp = new Button(composite, SWT.PUSH | SWT.FLAT);
 		monthUp.setText("<<");
 		monthUp.setLayoutData(gridData);
 		monthUp.addSelectionListener(new SelectionAdapter() {
@@ -127,7 +133,7 @@ public class VentanaPrincipalV2 implements MouseListener {
 			}
 		});
 
-		nowLabel = new CLabel(shell, SWT.CENTER | SWT.SHADOW_OUT);
+		nowLabel = new CLabel(composite, SWT.CENTER | SWT.SHADOW_OUT);
 		gridData = new GridData(GridData.FILL_HORIZONTAL);
 		gridData.horizontalSpan = 3;
 		nowLabel.setLayoutData(gridData);
@@ -135,7 +141,7 @@ public class VentanaPrincipalV2 implements MouseListener {
 		nowLabel.setText(formatter.format(new Date()));
 
 		gridData = new GridData(GridData.FILL_HORIZONTAL);
-		monthNext = new Button(shell, SWT.PUSH | SWT.FLAT);
+		monthNext = new Button(composite, SWT.PUSH | SWT.FLAT);
 		monthNext.setText(">>");
 		monthNext.setLayoutData(gridData);
 		monthNext.addSelectionListener(new SelectionAdapter() {
@@ -145,7 +151,7 @@ public class VentanaPrincipalV2 implements MouseListener {
 		});
 
 		gridData = new GridData(GridData.FILL_HORIZONTAL);
-		yearNext = new Button(shell, SWT.PUSH | SWT.FLAT);
+		yearNext = new Button(composite, SWT.PUSH | SWT.FLAT);
 		yearNext.setText(">");
 		yearNext.setLayoutData(gridData);
 		yearNext.addSelectionListener(new SelectionAdapter() {
@@ -154,7 +160,7 @@ public class VentanaPrincipalV2 implements MouseListener {
 			}
 		});
 
-		sunday = new CLabel(shell, SWT.CENTER | SWT.SHADOW_OUT);
+		sunday = new CLabel(composite, SWT.CENTER | SWT.SHADOW_OUT);
 		gridData = new GridData(GridData.FILL_HORIZONTAL
 				| GridData.FILL_VERTICAL);
 		gridData.widthHint = 20;
@@ -162,7 +168,7 @@ public class VentanaPrincipalV2 implements MouseListener {
 		sunday.setLayoutData(gridData);
 		sunday.setText("Sun");
 
-		monday = new CLabel(shell, SWT.CENTER | SWT.SHADOW_OUT);
+		monday = new CLabel(composite, SWT.CENTER | SWT.SHADOW_OUT);
 		gridData = new GridData(GridData.FILL_HORIZONTAL
 				| GridData.FILL_VERTICAL);
 		gridData.widthHint = 20;
@@ -170,7 +176,7 @@ public class VentanaPrincipalV2 implements MouseListener {
 		monday.setLayoutData(gridData);
 		monday.setText("Mon");
 
-		tuesday = new CLabel(shell, SWT.CENTER | SWT.SHADOW_OUT);
+		tuesday = new CLabel(composite, SWT.CENTER | SWT.SHADOW_OUT);
 		gridData = new GridData(GridData.FILL_HORIZONTAL
 				| GridData.FILL_VERTICAL);
 		gridData.widthHint = 20;
@@ -178,7 +184,7 @@ public class VentanaPrincipalV2 implements MouseListener {
 		tuesday.setLayoutData(gridData);
 		tuesday.setText("Tue");
 
-		wednesday = new CLabel(shell, SWT.CENTER | SWT.SHADOW_OUT);
+		wednesday = new CLabel(composite, SWT.CENTER | SWT.SHADOW_OUT);
 		gridData = new GridData(GridData.FILL_HORIZONTAL
 				| GridData.FILL_VERTICAL);
 		gridData.widthHint = 20;
@@ -186,7 +192,7 @@ public class VentanaPrincipalV2 implements MouseListener {
 		wednesday.setLayoutData(gridData);
 		wednesday.setText("Wed");
 
-		thursday = new CLabel(shell, SWT.CENTER | SWT.SHADOW_OUT);
+		thursday = new CLabel(composite, SWT.CENTER | SWT.SHADOW_OUT);
 		gridData = new GridData(GridData.FILL_HORIZONTAL
 				| GridData.FILL_VERTICAL);
 		gridData.widthHint = 20;
@@ -194,7 +200,7 @@ public class VentanaPrincipalV2 implements MouseListener {
 		thursday.setLayoutData(gridData);
 		thursday.setText("Thu");
 
-		friday = new CLabel(shell, SWT.CENTER | SWT.SHADOW_OUT);
+		friday = new CLabel(composite, SWT.CENTER | SWT.SHADOW_OUT);
 		gridData = new GridData(GridData.FILL_HORIZONTAL
 				| GridData.FILL_VERTICAL);
 		gridData.widthHint = 20;
@@ -202,7 +208,7 @@ public class VentanaPrincipalV2 implements MouseListener {
 		friday.setLayoutData(gridData);
 		friday.setText("Fri");
 
-		saturday = new CLabel(shell, SWT.CENTER | SWT.SHADOW_OUT);
+		saturday = new CLabel(composite, SWT.CENTER | SWT.SHADOW_OUT);
 		gridData = new GridData(GridData.FILL_HORIZONTAL
 				| GridData.FILL_VERTICAL);
 		gridData.widthHint = 20;
@@ -211,7 +217,7 @@ public class VentanaPrincipalV2 implements MouseListener {
 		saturday.setText("Sat");
 
 		for (int i = 0; i < 42; i++) {
-			days[i] = new CLabel(shell, SWT.FLAT | SWT.CENTER);
+			days[i] = new CLabel(composite, SWT.FLAT | SWT.CENTER);
 			gridData = new GridData(GridData.FILL_HORIZONTAL
 					| GridData.FILL_VERTICAL);
 			days[i].setLayoutData(gridData);
@@ -228,8 +234,34 @@ public class VentanaPrincipalV2 implements MouseListener {
 		getDate();
 		
 		//TODO: Labels por todos lados
+		Group group0 = new Group(sashForm, SWT.NULL);
+		group0.setLayout(null);
 		
-		tree = new Tree(shell, SWT.BORDER);
+		Label lblNewLabel = new Label(group0, SWT.NONE);
+		lblNewLabel.setBounds(10, 10, 133, 33);
+		lblNewLabel.setText("Filtre los eventos por\n\tgrupo:");
+		
+		final Combo combo = new Combo(group0, SWT.NONE);
+		combo.setBounds(10, 49, 133, 41);
+		
+		tree_1 = new Tree(group0, SWT.BORDER);
+		tree_1.setBounds(149, 10, 361, 145);
+		
+		combo.setText("Todos los grupos");
+		combo.select(0);
+		
+		List<Grupo> grupos = musicoGrupoService.getGrupos();
+		for (Grupo grupo : grupos) {
+			combo.add(grupo.getNombreOrquesta());
+		}
+		
+		combo.addSelectionListener(new SelectionAdapter() {
+		      public void widgetSelected(SelectionEvent e) {
+		          System.out.println(combo.getText());
+		        }
+		      });
+		
+		/*tree = new Tree(group0, SWT.BORDER);
 		gridData = new GridData(GridData.FILL_HORIZONTAL);
 		gridData.widthHint = 20;
 		gridData.heightHint = 200;
@@ -247,10 +279,13 @@ public class VentanaPrincipalV2 implements MouseListener {
 				setEvent(eventName);
 			}
 		});
-		tree2 = new Tree(shell, SWT.BORDER);
-		tree2.setLayoutData(gridData);
+		tree2 = new Tree(group0, SWT.BORDER);
+		gridData2 = new GridData(GridData.FILL_HORIZONTAL);
+		gridData2.widthHint = 20;
+		gridData2.heightHint = 200;
+		tree2.setLayoutData(gridData2);
 
-		Combo c1 = new Combo(shell, SWT.DEFAULT);
+		Combo c1 = new Combo(group0, SWT.DEFAULT);
 		gridData = new GridData(GridData.FILL_HORIZONTAL);
 		gridData.widthHint = 20;
 		gridData.verticalAlignment = SWT.TOP;
@@ -286,13 +321,13 @@ public class VentanaPrincipalV2 implements MouseListener {
 			}
 		});
 		
-		tree3 = new Tree(shell, SWT.BORDER);
+		tree3 = new Tree(group0, SWT.BORDER);
 		gridData = new GridData(GridData.FILL_HORIZONTAL);
 		gridData.widthHint = 20;
 		gridData.heightHint = 200;
 		tree3.setLayoutData(gridData);
 		
-		Combo c2 = new Combo(shell, SWT.DEFAULT);
+		Combo c2 = new Combo(group0, SWT.DEFAULT);
 		gridData = new GridData(GridData.FILL_HORIZONTAL);
 		gridData.widthHint = 20;
 		gridData.verticalAlignment = SWT.TOP;
@@ -305,7 +340,7 @@ public class VentanaPrincipalV2 implements MouseListener {
 		
 		
 		gridData = new GridData(GridData.FILL_HORIZONTAL);
-		Button botonAnadirGrupoEvento = new Button(shell,0);
+		Button botonAnadirGrupoEvento = new Button(group0,0);
 		botonAnadirGrupoEvento.setText("AnadirGrupoEvento");
 		gridData.verticalAlignment = SWT.TOP;
 		FillLayout fillLayout = new FillLayout();
@@ -338,9 +373,12 @@ public class VentanaPrincipalV2 implements MouseListener {
 		c1.setItems(items);
 
 		//TODO: Leyenda con los colores y hacer que dependiendo del eventos.size un color u otro
-		
+		*/
 		shell.open();
-		shell.layout();
+		//shell.layout();
+		//shell.pack();
+		//composite.pack();
+		//group0.pack();
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch()) {
 				display.sleep();
@@ -364,17 +402,21 @@ public class VentanaPrincipalV2 implements MouseListener {
 		fecha.set(Calendar.MONTH, month - 1);
 		fecha.set(Calendar.DATE, day);
 		List<Evento> eventos = eventoService.obtenerEventosFecha(fecha);
-		System.out.println(eventos.size());
 		setEvents(eventos);
 	}
 
 	private void setEvents(List<Evento> events) {
 		// tree.removeAll();
 //		 tree2.removeAll();
+
 		TreeItem treeItem;
 		for (int i = 0; i < events.size(); i++) {
-			treeItem = new TreeItem(tree, SWT.NONE);
+			treeItem = new TreeItem(tree_1, SWT.NONE);
 			treeItem.setText(events.get(i).getNombreEvento());
+			TreeItem localidadItem = new TreeItem(treeItem, 0);
+			localidadItem.setText("Localidad: " + events.get(i).getLocalidad());
+			TreeItem fechaItem = new TreeItem(treeItem, 0);
+			fechaItem.setText("Fecha: " + ConvertidorFechas.convertirCalendarString(events.get(i).getFechaInicioEvento()));
 		}
 	}
 
@@ -517,6 +559,10 @@ public class VentanaPrincipalV2 implements MouseListener {
 	public void mouseDoubleClick(MouseEvent e) {
 		CLabel day = (CLabel) e.getSource();
 		if (!day.getText().equals("")) {
+			// Limpiamos el árbol si ya contiene elementos
+			if (tree_1.getItemCount() > 0) {
+				tree_1.removeAll();
+			}
 			this.selectedDate = nowLabel.getText() + "/" + day.getText();
 			System.out.println(this.selectedDate);
 			getDate();
@@ -532,5 +578,4 @@ public class VentanaPrincipalV2 implements MouseListener {
 
 	public void mouseUp(MouseEvent e) {
 	}
-
 }
