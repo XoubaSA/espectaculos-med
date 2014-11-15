@@ -102,10 +102,7 @@ public class VentanaPrincipalV2 implements MouseListener {
 		shell = new Shell(display);
 		shell.setMinimumSize(new Point(80, 28));
 		shell.setSize(697, 363);
-		// FillLayout fillLayout = new FillLayout();
-		// shell.setLayout(fillLayout);
-		// shell.setText("Aplicacion espectaculos");
-		//shell.setLayout(new RowLayout(SWT.VERTICAL));
+
 		this.selectedDate = "2014/11/01";
 
 		gridLayout = new GridLayout(7, true);
@@ -233,7 +230,6 @@ public class VentanaPrincipalV2 implements MouseListener {
 		
 		getDate();
 		
-		//TODO: Labels por todos lados
 		Group group0 = new Group(sashForm, SWT.NULL);
 		group0.setLayout(null);
 		
@@ -243,6 +239,17 @@ public class VentanaPrincipalV2 implements MouseListener {
 		
 		final Combo combo = new Combo(group0, SWT.NONE);
 		combo.setBounds(10, 49, 133, 41);
+		
+		Button botonAnadirGrupoEvento = new Button(group0,SWT.NONE);
+		botonAnadirGrupoEvento.setBounds(10, 80, 133, 41);
+		botonAnadirGrupoEvento.setText("AnadirGrupoEvento");
+		
+		botonAnadirGrupoEvento.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				//TODO: Recuperar las 3 cosas que faltan
+				//eventoService.asignarGrupoEvento(grupo, evento, fecha);
+			}
+		});
 		
 		tree_1 = new Tree(group0, SWT.BORDER);
 		tree_1.setBounds(149, 10, 361, 145);
@@ -258,69 +265,21 @@ public class VentanaPrincipalV2 implements MouseListener {
 		combo.addSelectionListener(new SelectionAdapter() {
 		      public void widgetSelected(SelectionEvent e) {
 		          System.out.println(combo.getText());
+		          //combo.getText() devuelve el nombre del grupo
+		          //TODO: Debemos pasar el grupo, de forma que la lista devuelta de eventos sea solo en la que dicho grupo actua
 		        }
 		      });
 		
-		/*tree = new Tree(group0, SWT.BORDER);
-		gridData = new GridData(GridData.FILL_HORIZONTAL);
-		gridData.widthHint = 20;
-		gridData.heightHint = 200;
-		tree.setLayoutData(gridData);
-		// Obtener el elemento seleccionado del tree1
-		tree.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				System.out.println(arg0.item);
-				int startsWith = arg0.item.toString().indexOf("{") + 1;
-				int endsWith = arg0.item.toString().indexOf("}");
-				eventName = arg0.item.toString()
-						.substring(startsWith, endsWith);
-				System.out.println(eventName);
-				setEvent(eventName);
-			}
-		});
-		tree2 = new Tree(group0, SWT.BORDER);
-		gridData2 = new GridData(GridData.FILL_HORIZONTAL);
-		gridData2.widthHint = 20;
-		gridData2.heightHint = 200;
-		tree2.setLayoutData(gridData2);
+		Label lblNewLabel2 = new Label(group0, SWT.NONE);
+		lblNewLabel2.setBounds(520, 10, 133, 80);
+		lblNewLabel2.setText("Green      -> 0 events\n"
+				+ "Blue         -> 1 events\n"
+				+ "Dark Red -> 2 events\n"
+				+ "Magenta -> 3 events\n"
+				+ "Cyan        -> 4 events");
+		/*		
+		//TODO: For que recorra los componentes de un grupo y LLamada al servicio cuando este		
 
-		Combo c1 = new Combo(group0, SWT.DEFAULT);
-		gridData = new GridData(GridData.FILL_HORIZONTAL);
-		gridData.widthHint = 20;
-		gridData.verticalAlignment = SWT.TOP;
-		c1.setLayoutData(gridData);
-		
-
-//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-		
-		List<Grupo> gruposList = musicoGrupoService.getGrupos();
-		for (Grupo grupo : gruposList) {
-			c1.add(grupo.getNombreOrquesta());
-		}
-		// for (int i = 0; i<gruposList.size() ; i++) {
-		// c1.setItem(i, gruposList.get(i).getNombreOrquesta());
-		// }
-		// c1.setItem(0,"Combo Dominicano");
-
-//		String items[] = { "Combo Dominicano", "Prueba" };
-//		c1.setItems(items);
-		
-		c1.addSelectionListener(new SelectionAdapter() {
-			
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				Combo c = (Combo) arg0.widget;
-				tree3.removeAll();
-				TreeItem treeItem = new TreeItem(tree3, SWT.NONE);
-				
-				//TODO: For que recorra los componentes de un grupo y LLamada al servicio cuando este
-					
-				
-				treeItem.setText(c.getItem(c.getSelectionIndex()));
-			}
-		});
-		
 		tree3 = new Tree(group0, SWT.BORDER);
 		gridData = new GridData(GridData.FILL_HORIZONTAL);
 		gridData.widthHint = 20;
@@ -337,43 +296,8 @@ public class VentanaPrincipalV2 implements MouseListener {
 		for (Musico musico : musicos) {
 			c2.add(musico.getNombreMusico());
 		}
-		
-		
-		gridData = new GridData(GridData.FILL_HORIZONTAL);
-		Button botonAnadirGrupoEvento = new Button(group0,0);
-		botonAnadirGrupoEvento.setText("AnadirGrupoEvento");
-		gridData.verticalAlignment = SWT.TOP;
-		FillLayout fillLayout = new FillLayout();
-		botonAnadirGrupoEvento.setLayoutData(gridData);
-		
-		botonAnadirGrupoEvento.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent e) {
-				//TODO: Recuperar las 3 cosas que faltan
-				//eventoService.asignarGrupoEvento(grupo, evento, fecha);
-			}
-		});
-		
-	
-//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX		
-		
-		
-		
-		
-//		String[] grupos = new String[100];
-//		List<Grupo> grupos = musicoGrupoService.getGrupos();
-//		String[] gruposStr = new String[grupos.size()];
-
-//		List<Grupo> gruposList = musicoGrupoService.getGrupos();
-		// for (int i = 0; i<gruposList.size() ; i++) {
-		// c1.setItem(i, gruposList.get(i).getNombreOrquesta());
-		// }
-		// c1.setItem(0,"Combo Dominicano");
-
-		String items[] = { "Combo Dominicano" };
-		c1.setItems(items);
-
-		//TODO: Leyenda con los colores y hacer que dependiendo del eventos.size un color u otro
 		*/
+
 		shell.open();
 		//shell.layout();
 		//shell.pack();
@@ -406,9 +330,6 @@ public class VentanaPrincipalV2 implements MouseListener {
 	}
 
 	private void setEvents(List<Evento> events) {
-		// tree.removeAll();
-//		 tree2.removeAll();
-
 		TreeItem treeItem;
 		for (int i = 0; i < events.size(); i++) {
 			treeItem = new TreeItem(tree_1, SWT.NONE);
@@ -417,27 +338,8 @@ public class VentanaPrincipalV2 implements MouseListener {
 			localidadItem.setText("Localidad: " + events.get(i).getLocalidad());
 			TreeItem fechaItem = new TreeItem(treeItem, 0);
 			fechaItem.setText("Fecha: " + ConvertidorFechas.convertirCalendarString(events.get(i).getFechaInicioEvento()));
-		}
-	}
-
-	private void setEvent(String eventName) {
-		try {
-			Evento event = eventoService.obtenerEventoPorNombre(eventName);
-			tree2.removeAll();
-			TreeItem treeItem, treeItem2, treeItem3, treeItem4;
-			// Todos los metodos get implementados
-			// MAnana corregire las variables globales al principio y demas
-			treeItem = new TreeItem(tree2, SWT.NONE);
-			treeItem2 = new TreeItem(tree2, SWT.NONE);
-			treeItem3 = new TreeItem(tree2, SWT.NONE);
-			treeItem.setText("Nombre del evento: " + event.getNombreEvento());
-			treeItem2.setText("Fecha de inicio: "
-					+ ConvertidorFechas.convertirCalendarString(event
-							.getFechaInicioEvento()));
-			treeItem3.setText("Localidad: " + event.getLocalidad());
-		} catch (InstanceNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			TreeItem gruposItem = new TreeItem(treeItem, 0);
+			gruposItem.setText("Grupos: " + "(falta por implementar llamada que obtenga grupos partiendo de un evento)");
 		}
 	}
 
@@ -490,25 +392,9 @@ public class VentanaPrincipalV2 implements MouseListener {
 				days[i].setBackground(display.getSystemColor(SWT.COLOR_WHITE));
 			}
 		}
-		for (int i = 0; i < 42; i++) {
-			if (i >= startIndex && i <= endIndex) {
-				
-				days[i].setText("" + startday);
-				System.out.println(days[i]);
-				if (startday == currentDay) {
-					days[i].setBackground(display
-							.getSystemColor(SWT.COLOR_BLUE)); //
-				}
-				startday++;
-			} else {
-				days[i].setText("");
-			}
-		}
-		
 	}
 
 	public void pinta (Calendar now, Display display) {
-		int currentDay = now.get(Calendar.DATE);
 		now.add(Calendar.DAY_OF_MONTH, -(now.get(Calendar.DATE) - 1)); //
 		int startIndex = now.get(Calendar.DAY_OF_WEEK) - 1; //
 		int year = now.get(Calendar.YEAR); //
@@ -532,6 +418,18 @@ public class VentanaPrincipalV2 implements MouseListener {
 					List<Evento> eventos = eventoService.obtenerEventosFecha(fecha);
 					if (eventos.size()==0) {
 						days[i].setBackground(display.getSystemColor(SWT.COLOR_GREEN));
+					}
+					if (eventos.size()==1) {
+						days[i].setBackground(display.getSystemColor(SWT.COLOR_BLUE));
+					}
+					if (eventos.size()==2) {
+						days[i].setBackground(display.getSystemColor(SWT.COLOR_DARK_RED));
+					}
+					if (eventos.size()==3) {
+						days[i].setBackground(display.getSystemColor(SWT.COLOR_MAGENTA));
+					}
+					if (eventos.size()==4) {
+						days[i].setBackground(display.getSystemColor(SWT.COLOR_CYAN));
 					}
 				startday++;
 			} else {
@@ -564,7 +462,6 @@ public class VentanaPrincipalV2 implements MouseListener {
 				tree_1.removeAll();
 			}
 			this.selectedDate = nowLabel.getText() + "/" + day.getText();
-			System.out.println(this.selectedDate);
 			getDate();
 		}
 	}
