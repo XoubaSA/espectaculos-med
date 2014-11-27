@@ -1,6 +1,7 @@
 package es.udc.med.espectaculos.vista;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -340,6 +341,12 @@ public class VentanaPrincipalV2 implements MouseListener {
 			fechaItem.setText("Fecha: " + ConvertidorFechas.convertirCalendarString(events.get(i).getFechaInicioEvento()));
 			TreeItem gruposItem = new TreeItem(treeItem, 0);
 			gruposItem.setText("Grupos: " + "(falta por implementar llamada que obtenga grupos partiendo de un evento)");
+			List<Grupo> grupos= new ArrayList<>();//TODO: llamada al servicio, recuperar grupos del evento
+			for (Grupo grupo : grupos) {
+				TreeItem grupoItem = new TreeItem(gruposItem, 0);
+				grupoItem.setText(grupo.getNombreOrquesta());
+			}
+			
 		}
 	}
 
