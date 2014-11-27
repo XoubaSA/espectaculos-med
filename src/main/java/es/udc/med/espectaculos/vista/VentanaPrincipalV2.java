@@ -90,11 +90,12 @@ public class VentanaPrincipalV2 implements MouseListener {
 
 	public VentanaPrincipalV2() {
 		this.eventoService = new EventoServiceImpl();
-		this.musicoGrupoService= new MusicoGrupoServiceImpl();
+		this.musicoGrupoService = new MusicoGrupoServiceImpl();
 	}
 
 	/**
 	 * Open the window.
+	 * 
 	 * @wbp.parser.entryPoint
 	 */
 	public void open() {
@@ -227,83 +228,77 @@ public class VentanaPrincipalV2 implements MouseListener {
 		Calendar now = Calendar.getInstance(); //
 		nowDate = new Date(now.getTimeInMillis());
 		setDayForDisplay(now, display);
-		pinta(now,display);
-		
+		pinta(now, display);
+
 		getDate();
-		
+
 		Group group0 = new Group(sashForm, SWT.NULL);
 		group0.setLayout(null);
-		
+
 		Label lblNewLabel = new Label(group0, SWT.NONE);
 		lblNewLabel.setBounds(10, 10, 133, 33);
 		lblNewLabel.setText("Filtre los eventos por\n\tgrupo:");
-		
+
 		final Combo combo = new Combo(group0, SWT.NONE);
 		combo.setBounds(10, 49, 133, 41);
-		
-		Button botonAnadirGrupoEvento = new Button(group0,SWT.NONE);
+
+		Button botonAnadirGrupoEvento = new Button(group0, SWT.NONE);
 		botonAnadirGrupoEvento.setBounds(10, 80, 133, 41);
 		botonAnadirGrupoEvento.setText("AnadirGrupoEvento");
-		
+
 		botonAnadirGrupoEvento.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				//TODO: Recuperar las 3 cosas que faltan
-				//eventoService.asignarGrupoEvento(grupo, evento, fecha);
+				// TODO: Recuperar las 3 cosas que faltan
+				// eventoService.asignarGrupoEvento(grupo, evento, fecha);
 			}
 		});
-		
+
 		tree_1 = new Tree(group0, SWT.BORDER);
 		tree_1.setBounds(149, 10, 361, 145);
-		
+
 		combo.setText("Todos los grupos");
 		combo.select(0);
-		
+
 		List<Grupo> grupos = musicoGrupoService.getGrupos();
 		for (Grupo grupo : grupos) {
 			combo.add(grupo.getNombreOrquesta());
 		}
-		
+
 		combo.addSelectionListener(new SelectionAdapter() {
-		      public void widgetSelected(SelectionEvent e) {
-		          System.out.println(combo.getText());
-		          //combo.getText() devuelve el nombre del grupo
-		          //TODO: Debemos pasar el grupo, de forma que la lista devuelta de eventos sea solo en la que dicho grupo actua
-		        }
-		      });
-		
+			public void widgetSelected(SelectionEvent e) {
+				System.out.println(combo.getText());
+				// combo.getText() devuelve el nombre del grupo
+				// TODO: Debemos pasar el grupo, de forma que la lista devuelta
+				// de eventos sea solo en la que dicho grupo actua
+			}
+		});
+
 		Label lblNewLabel2 = new Label(group0, SWT.NONE);
 		lblNewLabel2.setBounds(520, 10, 133, 80);
 		lblNewLabel2.setText("Green      -> 0 events\n"
-				+ "Blue         -> 1 events\n"
-				+ "Dark Red -> 2 events\n"
-				+ "Magenta -> 3 events\n"
-				+ "Cyan        -> 4 events");
-		/*		
-		//TODO: For que recorra los componentes de un grupo y LLamada al servicio cuando este		
-
-		tree3 = new Tree(group0, SWT.BORDER);
-		gridData = new GridData(GridData.FILL_HORIZONTAL);
-		gridData.widthHint = 20;
-		gridData.heightHint = 200;
-		tree3.setLayoutData(gridData);
-		
-		Combo c2 = new Combo(group0, SWT.DEFAULT);
-		gridData = new GridData(GridData.FILL_HORIZONTAL);
-		gridData.widthHint = 20;
-		gridData.verticalAlignment = SWT.TOP;
-		c2.setLayoutData(gridData);
-		
-		List<Musico> musicos = musicoGrupoService.getMusicos();
-		for (Musico musico : musicos) {
-			c2.add(musico.getNombreMusico());
-		}
-		*/
+				+ "Blue         -> 1 events\n" + "Dark Red -> 2 events\n"
+				+ "Magenta -> 3 events\n" + "Cyan        -> 4 events");
+		/*
+		 * //TODO: For que recorra los componentes de un grupo y LLamada al
+		 * servicio cuando este
+		 * 
+		 * tree3 = new Tree(group0, SWT.BORDER); gridData = new
+		 * GridData(GridData.FILL_HORIZONTAL); gridData.widthHint = 20;
+		 * gridData.heightHint = 200; tree3.setLayoutData(gridData);
+		 * 
+		 * Combo c2 = new Combo(group0, SWT.DEFAULT); gridData = new
+		 * GridData(GridData.FILL_HORIZONTAL); gridData.widthHint = 20;
+		 * gridData.verticalAlignment = SWT.TOP; c2.setLayoutData(gridData);
+		 * 
+		 * List<Musico> musicos = musicoGrupoService.getMusicos(); for (Musico
+		 * musico : musicos) { c2.add(musico.getNombreMusico()); }
+		 */
 
 		shell.open();
-		//shell.layout();
-		//shell.pack();
-		//composite.pack();
-		//group0.pack();
+		// shell.layout();
+		// shell.pack();
+		// composite.pack();
+		// group0.pack();
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch()) {
 				display.sleep();
@@ -314,7 +309,7 @@ public class VentanaPrincipalV2 implements MouseListener {
 	private void getDate() {
 		try {
 			day = Integer.valueOf(this.selectedDate.substring(8, 10));
-		} catch(Exception e) {
+		} catch (Exception e) {
 			day = Integer.valueOf(this.selectedDate.substring(8, 9));
 		}
 		month = Integer.valueOf(this.selectedDate.substring(5, 7));
@@ -338,15 +333,21 @@ public class VentanaPrincipalV2 implements MouseListener {
 			TreeItem localidadItem = new TreeItem(treeItem, 0);
 			localidadItem.setText("Localidad: " + events.get(i).getLocalidad());
 			TreeItem fechaItem = new TreeItem(treeItem, 0);
-			fechaItem.setText("Fecha: " + ConvertidorFechas.convertirCalendarString(events.get(i).getFechaInicioEvento()));
+			fechaItem.setText("Fecha: "
+					+ ConvertidorFechas.convertirCalendarString(events.get(i)
+							.getFechaInicioEvento()));
 			TreeItem gruposItem = new TreeItem(treeItem, 0);
-			gruposItem.setText("Grupos: " + "(falta por implementar llamada que obtenga grupos partiendo de un evento)");
-			List<Grupo> grupos= new ArrayList<>();//TODO: llamada al servicio, recuperar grupos del evento
+			gruposItem
+					.setText("Grupos: "
+							+ "(falta por implementar llamada que obtenga grupos partiendo de un evento)");
+			List<Grupo> grupos = new ArrayList<>();// TODO: llamada al servicio,
+													// recuperar grupos del
+													// evento
 			for (Grupo grupo : grupos) {
 				TreeItem grupoItem = new TreeItem(gruposItem, 0);
 				grupoItem.setText(grupo.getNombreOrquesta());
 			}
-			
+
 		}
 	}
 
@@ -381,7 +382,7 @@ public class VentanaPrincipalV2 implements MouseListener {
 																		// date
 		nowLabel.setText(formatter.format(nowDate)); // set to label
 		setDayForDisplay(now, display);
-		pinta(now,display);
+		pinta(now, display);
 	}
 
 	private void setDayForDisplay(Calendar now, Display display) {
@@ -401,7 +402,7 @@ public class VentanaPrincipalV2 implements MouseListener {
 		}
 	}
 
-	public void pinta (Calendar now, Display display) {
+	public void pinta(Calendar now, Display display) {
 		now.add(Calendar.DAY_OF_MONTH, -(now.get(Calendar.DATE) - 1)); //
 		int startIndex = now.get(Calendar.DAY_OF_WEEK) - 1; //
 		int year = now.get(Calendar.YEAR); //
@@ -413,38 +414,42 @@ public class VentanaPrincipalV2 implements MouseListener {
 			if (i >= startIndex && i <= endIndex) {
 				days[i].setText("" + startday);
 
-				//if (startday == currentDay) {
+				// if (startday == currentDay) {
+				days[i].setBackground(display.getSystemColor(SWT.COLOR_BLUE)); //
+				// }
+
+				Calendar fecha = Calendar.getInstance();
+				fecha.set(Calendar.YEAR, year);
+				fecha.set(Calendar.MONTH, month - 1);
+				fecha.set(Calendar.DATE, startday);
+				List<Evento> eventos = eventoService.obtenerEventosFecha(fecha);
+				if (eventos.size() == 0) {
 					days[i].setBackground(display
-							.getSystemColor(SWT.COLOR_BLUE)); //
-				//}
-					
-					Calendar fecha = Calendar.getInstance();
-					fecha.set(Calendar.YEAR, year);
-					fecha.set(Calendar.MONTH, month - 1);
-					fecha.set(Calendar.DATE, startday);
-					List<Evento> eventos = eventoService.obtenerEventosFecha(fecha);
-					if (eventos.size()==0) {
-						days[i].setBackground(display.getSystemColor(SWT.COLOR_GREEN));
-					}
-					if (eventos.size()==1) {
-						days[i].setBackground(display.getSystemColor(SWT.COLOR_BLUE));
-					}
-					if (eventos.size()==2) {
-						days[i].setBackground(display.getSystemColor(SWT.COLOR_DARK_RED));
-					}
-					if (eventos.size()==3) {
-						days[i].setBackground(display.getSystemColor(SWT.COLOR_MAGENTA));
-					}
-					if (eventos.size()==4) {
-						days[i].setBackground(display.getSystemColor(SWT.COLOR_CYAN));
-					}
+							.getSystemColor(SWT.COLOR_GREEN));
+				}
+				if (eventos.size() == 1) {
+					days[i].setBackground(display
+							.getSystemColor(SWT.COLOR_BLUE));
+				}
+				if (eventos.size() == 2) {
+					days[i].setBackground(display
+							.getSystemColor(SWT.COLOR_DARK_RED));
+				}
+				if (eventos.size() == 3) {
+					days[i].setBackground(display
+							.getSystemColor(SWT.COLOR_MAGENTA));
+				}
+				if (eventos.size() == 4) {
+					days[i].setBackground(display
+							.getSystemColor(SWT.COLOR_CYAN));
+				}
 				startday++;
 			} else {
 				days[i].setText("");
 			}
 		}
 	}
-	
+
 	public void previousYear(Display display) {
 		moveTo(Calendar.YEAR, -1, display);
 	}
