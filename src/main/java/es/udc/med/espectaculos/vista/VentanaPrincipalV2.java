@@ -38,8 +38,12 @@ import es.udc.med.espectaculos.model.musicogruposervice.MusicoGrupoService;
 import es.udc.med.espectaculos.model.musicogruposervice.MusicoGrupoServiceImpl;
 import es.udc.med.espectaculos.utils.ConvertidorFechas;
 import es.udc.med.espectaculos.utils.InstanceNotFoundException;
+import org.eclipse.swt.widgets.TabFolder;
+import org.eclipse.swt.widgets.TabItem;
 
 public class VentanaPrincipalV2 implements MouseListener {
+
+	SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM");
 
 	private Shell shell;
 	private int day, month, year;
@@ -101,16 +105,29 @@ public class VentanaPrincipalV2 implements MouseListener {
 	public void open() {
 		final Display display = Display.getDefault();
 
-		shell = new Shell(display);
+		shell = new Shell(display, SWT.SHELL_TRIM & (~SWT.RESIZE) & (~SWT.MAX));
 		shell.setMinimumSize(new Point(80, 28));
-		shell.setSize(697, 363);
+		shell.setSize(690, 372);
 
 		this.selectedDate = "2014/11/01";
+		shell.setLayout(new FillLayout());
+
+		TabFolder tabFolder = new TabFolder(shell, SWT.NONE);
+
+		TabItem tbtmCalendario = new TabItem(tabFolder, SWT.NONE);
+		tbtmCalendario.setText("Calendario");
+
+		Composite composite_1 = new Composite(tabFolder, SWT.NONE);
+		tbtmCalendario.setControl(composite_1);
+		composite_1.setLayout(new GridLayout(1, false));
 
 		gridLayout = new GridLayout(7, true);
-		shell.setLayout(new FillLayout());
-		SashForm sashForm = new SashForm(shell, SWT.VERTICAL);
-		Composite composite = new Composite(sashForm, SWT.NONE);
+		Composite composite = new Composite(composite_1, SWT.NONE);
+		GridData gd_composite = new GridData(SWT.LEFT, SWT.CENTER, false,
+				false, 1, 1);
+		gd_composite.widthHint = 656;
+		gd_composite.heightHint = 151;
+		composite.setLayoutData(gd_composite);
 		composite.setLayout(gridLayout);
 		gridData = new GridData(GridData.FILL_HORIZONTAL);
 		yearUp = new Button(composite, SWT.PUSH | SWT.FLAT);
@@ -136,7 +153,6 @@ public class VentanaPrincipalV2 implements MouseListener {
 		gridData = new GridData(GridData.FILL_HORIZONTAL);
 		gridData.horizontalSpan = 3;
 		nowLabel.setLayoutData(gridData);
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM");
 		nowLabel.setText(formatter.format(new Date()));
 
 		gridData = new GridData(GridData.FILL_HORIZONTAL);
@@ -215,6 +231,40 @@ public class VentanaPrincipalV2 implements MouseListener {
 		saturday.setLayoutData(gridData);
 		saturday.setText("Sat");
 
+		Group group0 = new Group(composite_1, SWT.NULL);
+		group0.setLayout(null);
+
+		Label lblNewLabel = new Label(group0, SWT.NONE);
+		lblNewLabel.setBounds(10, 10, 133, 33);
+		lblNewLabel.setText("Filtre los eventos por\n\tgrupo:");
+
+		final Combo combo = new Combo(group0, SWT.NONE);
+		combo.setBounds(10, 49, 133, 41);
+
+		tree_1 = new Tree(group0, SWT.BORDER);
+		tree_1.setBounds(149, 10, 361, 127);
+
+		combo.setText("Todos los grupos");
+		combo.select(0);
+
+		combo.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				System.out.println(combo.getText());
+				// combo.getText() devuelve el nombre del grupo
+				// TODO: Debemos pasar el grupo, de forma que la lista devuelta
+				// de eventos sea solo en la que dicho grupo actua
+			}
+		});
+
+		Label lblNewLabel2 = new Label(group0, SWT.NONE);
+		lblNewLabel2.setBounds(520, 10, 133, 80);
+		lblNewLabel2.setText("Green      -> 0 events\n"
+				+ "Blue         -> 1 events\n" + "Dark Red -> 2 events\n"
+				+ "Magenta -> 3 events\n" + "Cyan        -> 4 events");
+		
+		TabItem tbtmNewItem = new TabItem(tabFolder, SWT.NONE);
+		tbtmNewItem.setText("Asignaciones");
+
 		for (int i = 0; i < 42; i++) {
 			days[i] = new CLabel(composite, SWT.FLAT | SWT.CENTER);
 			gridData = new GridData(GridData.FILL_HORIZONTAL
@@ -232,52 +282,10 @@ public class VentanaPrincipalV2 implements MouseListener {
 
 		getDate();
 
-		Group group0 = new Group(sashForm, SWT.NULL);
-		group0.setLayout(null);
-
-		Label lblNewLabel = new Label(group0, SWT.NONE);
-		lblNewLabel.setBounds(10, 10, 133, 33);
-		lblNewLabel.setText("Filtre los eventos por\n\tgrupo:");
-
-		final Combo combo = new Combo(group0, SWT.NONE);
-		combo.setBounds(10, 49, 133, 41);
-
-		Button botonAnadirGrupoEvento = new Button(group0, SWT.NONE);
-		botonAnadirGrupoEvento.setBounds(10, 80, 133, 41);
-		botonAnadirGrupoEvento.setText("AnadirGrupoEvento");
-
-		botonAnadirGrupoEvento.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent e) {
-				// TODO: Recuperar las 3 cosas que faltan
-				// eventoService.asignarGrupoEvento(grupo, evento, fecha);
-			}
-		});
-
-		tree_1 = new Tree(group0, SWT.BORDER);
-		tree_1.setBounds(149, 10, 361, 145);
-
-		combo.setText("Todos los grupos");
-		combo.select(0);
-
 		List<Grupo> grupos = musicoGrupoService.getGrupos();
 		for (Grupo grupo : grupos) {
 			combo.add(grupo.getNombreOrquesta());
 		}
-
-		combo.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent e) {
-				System.out.println(combo.getText());
-				// combo.getText() devuelve el nombre del grupo
-				// TODO: Debemos pasar el grupo, de forma que la lista devuelta
-				// de eventos sea solo en la que dicho grupo actua
-			}
-		});
-
-		Label lblNewLabel2 = new Label(group0, SWT.NONE);
-		lblNewLabel2.setBounds(520, 10, 133, 80);
-		lblNewLabel2.setText("Green      -> 0 events\n"
-				+ "Blue         -> 1 events\n" + "Dark Red -> 2 events\n"
-				+ "Magenta -> 3 events\n" + "Cyan        -> 4 events");
 		/*
 		 * //TODO: For que recorra los componentes de un grupo y LLamada al
 		 * servicio cuando este
@@ -338,7 +346,8 @@ public class VentanaPrincipalV2 implements MouseListener {
 							.getFechaInicioEvento()));
 			TreeItem gruposItem = new TreeItem(treeItem, 0);
 			gruposItem.setText("Grupos: ");
-			List<Grupo> grupos = eventoService.obtenerGruposEvento(events.get(i));
+			List<Grupo> grupos = eventoService.obtenerGruposEvento(events
+					.get(i));
 			for (Grupo grupo : grupos) {
 				TreeItem grupoItem = new TreeItem(gruposItem, 0);
 				grupoItem.setText(grupo.getNombreOrquesta());
