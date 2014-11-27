@@ -337,12 +337,8 @@ public class VentanaPrincipalV2 implements MouseListener {
 					+ ConvertidorFechas.convertirCalendarString(events.get(i)
 							.getFechaInicioEvento()));
 			TreeItem gruposItem = new TreeItem(treeItem, 0);
-			gruposItem
-					.setText("Grupos: "
-							+ "(falta por implementar llamada que obtenga grupos partiendo de un evento)");
-			List<Grupo> grupos = new ArrayList<>();// TODO: llamada al servicio,
-													// recuperar grupos del
-													// evento
+			gruposItem.setText("Grupos: ");
+			List<Grupo> grupos = eventoService.obtenerGruposEvento(events.get(i));
 			for (Grupo grupo : grupos) {
 				TreeItem grupoItem = new TreeItem(gruposItem, 0);
 				grupoItem.setText(grupo.getNombreOrquesta());

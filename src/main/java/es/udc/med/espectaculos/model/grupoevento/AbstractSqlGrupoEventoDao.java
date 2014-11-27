@@ -121,6 +121,35 @@ public abstract class AbstractSqlGrupoEventoDao implements GrupoEventoDao {
 		return eventos;
 	}
 
+	public List<Grupo> obtenerGruposEvento(Connection conexion, Evento evento) {
+		
+		String queryString = "SELECT g.ID_GRUPO, g.NOMBRE_ORQUESTA, g.SALARIO_ACTUACION "
+							+ "FROM GRUPO_EVENTO ge INNER JOIN GRUPO g ON ge.ID_GRUPO = g.ID_GRUPO "
+							+ "WHERE ge.ID_EVENTO = ?";
+		
+		List <Grupo> grupos = new ArrayList<Grupo>();
+		
+		try (PreparedStatement preparedStatement = conexion.prepareStatement(queryString)) {
+			int i = 1;
+			preparedStatement.setInt(i++, evento.getIdEvento());
+			
+			ResultSet rs = preparedStatement.executeQuery();
+			int results = 0;
+			while (rs.next()) {
+				i = 1;
+				int id = rs.getInt(i++);
+				String nombre = rs.getString(i++);
+				float salario = rs.getFloat(i++); 
+				Grupo grupo = new Grupo(id, nombre, salario);
+				grupos.add(grupo);
+			}
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+		
+		return grupos;
+	}
+	
 	public boolean grupoAsignadoFecha(Connection conexion, Grupo grupo,
 			String fecha) {
 
@@ -152,3 +181,4 @@ public abstract class AbstractSqlGrupoEventoDao implements GrupoEventoDao {
 		}
 	}
 }
+

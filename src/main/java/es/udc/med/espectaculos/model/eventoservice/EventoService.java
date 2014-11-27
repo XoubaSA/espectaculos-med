@@ -22,6 +22,8 @@ public interface EventoService {
 
 	public GrupoEvento asignarGrupoEvento(Grupo grupo, Evento evento, String fecha) throws InputValidationException, AsignarGrupoEventoException;
 
+	public List<Grupo> obtenerGruposEvento(Evento evento);
+	
 	public List<Evento> obtenerEventosFecha(Calendar fecha);
 
 	public List<Calendar> getDates(String mes, Integer grupo_id);
@@ -35,3 +37,4 @@ public interface EventoService {
 	public void borrarGrupoEvento(Integer idGrupoEvento) throws InstanceNotFoundException;
 
 }
+
