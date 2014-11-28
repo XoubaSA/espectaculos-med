@@ -40,6 +40,8 @@ import es.udc.med.espectaculos.utils.ConvertidorFechas;
 import es.udc.med.espectaculos.utils.InstanceNotFoundException;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
+import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.DateTime;
 
 public class VentanaPrincipalV2 implements MouseListener {
 
@@ -75,6 +77,16 @@ public class VentanaPrincipalV2 implements MouseListener {
 	private CLabel nowLabel = null;
 
 	private CLabel[] days = new CLabel[42];
+	private Text text;
+	private Text text_1;
+	private Text text_2;
+	private Text text_3;
+	private Text text_4;
+	private Text text_5;
+	private Text text_6;
+	private Text text_7;
+	private Text text_8;
+	private Text text_9;
 
 	public String getStrDate() {
 		return strDate;
@@ -263,7 +275,252 @@ public class VentanaPrincipalV2 implements MouseListener {
 				+ "Magenta -> 3 events\n" + "Cyan        -> 4 events");
 		
 		TabItem tbtmNewItem = new TabItem(tabFolder, SWT.NONE);
-		tbtmNewItem.setText("Asignaciones");
+		tbtmNewItem.setText("Evento");
+		
+		Composite composite_2 = new Composite(tabFolder, SWT.NONE);
+		tbtmNewItem.setControl(composite_2);
+		
+		Group grpCrearEvento = new Group(composite_2, SWT.NONE);
+		grpCrearEvento.setText("Crear evento");
+		grpCrearEvento.setBounds(0, 0, 222, 315);
+		
+		Label lblIntroduceNombre = new Label(grpCrearEvento, SWT.NONE);
+		lblIntroduceNombre.setBounds(10, 20, 99, 15);
+		lblIntroduceNombre.setText("Introduce nombre:");
+		
+		text = new Text(grpCrearEvento, SWT.BORDER);
+		text.setBounds(10, 41, 202, 21);
+		
+		Label lblIntroduceFechaInicio = new Label(grpCrearEvento, SWT.NONE);
+		lblIntroduceFechaInicio.setBounds(10, 68, 118, 15);
+		lblIntroduceFechaInicio.setText("Introduce fecha inicio:");
+		
+		DateTime dateTime = new DateTime(grpCrearEvento, SWT.BORDER);
+		dateTime.setBounds(10, 89, 80, 24);
+		
+		Label lblIntroduceLocalidad = new Label(grpCrearEvento, SWT.NONE);
+		lblIntroduceLocalidad.setBounds(10, 119, 105, 15);
+		lblIntroduceLocalidad.setText("Introduce localidad:");
+		
+		text_1 = new Text(grpCrearEvento, SWT.BORDER);
+		text_1.setBounds(10, 140, 202, 21);
+		
+		Button btnAnadirEvento = new Button(grpCrearEvento, SWT.NONE);
+		btnAnadirEvento.setBounds(10, 280, 202, 25);
+		btnAnadirEvento.setText("Crear evento");
+		
+		Group grpAsignarEventoA = new Group(composite_2, SWT.NONE);
+		grpAsignarEventoA.setText("Asignar evento a grupo");
+		grpAsignarEventoA.setBounds(228, 0, 212, 315);
+		
+		Label lblSeleccionaElGrupo = new Label(grpAsignarEventoA, SWT.NONE);
+		lblSeleccionaElGrupo.setText("Selecciona el grupo:");
+		lblSeleccionaElGrupo.setBounds(10, 20, 116, 15);
+		
+		Combo combo_1 = new Combo(grpAsignarEventoA, SWT.NONE);
+		combo_1.setBounds(10, 41, 192, 23);
+		
+		Label lblSeleccionaElEvento = new Label(grpAsignarEventoA, SWT.NONE);
+		lblSeleccionaElEvento.setText("Selecciona el evento:");
+		lblSeleccionaElEvento.setBounds(10, 68, 116, 15);
+		
+		Combo combo_2 = new Combo(grpAsignarEventoA, SWT.NONE);
+		combo_2.setBounds(10, 89, 192, 23);
+		
+		Label label_1 = new Label(grpAsignarEventoA, SWT.NONE);
+		label_1.setText("Introduce fecha inicio:");
+		label_1.setBounds(10, 119, 118, 15);
+		
+		DateTime dateTime_1 = new DateTime(grpAsignarEventoA, SWT.BORDER);
+		dateTime_1.setBounds(10, 140, 80, 24);
+		
+		Button btnAsignarEventoA = new Button(grpAsignarEventoA, SWT.NONE);
+		btnAsignarEventoA.setText("Asignar evento a grupo");
+		btnAsignarEventoA.setBounds(10, 280, 192, 25);
+		
+		Group grpBorrarEvento = new Group(composite_2, SWT.NONE);
+		grpBorrarEvento.setText("Borrar evento");
+		grpBorrarEvento.setBounds(446, 0, 219, 146);
+		
+		Group grpDesasignarGrupoA = new Group(composite_2, SWT.NONE);
+		grpDesasignarGrupoA.setText("Desasignar grupo a evento");
+		grpDesasignarGrupoA.setBounds(446, 152, 219, 163);
+		
+		TabItem tbtmMusico = new TabItem(tabFolder, 0);
+		tbtmMusico.setText("Grupo");
+		
+		Composite composite_3 = new Composite(tabFolder, SWT.NONE);
+		tbtmMusico.setControl(composite_3);
+		
+		Group group = new Group(composite_3, SWT.NONE);
+		group.setText("Crear grupo");
+		group.setBounds(0, 0, 318, 315);
+		
+		Label label = new Label(group, SWT.NONE);
+		label.setText("Introduce nombre:");
+		label.setBounds(10, 20, 99, 15);
+		
+		text_2 = new Text(group, SWT.BORDER);
+		text_2.setBounds(10, 41, 298, 21);
+		
+		Label label_2 = new Label(group, SWT.NONE);
+		label_2.setText("Introduce salario:");
+		label_2.setBounds(10, 68, 105, 15);
+		
+		text_3 = new Text(group, SWT.BORDER);
+		text_3.setBounds(10, 89, 298, 21);
+		
+		Button button = new Button(group, SWT.NONE);
+		button.setText("Crear grupo");
+		button.setBounds(10, 280, 298, 25);
+		
+		Group group_1 = new Group(composite_3, SWT.NONE);
+		group_1.setText("Borrar grupo");
+		group_1.setBounds(324, 0, 342, 315);
+		
+		TabItem tbtmMusico_1 = new TabItem(tabFolder, 0);
+		tbtmMusico_1.setText("Musico");
+		
+		Composite composite_4 = new Composite(tabFolder, SWT.NONE);
+		tbtmMusico_1.setControl(composite_4);
+		
+		Group grpCrearMusico = new Group(composite_4, SWT.NONE);
+		grpCrearMusico.setText("Crear musico");
+		grpCrearMusico.setBounds(0, 0, 222, 315);
+		
+		Label label_3 = new Label(grpCrearMusico, SWT.NONE);
+		label_3.setText("Introduce nombre:");
+		label_3.setBounds(10, 20, 99, 15);
+		
+		text_4 = new Text(grpCrearMusico, SWT.BORDER);
+		text_4.setBounds(10, 41, 202, 21);
+		
+		Label lblIntroduceDireccion = new Label(grpCrearMusico, SWT.NONE);
+		lblIntroduceDireccion.setText("Introduce direccion:");
+		lblIntroduceDireccion.setBounds(10, 68, 118, 15);
+		
+		Label lblIntroduceInstrumento = new Label(grpCrearMusico, SWT.NONE);
+		lblIntroduceInstrumento.setText("Introduce instrumento:");
+		lblIntroduceInstrumento.setBounds(10, 116, 140, 15);
+		
+		text_5 = new Text(grpCrearMusico, SWT.BORDER);
+		text_5.setBounds(10, 137, 202, 21);
+		
+		Button button_1 = new Button(grpCrearMusico, SWT.NONE);
+		button_1.setText("Crear evento");
+		button_1.setBounds(10, 280, 202, 25);
+		
+		text_6 = new Text(grpCrearMusico, SWT.BORDER);
+		text_6.setBounds(10, 89, 202, 21);
+		
+		Group grpAsignarMusicoA = new Group(composite_4, SWT.NONE);
+		grpAsignarMusicoA.setText("Asignar musico a grupo");
+		grpAsignarMusicoA.setBounds(228, 0, 212, 315);
+		
+		Label label_5 = new Label(grpAsignarMusicoA, SWT.NONE);
+		label_5.setText("Selecciona el grupo:");
+		label_5.setBounds(10, 20, 116, 15);
+		
+		Combo combo_3 = new Combo(grpAsignarMusicoA, SWT.NONE);
+		combo_3.setBounds(10, 41, 192, 23);
+		
+		Label lblSeleccionaElMusico = new Label(grpAsignarMusicoA, SWT.NONE);
+		lblSeleccionaElMusico.setText("Selecciona el musico:");
+		lblSeleccionaElMusico.setBounds(10, 68, 116, 15);
+		
+		Combo combo_4 = new Combo(grpAsignarMusicoA, SWT.NONE);
+		combo_4.setBounds(10, 89, 192, 23);
+		
+		Button button_3 = new Button(grpAsignarMusicoA, SWT.NONE);
+		button_3.setText("Asignar evento a grupo");
+		button_3.setBounds(10, 280, 192, 25);
+		
+		Group grpBorrarMusico = new Group(composite_4, SWT.NONE);
+		grpBorrarMusico.setText("Borrar musico");
+		grpBorrarMusico.setBounds(446, 0, 219, 146);
+		
+		Group grpDesasignarMusicoA = new Group(composite_4, SWT.NONE);
+		grpDesasignarMusicoA.setText("Desasignar musico a evento");
+		grpDesasignarMusicoA.setBounds(446, 152, 219, 163);
+		
+		TabItem tbtmTransporte = new TabItem(tabFolder, 0);
+		tbtmTransporte.setText("Transporte");
+		
+		Composite composite_5 = new Composite(tabFolder, SWT.NONE);
+		tbtmTransporte.setControl(composite_5);
+		
+		Group grpCrearTransporte = new Group(composite_5, SWT.NONE);
+		grpCrearTransporte.setText("Crear transporte");
+		grpCrearTransporte.setBounds(0, 0, 222, 315);
+		
+		Label label_4 = new Label(grpCrearTransporte, SWT.NONE);
+		label_4.setText("Introduce nombre:");
+		label_4.setBounds(10, 20, 99, 15);
+		
+		text_7 = new Text(grpCrearTransporte, SWT.BORDER);
+		text_7.setBounds(10, 41, 202, 21);
+		
+		Label lblIntroduceMatricula = new Label(grpCrearTransporte, SWT.NONE);
+		lblIntroduceMatricula.setText("Introduce matricula:");
+		lblIntroduceMatricula.setBounds(10, 68, 118, 15);
+		
+		Label lblIntroduceDescripcion = new Label(grpCrearTransporte, SWT.NONE);
+		lblIntroduceDescripcion.setText("Introduce descripcion:");
+		lblIntroduceDescripcion.setBounds(10, 116, 140, 15);
+		
+		text_8 = new Text(grpCrearTransporte, SWT.BORDER);
+		text_8.setBounds(10, 137, 202, 21);
+		
+		Button button_2 = new Button(grpCrearTransporte, SWT.NONE);
+		button_2.setText("Crear evento");
+		button_2.setBounds(10, 280, 202, 25);
+		
+		text_9 = new Text(grpCrearTransporte, SWT.BORDER);
+		text_9.setBounds(10, 89, 202, 21);
+		
+		Group grpAsignarTransporteA = new Group(composite_5, SWT.NONE);
+		grpAsignarTransporteA.setText("Asignar transporte a grupo");
+		grpAsignarTransporteA.setBounds(228, 0, 212, 315);
+		
+		Label label_6 = new Label(grpAsignarTransporteA, SWT.NONE);
+		label_6.setText("Selecciona el grupo:");
+		label_6.setBounds(10, 20, 116, 15);
+		
+		Combo combo_5 = new Combo(grpAsignarTransporteA, SWT.NONE);
+		combo_5.setBounds(10, 41, 192, 21);
+		
+		Label lblSeleccionaElTransporte = new Label(grpAsignarTransporteA, SWT.NONE);
+		lblSeleccionaElTransporte.setText("Selecciona el transporte:");
+		lblSeleccionaElTransporte.setBounds(10, 68, 142, 15);
+		
+		Combo combo_6 = new Combo(grpAsignarTransporteA, SWT.NONE);
+		combo_6.setBounds(10, 89, 192, 23);
+		
+		Label label_9 = new Label(grpAsignarTransporteA, SWT.NONE);
+		label_9.setText("Introduce fecha inicio:");
+		label_9.setBounds(10, 119, 118, 15);
+		
+		DateTime dateTime_3 = new DateTime(grpAsignarTransporteA, SWT.BORDER);
+		dateTime_3.setBounds(10, 140, 80, 24);
+		
+		Button button_4 = new Button(grpAsignarTransporteA, SWT.NONE);
+		button_4.setText("Asignar evento a grupo");
+		button_4.setBounds(10, 280, 192, 25);
+		
+		Label lblIntroduceFechaFin = new Label(grpAsignarTransporteA, SWT.NONE);
+		lblIntroduceFechaFin.setText("Introduce fecha fin:");
+		lblIntroduceFechaFin.setBounds(10, 170, 118, 15);
+		
+		DateTime dateTime_4 = new DateTime(grpAsignarTransporteA, SWT.BORDER);
+		dateTime_4.setBounds(10, 191, 80, 24);
+		
+		Group grpBorrarTransporte = new Group(composite_5, SWT.NONE);
+		grpBorrarTransporte.setText("Borrar transporte");
+		grpBorrarTransporte.setBounds(446, 0, 219, 146);
+		
+		Group grpDesasignarTransporteA = new Group(composite_5, SWT.NONE);
+		grpDesasignarTransporteA.setText("Desasignar transporte a evento");
+		grpDesasignarTransporteA.setBounds(446, 152, 219, 163);
 
 		for (int i = 0; i < 42; i++) {
 			days[i] = new CLabel(composite, SWT.FLAT | SWT.CENTER);
