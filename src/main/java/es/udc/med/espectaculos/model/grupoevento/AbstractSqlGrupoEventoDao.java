@@ -120,6 +120,42 @@ public abstract class AbstractSqlGrupoEventoDao implements GrupoEventoDao {
 
 		return eventos;
 	}
+	
+	@Override
+	public List<Evento> obtenerEventosGrupoDia(Connection conexion,
+			Grupo grupo, Calendar dia) {
+
+		List<Evento> eventos = new ArrayList<Evento>();
+		String strDateIni = ConvertidorFechas
+				.convertirCalendarString(dia);
+
+		String queryString = "SELECT e.ID_EVENTO, e.NOMBRE_EVENTO, e.FECHA_INICIO_EVENTO, e.LOCALIDAD "
+				+ "FROM EVENTO e JOIN GRUPO_EVENTO g ON g.ID_EVENTO = e.ID_EVENTO "
+				+ "WHERE g.ID_GRUPO = ? AND e.FECHA_INICIO_EVENTO = ?";
+
+		try (PreparedStatement preparedStatement = conexion
+				.prepareStatement(queryString)) {
+			int i = 1;
+			preparedStatement.setInt(i++, grupo.getIdGrupo());
+			preparedStatement.setString(i++, strDateIni);
+
+			ResultSet resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()) {
+				i = 1;
+				Integer id = resultSet.getInt(i++);
+				String nombre = resultSet.getString(i++);
+				String fecha = resultSet.getString(i++);
+				Calendar calendar = ConvertidorFechas.convertirStringCalendar(fecha);
+				String localidad = resultSet.getString(i++);
+				Evento evento = new Evento(id, nombre, calendar, localidad);
+				eventos.add(evento);
+			}
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+
+		return eventos;
+	}
 
 	public List<Grupo> obtenerGruposEvento(Connection conexion, Evento evento) {
 		

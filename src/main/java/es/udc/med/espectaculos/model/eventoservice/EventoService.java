@@ -30,6 +30,8 @@ public interface EventoService {
 
 	public List<Evento> filtrarEventosGrupo(Grupo grupo, Calendar fechaInicio, Calendar fechaFin) throws InputValidationException;
 	
+	public List<Evento> obtenerEventosDeGrupoDia(Grupo grupo, Calendar fecha) throws InputValidationException;
+	
 	public void borrarEvento(Integer idEvento) throws InstanceNotFoundException;
 	
 	public void borrarGrupo(Integer idGrupo) throws InstanceNotFoundException;

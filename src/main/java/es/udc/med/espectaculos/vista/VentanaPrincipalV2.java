@@ -37,6 +37,7 @@ import es.udc.med.espectaculos.model.grupo.Grupo;
 import es.udc.med.espectaculos.model.musicogruposervice.MusicoGrupoService;
 import es.udc.med.espectaculos.model.musicogruposervice.MusicoGrupoServiceImpl;
 import es.udc.med.espectaculos.utils.ConvertidorFechas;
+import es.udc.med.espectaculos.utils.InputValidationException;
 import es.udc.med.espectaculos.utils.InstanceNotFoundException;
 
 public class VentanaPrincipalV2 implements MouseListener {
@@ -47,6 +48,7 @@ public class VentanaPrincipalV2 implements MouseListener {
 	private Tree tree_1, tree2, tree3;
 	private TableTree tableTree;
 	private String eventName;
+	
 	private EventoService eventoService;
 	private MusicoGrupoService musicoGrupoService;
 
@@ -71,6 +73,8 @@ public class VentanaPrincipalV2 implements MouseListener {
 	private CLabel nowLabel = null;
 
 	private CLabel[] days = new CLabel[42];
+	
+	private Combo combo;
 
 	public String getStrDate() {
 		return strDate;
@@ -225,12 +229,7 @@ public class VentanaPrincipalV2 implements MouseListener {
 			days[i].setToolTipText("double click get current date.");
 		}
 
-		Calendar now = Calendar.getInstance(); //
-		nowDate = new Date(now.getTimeInMillis());
-		setDayForDisplay(now, display);
-		pinta(now, display);
-
-		getDate();
+		
 
 		Group group0 = new Group(sashForm, SWT.NULL);
 		group0.setLayout(null);
@@ -239,7 +238,7 @@ public class VentanaPrincipalV2 implements MouseListener {
 		lblNewLabel.setBounds(10, 10, 133, 33);
 		lblNewLabel.setText("Filtre los eventos por\n\tgrupo:");
 
-		final Combo combo = new Combo(group0, SWT.NONE);
+		combo = new Combo(group0, SWT.NONE);
 		combo.setBounds(10, 49, 133, 41);
 
 		Button botonAnadirGrupoEvento = new Button(group0, SWT.NONE);
@@ -257,6 +256,7 @@ public class VentanaPrincipalV2 implements MouseListener {
 		tree_1.setBounds(149, 10, 361, 145);
 
 		combo.setText("Todos los grupos");
+		combo.add("Todos los grupos");
 		combo.select(0);
 
 		List<Grupo> grupos = musicoGrupoService.getGrupos();
@@ -267,11 +267,21 @@ public class VentanaPrincipalV2 implements MouseListener {
 		combo.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				System.out.println(combo.getText());
-				// combo.getText() devuelve el nombre del grupo
+				Calendar now = Calendar.getInstance();
+				now.setTime(nowDate);
+				now.set(Calendar.DATE, day);
+				pinta(now, display);
 				// TODO: Debemos pasar el grupo, de forma que la lista devuelta
 				// de eventos sea solo en la que dicho grupo actua
 			}
 		});
+		
+		Calendar now = Calendar.getInstance(); //
+		nowDate = new Date(now.getTimeInMillis());
+		setDayForDisplay(now, display);
+		pinta(now, display);
+
+		getDate();
 
 		Label lblNewLabel2 = new Label(group0, SWT.NONE);
 		lblNewLabel2.setBounds(520, 10, 133, 80);
@@ -406,6 +416,7 @@ public class VentanaPrincipalV2 implements MouseListener {
 		int lastDay = this.getLastDayOfMonth(year, month); //
 		int endIndex = startIndex + lastDay - 1; //
 		int startday = 1;
+		List<Grupo> grupos = musicoGrupoService.getGrupos();
 		for (int i = 0; i < 42; i++) {
 			if (i >= startIndex && i <= endIndex) {
 				days[i].setText("" + startday);
@@ -418,7 +429,22 @@ public class VentanaPrincipalV2 implements MouseListener {
 				fecha.set(Calendar.YEAR, year);
 				fecha.set(Calendar.MONTH, month - 1);
 				fecha.set(Calendar.DATE, startday);
-				List<Evento> eventos = eventoService.obtenerEventosFecha(fecha);
+				List<Evento> eventos = new ArrayList<>();
+				if (combo.getSelectionIndex() == 0) eventos = eventoService.obtenerEventosFecha(fecha);
+				else {
+					Calendar fechaFin = (Calendar) fecha.clone();
+					fechaFin.add(Calendar.DATE, 1);
+					for (Grupo grupo : grupos) {
+						if (grupo.getNombreOrquesta().equals(combo.getText())) {
+							try {
+								eventos = eventoService.obtenerEventosDeGrupoDia(grupo, fecha);
+							} catch (InputValidationException e) {
+								eventos = eventoService.obtenerEventosFecha(fecha);
+							}
+						}
+					}
+//					eventos = eventoService.filtrarEventosGrupo(grupo, fechaInicio, fechaFin)
+				}
 				if (eventos.size() == 0) {
 					days[i].setBackground(display
 							.getSystemColor(SWT.COLOR_GREEN));
