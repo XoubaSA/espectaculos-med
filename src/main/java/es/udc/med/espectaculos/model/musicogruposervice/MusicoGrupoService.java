@@ -4,12 +4,15 @@ import java.util.List;
 
 import es.udc.med.espectaculos.model.grupo.Grupo;
 import es.udc.med.espectaculos.model.musico.Musico;
+import es.udc.med.espectaculos.model.musicogrupo.MusicoGrupo;
 import es.udc.med.espectaculos.utils.InputValidationException;
 import es.udc.med.espectaculos.utils.InstanceNotFoundException;
+import es.udc.med.espectaculos.utils.MusicoAsignadoException;
 
 public interface MusicoGrupoService {
 	
-	public void asociarMusicoGrupo(List<Musico> musicos, Grupo grupo) throws InputValidationException;
+	public MusicoGrupo asignarMusicoGrupo(Musico musico, Grupo grupo) 
+			throws InputValidationException, MusicoAsignadoException;
 	
 	public Musico crearMusico(String nombreMusico, String direccion, String instrumento);
 
@@ -19,6 +22,8 @@ public interface MusicoGrupoService {
 	
 	public List<Grupo> getGrupos();
 	
-	public List<Musico> getFormacion(Grupo grupo) throws InputValidationException, InstanceNotFoundException;
+	//TODO Falta implementar un metodo que obtenga los musicos de un grupo GetFormacion() que devuelva List<Musico>
 	
+	//TODO Falta implementar borrado de un musico en un grupo concreto
+
 }

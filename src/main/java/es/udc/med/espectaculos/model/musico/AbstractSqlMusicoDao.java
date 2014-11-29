@@ -2,13 +2,53 @@ package es.udc.med.espectaculos.model.musico;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import es.udc.med.espectaculos.utils.InstanceNotFoundException;
 
 public abstract class AbstractSqlMusicoDao implements MusicoDao{
 
 	protected AbstractSqlMusicoDao() {
+	}
+	
+	@Override
+	public List<Musico> getMusicos(Connection connection) {
+
+		/* Create "queryString". */
+		String queryString = "SELECT ID_MUSICO, NOMBRE_MUSICO, DIRECCION, INSTRUMENTO"
+				+ " FROM MUSICO";
+
+		try (PreparedStatement preparedStatement = connection
+				.prepareStatement(queryString)) {
+
+			/* Execute query. */
+			ResultSet resultSet = preparedStatement.executeQuery();
+
+			/* Read eventos. */
+			List<Musico> musicos = new ArrayList<Musico>();
+
+			while (resultSet.next()) {
+
+				int i = 1;
+				Integer musicoId = new Integer(resultSet.getInt(i++));
+				String nombre = resultSet.getString(i++);
+				String direccion = resultSet.getString(i++);
+				String instrumento = resultSet.getString(i++);
+
+				musicos.add(new Musico(musicoId, nombre, direccion, instrumento));
+
+			}
+
+			/* Return eventos. */
+			return musicos;
+
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+
 	}
 	
 	@Override
@@ -27,7 +67,7 @@ public abstract class AbstractSqlMusicoDao implements MusicoDao{
             preparedStatement.setString(i++, musico.getNombreMusico());
             preparedStatement.setString(i++, musico.getDireccion());
             preparedStatement.setString(i++, musico.getInstrumento());
-            preparedStatement.setLong(i++, musico.getIdMusico());
+            preparedStatement.setInt(i++, musico.getIdMusico());
 
             /* Execute query. */
             int updatedRows = preparedStatement.executeUpdate();

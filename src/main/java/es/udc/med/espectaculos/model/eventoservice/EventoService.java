@@ -22,11 +22,15 @@ public interface EventoService {
 
 	public GrupoEvento asignarGrupoEvento(Grupo grupo, Evento evento, String fecha) throws InputValidationException, AsignarGrupoEventoException;
 
+	public List<Grupo> obtenerGruposEvento(Evento evento);
+	
 	public List<Evento> obtenerEventosFecha(Calendar fecha);
 
 	public List<Calendar> getDates(String mes, Integer grupo_id);
 
 	public List<Evento> filtrarEventosGrupo(Grupo grupo, Calendar fechaInicio, Calendar fechaFin) throws InputValidationException;
+	
+	public List<Evento> obtenerEventosDeGrupoDia(Grupo grupo, Calendar fecha) throws InputValidationException;
 	
 	public void borrarEvento(Integer idEvento) throws InstanceNotFoundException;
 	
@@ -34,4 +38,7 @@ public interface EventoService {
 	
 	public void borrarGrupoEvento(Integer idGrupoEvento) throws InstanceNotFoundException;
 
+	//TODO implementar el nuevo borrado que borre el grupo de un evento concreto.
+	
 }
+

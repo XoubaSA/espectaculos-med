@@ -97,6 +97,11 @@ public class EventoServiceImpl implements EventoService {
 	}
 
 	@Override
+	public List<Grupo> obtenerGruposEvento(Evento evento) {
+		return grupoEventoDao.obtenerGruposEvento(conexion, evento);
+	}
+	
+	@Override
 	public List<Evento> obtenerEventosFecha(Calendar fecha) {
 		try {
 			return eventoDao.getEventoByDate(conexion, fecha);
@@ -119,6 +124,15 @@ public class EventoServiceImpl implements EventoService {
 
 		return grupoEventoDao.obtenerEventosGrupoFecha(conexion, grupo,
 				fechaInicio, fechaFin);
+	}
+	
+	@Override
+	public List<Evento> obtenerEventosDeGrupoDia(Grupo grupo, Calendar fecha) throws InputValidationException {
+		if ((grupo == null) || (fecha == null))
+			throw new InputValidationException(
+					"Grupo y fecha no pueden ser nulos");
+
+		return grupoEventoDao.obtenerEventosGrupoDia(conexion, grupo, fecha);
 	}
 
 	@Override
@@ -165,3 +179,4 @@ public class EventoServiceImpl implements EventoService {
 	}
 
 }
+

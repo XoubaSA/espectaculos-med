@@ -2,10 +2,18 @@ package es.udc.med.espectaculos.model.musico;
 
 public class Musico {
 
-	private long idMusico;
+	private Integer idMusico;
 	private String nombreMusico;
 	private String direccion;
 	private String instrumento;
+	
+	public Musico(Integer idMusico, String nombreMusico, String direccion,
+			String instrumento) {
+		this.idMusico = idMusico;
+		this.nombreMusico = nombreMusico;
+		this.direccion = direccion;
+		this.instrumento = instrumento;
+	}
 
 	public Musico(String nombre, String direccion, String instrumento) {
 		this.nombreMusico = nombre;
@@ -13,11 +21,11 @@ public class Musico {
 		this.instrumento = instrumento;
 	}
 
-	public long getIdMusico() {
+	public Integer getIdMusico() {
 		return idMusico;
 	}
 
-	public void setIdMusico(long idMusico) {
+	public void setIdMusico(Integer idMusico) {
 		this.idMusico = idMusico;
 	}
 
