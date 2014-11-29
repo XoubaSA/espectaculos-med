@@ -21,9 +21,13 @@ public interface EventoService {
 	
 	public Evento obtenerEventoPorNombre(String nombreEvento)
 			throws InstanceNotFoundException;
+	
+	public Grupo obtenerGrupoPorNombre(String nombreGrupo) throws InstanceNotFoundException;
 
 	public GrupoEvento asignarGrupoEvento(Grupo grupo, Evento evento, String fecha) throws InputValidationException, AsignarGrupoEventoException;
 
+	public List<Grupo> obtenerGrupos();
+	
 	public List<Grupo> obtenerGruposEvento(Evento evento);
 	
 	public List<Evento> obtenerEventosFecha(Calendar fecha);

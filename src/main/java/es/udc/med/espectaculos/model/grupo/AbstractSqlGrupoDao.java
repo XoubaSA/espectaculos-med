@@ -5,8 +5,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
+import es.udc.med.espectaculos.model.evento.Evento;
+import es.udc.med.espectaculos.utils.ConvertidorFechas;
 import es.udc.med.espectaculos.utils.InstanceNotFoundException;
 
 public abstract class AbstractSqlGrupoDao implements GrupoDao{
@@ -106,6 +109,55 @@ public abstract class AbstractSqlGrupoDao implements GrupoDao{
             throw new RuntimeException(e);
         }
 
+	}
+
+	@Override
+	public List<Grupo> obtenerGrupos(Connection conexion) {
+		List<Grupo> grupos = new ArrayList<Grupo>();
+		String queryString = "SELECT ID_GRUPO, NOMBRE_ORQUESTA, SALARIO_ACTUACION FROM GRUPO";
+
+		try (PreparedStatement preparedStatement = conexion
+				.prepareStatement(queryString)) {
+
+			ResultSet resultados = preparedStatement.executeQuery();
+			while (resultados.next()) {
+				int i = 1;
+				Integer idGrupo = resultados.getInt(i++);
+				String nombre = resultados.getString(i++);
+				float salario = resultados.getFloat(i++);
+
+				grupos.add(new Grupo(idGrupo, nombre, salario));
+			}
+			return grupos;
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@Override
+	public Grupo obtenerGrupoPorNombre(Connection conexion, String nombreGrupo) throws InstanceNotFoundException {
+		String queryString = "SELECT ID_GRUPO, NOMBRE_ORQUESTA, SALARIO_ACTUACION FROM GRUPO WHERE NOMBRE_ORQUESTA = ?";
+
+		try (PreparedStatement preparedStatement = conexion
+				.prepareStatement(queryString)) {
+
+			int i = 1;
+			preparedStatement.setString(i++, nombreGrupo);
+
+			ResultSet resultados = preparedStatement.executeQuery();
+			if (!resultados.next())
+				throw new InstanceNotFoundException(nombreGrupo,
+						Grupo.class.getName());
+
+			i = 1;
+			Integer idGrupo = resultados.getInt(i++);
+			String nombre = resultados.getString(i++);		
+			Float salario = resultados.getFloat(i++);
+
+			return new Grupo(idGrupo, nombre, salario);
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
 	}
 	
 }

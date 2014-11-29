@@ -183,5 +183,16 @@ public class EventoServiceImpl implements EventoService {
 		return eventoDao.findAllEvents(conexion);
 	}
 
+	@Override
+	public List<Grupo> obtenerGrupos() {
+		return grupoDao.obtenerGrupos(conexion);
+	}
+
+	@Override
+	public Grupo obtenerGrupoPorNombre(String nombreGrupo)
+			throws InstanceNotFoundException {
+		return grupoDao.obtenerGrupoPorNombre(conexion, nombreGrupo);
+	}
+
 }
 

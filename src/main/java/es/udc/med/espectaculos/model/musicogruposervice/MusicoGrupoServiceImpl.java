@@ -62,6 +62,12 @@ public class MusicoGrupoServiceImpl implements MusicoGrupoService {
 	}
 
 	@Override
+	public Musico obtenerMusicoPorNombre(String nombreMusico)
+			throws InstanceNotFoundException {
+		return musicoDao.obtenerMusicoPorNombre(conexion, nombreMusico);
+	}
+
+	@Override
 	public void borrarMusico(Integer idMusico) throws InstanceNotFoundException {
 		try {
 			try {

@@ -15,6 +15,8 @@ public interface MusicoGrupoService {
 			throws InputValidationException, MusicoAsignadoException;
 	
 	public Musico crearMusico(String nombreMusico, String direccion, String instrumento);
+	
+	public Musico obtenerMusicoPorNombre(String nombreMusico) throws InstanceNotFoundException;
 
 	public void borrarMusico(Integer idMusico) throws InstanceNotFoundException;
 

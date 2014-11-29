@@ -18,5 +18,8 @@ public interface MusicoDao {
 			throws SQLException;
 	
 	public List<Musico> getMusicos(Connection connection);
+
+	public Musico obtenerMusicoPorNombre(Connection conexion,
+			String nombreMusico) throws InstanceNotFoundException;
 	
 }

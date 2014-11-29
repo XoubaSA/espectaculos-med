@@ -8,7 +8,6 @@ import java.util.List;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
-import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.TableTree;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
@@ -22,11 +21,14 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.ExpandBar;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.TabFolder;
+import org.eclipse.swt.widgets.TabItem;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 
@@ -34,15 +36,13 @@ import es.udc.med.espectaculos.model.evento.Evento;
 import es.udc.med.espectaculos.model.eventoservice.EventoService;
 import es.udc.med.espectaculos.model.eventoservice.EventoServiceImpl;
 import es.udc.med.espectaculos.model.grupo.Grupo;
+import es.udc.med.espectaculos.model.musico.Musico;
 import es.udc.med.espectaculos.model.musicogruposervice.MusicoGrupoService;
 import es.udc.med.espectaculos.model.musicogruposervice.MusicoGrupoServiceImpl;
+import es.udc.med.espectaculos.utils.AsignarGrupoEventoException;
 import es.udc.med.espectaculos.utils.ConvertidorFechas;
 import es.udc.med.espectaculos.utils.InputValidationException;
 import es.udc.med.espectaculos.utils.InstanceNotFoundException;
-import org.eclipse.swt.widgets.TabFolder;
-import org.eclipse.swt.widgets.TabItem;
-import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.widgets.DateTime;
 
 public class VentanaPrincipalV2 implements MouseListener {
 
@@ -54,7 +54,7 @@ public class VentanaPrincipalV2 implements MouseListener {
 	private Tree tree_1, tree2, tree3;
 	private TableTree tableTree;
 	private String eventName;
-	
+
 	private EventoService eventoService;
 	private MusicoGrupoService musicoGrupoService;
 
@@ -78,6 +78,9 @@ public class VentanaPrincipalV2 implements MouseListener {
 	private Button monthNext = null;
 	private CLabel nowLabel = null;
 
+	private Combo combo_1;
+	private Combo combo_2;
+
 	private CLabel[] days = new CLabel[42];
 	private Text text;
 	private Text text_1;
@@ -89,7 +92,7 @@ public class VentanaPrincipalV2 implements MouseListener {
 	private Text text_7;
 	private Text text_8;
 	private Text text_9;
-	
+
 	private Combo combo;
 
 	public String getStrDate() {
@@ -128,7 +131,7 @@ public class VentanaPrincipalV2 implements MouseListener {
 		this.selectedDate = "2014/11/01";
 		shell.setLayout(new FillLayout());
 
-		TabFolder tabFolder = new TabFolder(shell, SWT.NONE);
+		final TabFolder tabFolder = new TabFolder(shell, SWT.NONE);
 
 		TabItem tbtmCalendario = new TabItem(tabFolder, SWT.NONE);
 		tbtmCalendario.setText("Calendario");
@@ -279,44 +282,48 @@ public class VentanaPrincipalV2 implements MouseListener {
 		lblNewLabel2.setText("Green      -> 0 events\n"
 				+ "Blue         -> 1 events\n" + "Dark Red -> 2 events\n"
 				+ "Magenta -> 3 events\n" + "Cyan        -> 4 events");
-		
-		TabItem tbtmNewItem = new TabItem(tabFolder, SWT.NONE);
+
+		final TabItem tbtmNewItem = new TabItem(tabFolder, SWT.NONE);
 		tbtmNewItem.setText("Evento");
-		
+
 		Composite composite_2 = new Composite(tabFolder, SWT.NONE);
 		tbtmNewItem.setControl(composite_2);
-		
+
 		Group grpCrearEvento = new Group(composite_2, SWT.NONE);
 		grpCrearEvento.setText("Crear evento");
 		grpCrearEvento.setBounds(0, 0, 222, 315);
-		
+
 		Label lblIntroduceNombre = new Label(grpCrearEvento, SWT.NONE);
 		lblIntroduceNombre.setBounds(10, 20, 99, 15);
 		lblIntroduceNombre.setText("Introduce nombre:");
-		
+
 		text = new Text(grpCrearEvento, SWT.BORDER);
 		text.setBounds(10, 41, 202, 21);
-		
+
 		Label lblIntroduceFechaInicio = new Label(grpCrearEvento, SWT.NONE);
 		lblIntroduceFechaInicio.setBounds(10, 68, 118, 15);
 		lblIntroduceFechaInicio.setText("Introduce fecha inicio:");
-		
+
 		final DateTime dateTime = new DateTime(grpCrearEvento, SWT.BORDER);
 		dateTime.setBounds(10, 89, 80, 24);
-		
+
 		Label lblIntroduceLocalidad = new Label(grpCrearEvento, SWT.NONE);
 		lblIntroduceLocalidad.setBounds(10, 119, 105, 15);
 		lblIntroduceLocalidad.setText("Introduce localidad:");
-		
+
 		text_1 = new Text(grpCrearEvento, SWT.BORDER);
 		text_1.setBounds(10, 140, 202, 21);
-		
+
 		Button btnAnadirEvento = new Button(grpCrearEvento, SWT.NONE);
 		btnAnadirEvento.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e) {				
+			public void widgetSelected(SelectionEvent e) {
 				try {
-					eventoService.crearEvento(text.getText(), ConvertidorFechas.convertirDateTimeWidget(dateTime), text_1.getText());
+					eventoService.crearEvento(
+							text.getText(),
+							ConvertidorFechas.convertirDateTimeWidget(dateTime),
+							text_1.getText());
+					VentanaPrincipalV2.this.combo_2.add(text.getText());
 				} catch (InputValidationException e1) {
 					e1.printStackTrace();
 				}
@@ -324,224 +331,257 @@ public class VentanaPrincipalV2 implements MouseListener {
 		});
 		btnAnadirEvento.setBounds(10, 280, 202, 25);
 		btnAnadirEvento.setText("Crear evento");
-		
+
 		Group grpAsignarEventoA = new Group(composite_2, SWT.NONE);
 		grpAsignarEventoA.setText("Asignar evento a grupo");
 		grpAsignarEventoA.setBounds(228, 0, 212, 315);
-		
+
 		Label lblSeleccionaElGrupo = new Label(grpAsignarEventoA, SWT.NONE);
 		lblSeleccionaElGrupo.setText("Selecciona el grupo:");
 		lblSeleccionaElGrupo.setBounds(10, 20, 116, 15);
-		
-		Combo combo_1 = new Combo(grpAsignarEventoA, SWT.NONE);		
+
+		combo_1 = new Combo(grpAsignarEventoA, SWT.READ_ONLY);
 		combo_1.setBounds(10, 41, 192, 23);
-		
+
 		Label lblSeleccionaElEvento = new Label(grpAsignarEventoA, SWT.NONE);
 		lblSeleccionaElEvento.setText("Selecciona el evento:");
 		lblSeleccionaElEvento.setBounds(10, 68, 116, 15);
-		
-		Combo combo_2 = new Combo(grpAsignarEventoA, SWT.NONE);
-		List<Evento> eventosCombo2 = eventoService.findAllEvents();
-		for(Evento evento : eventosCombo2) {
-			combo_2.add(evento.getNombreEvento());
-		}
+
+		combo_2 = new Combo(grpAsignarEventoA, SWT.READ_ONLY);
 		combo_2.setBounds(10, 89, 192, 23);
-		
+
 		Label label_1 = new Label(grpAsignarEventoA, SWT.NONE);
 		label_1.setText("Introduce fecha inicio:");
 		label_1.setBounds(10, 119, 118, 15);
-		
-		DateTime dateTime_1 = new DateTime(grpAsignarEventoA, SWT.BORDER);
+
+		final DateTime dateTime_1 = new DateTime(grpAsignarEventoA, SWT.BORDER);
 		dateTime_1.setBounds(10, 140, 80, 24);
-		
+
 		Button btnAsignarEventoA = new Button(grpAsignarEventoA, SWT.NONE);
+		btnAsignarEventoA.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				try {
+					Grupo grupo = eventoService.obtenerGrupoPorNombre(combo_1
+							.getText());
+					Evento evento = eventoService
+							.obtenerEventoPorNombre(combo_2.getText());
+					Calendar fecha = ConvertidorFechas
+							.convertirDateTimeWidget(dateTime_1);
+
+					eventoService.asignarGrupoEvento(grupo, evento,
+							ConvertidorFechas.convertirCalendarString(fecha));
+				} catch (InputValidationException | AsignarGrupoEventoException | InstanceNotFoundException e1) { 
+					e1.printStackTrace();
+				}
+			}
+		});
 		btnAsignarEventoA.setText("Asignar evento a grupo");
 		btnAsignarEventoA.setBounds(10, 280, 192, 25);
-		
+
 		Group grpBorrarEvento = new Group(composite_2, SWT.NONE);
 		grpBorrarEvento.setText("Borrar evento");
 		grpBorrarEvento.setBounds(446, 0, 219, 146);
-		
+
 		Group grpDesasignarGrupoA = new Group(composite_2, SWT.NONE);
 		grpDesasignarGrupoA.setText("Desasignar grupo a evento");
 		grpDesasignarGrupoA.setBounds(446, 152, 219, 163);
-		
+
 		TabItem tbtmMusico = new TabItem(tabFolder, 0);
 		tbtmMusico.setText("Grupo");
-		
+
 		Composite composite_3 = new Composite(tabFolder, SWT.NONE);
 		tbtmMusico.setControl(composite_3);
-		
+
 		Group group = new Group(composite_3, SWT.NONE);
 		group.setText("Crear grupo");
 		group.setBounds(0, 0, 318, 315);
-		
+
 		Label label = new Label(group, SWT.NONE);
 		label.setText("Introduce nombre:");
 		label.setBounds(10, 20, 99, 15);
-		
+
 		text_2 = new Text(group, SWT.BORDER);
 		text_2.setBounds(10, 41, 298, 21);
-		
+
 		Label label_2 = new Label(group, SWT.NONE);
 		label_2.setText("Introduce salario:");
 		label_2.setBounds(10, 68, 105, 15);
-		
+
 		text_3 = new Text(group, SWT.BORDER);
 		text_3.setBounds(10, 89, 298, 21);
-		
+
 		Button button = new Button(group, SWT.NONE);
+		button.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				eventoService.crearGrupo(text_2.getText(),
+						Float.valueOf(text_3.getText()));
+			}
+		});
 		button.setText("Crear grupo");
 		button.setBounds(10, 280, 298, 25);
-		
+
 		Group group_1 = new Group(composite_3, SWT.NONE);
 		group_1.setText("Borrar grupo");
 		group_1.setBounds(324, 0, 342, 315);
-		
-		TabItem tbtmMusico_1 = new TabItem(tabFolder, 0);
+
+		final TabItem tbtmMusico_1 = new TabItem(tabFolder, 0);
 		tbtmMusico_1.setText("Musico");
-		
+
 		Composite composite_4 = new Composite(tabFolder, SWT.NONE);
 		tbtmMusico_1.setControl(composite_4);
-		
+
 		Group grpCrearMusico = new Group(composite_4, SWT.NONE);
 		grpCrearMusico.setText("Crear musico");
 		grpCrearMusico.setBounds(0, 0, 222, 315);
-		
+
 		Label label_3 = new Label(grpCrearMusico, SWT.NONE);
 		label_3.setText("Introduce nombre:");
 		label_3.setBounds(10, 20, 99, 15);
-		
+
 		text_4 = new Text(grpCrearMusico, SWT.BORDER);
 		text_4.setBounds(10, 41, 202, 21);
-		
+
 		Label lblIntroduceDireccion = new Label(grpCrearMusico, SWT.NONE);
 		lblIntroduceDireccion.setText("Introduce direccion:");
 		lblIntroduceDireccion.setBounds(10, 68, 118, 15);
-		
+
 		Label lblIntroduceInstrumento = new Label(grpCrearMusico, SWT.NONE);
 		lblIntroduceInstrumento.setText("Introduce instrumento:");
 		lblIntroduceInstrumento.setBounds(10, 116, 140, 15);
-		
+
 		text_5 = new Text(grpCrearMusico, SWT.BORDER);
 		text_5.setBounds(10, 137, 202, 21);
-		
-		Button button_1 = new Button(grpCrearMusico, SWT.NONE);
-		button_1.setText("Crear evento");
+
+		Button button_1 = new Button(grpCrearMusico, SWT.NONE);		
+		button_1.setText("Crear musico");
 		button_1.setBounds(10, 280, 202, 25);
-		
+
 		text_6 = new Text(grpCrearMusico, SWT.BORDER);
 		text_6.setBounds(10, 89, 202, 21);
-		
+
 		Group grpAsignarMusicoA = new Group(composite_4, SWT.NONE);
 		grpAsignarMusicoA.setText("Asignar musico a grupo");
 		grpAsignarMusicoA.setBounds(228, 0, 212, 315);
-		
+
 		Label label_5 = new Label(grpAsignarMusicoA, SWT.NONE);
 		label_5.setText("Selecciona el grupo:");
 		label_5.setBounds(10, 20, 116, 15);
-		
-		Combo combo_3 = new Combo(grpAsignarMusicoA, SWT.NONE);
+
+		final Combo combo_3 = new Combo(grpAsignarMusicoA, SWT.READ_ONLY);
 		combo_3.setBounds(10, 41, 192, 23);
-		
+
 		Label lblSeleccionaElMusico = new Label(grpAsignarMusicoA, SWT.NONE);
 		lblSeleccionaElMusico.setText("Selecciona el musico:");
 		lblSeleccionaElMusico.setBounds(10, 68, 116, 15);
-		
-		Combo combo_4 = new Combo(grpAsignarMusicoA, SWT.NONE);
+
+		final Combo combo_4 = new Combo(grpAsignarMusicoA, SWT.READ_ONLY);
 		combo_4.setBounds(10, 89, 192, 23);
-		
+
 		Button button_3 = new Button(grpAsignarMusicoA, SWT.NONE);
-		button_3.setText("Asignar evento a grupo");
+		button_3.setText("Asignar musico a grupo");
 		button_3.setBounds(10, 280, 192, 25);
-		
+
 		Group grpBorrarMusico = new Group(composite_4, SWT.NONE);
 		grpBorrarMusico.setText("Borrar musico");
 		grpBorrarMusico.setBounds(446, 0, 219, 146);
-		
+
 		Group grpDesasignarMusicoA = new Group(composite_4, SWT.NONE);
 		grpDesasignarMusicoA.setText("Desasignar musico a evento");
 		grpDesasignarMusicoA.setBounds(446, 152, 219, 163);
-		
+
 		TabItem tbtmTransporte = new TabItem(tabFolder, 0);
 		tbtmTransporte.setText("Transporte");
-		
+
 		Composite composite_5 = new Composite(tabFolder, SWT.NONE);
 		tbtmTransporte.setControl(composite_5);
-		
+
 		Group grpCrearTransporte = new Group(composite_5, SWT.NONE);
 		grpCrearTransporte.setText("Crear transporte");
 		grpCrearTransporte.setBounds(0, 0, 222, 315);
-		
+
 		Label label_4 = new Label(grpCrearTransporte, SWT.NONE);
 		label_4.setText("Introduce nombre:");
 		label_4.setBounds(10, 20, 99, 15);
-		
+
 		text_7 = new Text(grpCrearTransporte, SWT.BORDER);
 		text_7.setBounds(10, 41, 202, 21);
-		
+
 		Label lblIntroduceMatricula = new Label(grpCrearTransporte, SWT.NONE);
 		lblIntroduceMatricula.setText("Introduce matricula:");
 		lblIntroduceMatricula.setBounds(10, 68, 118, 15);
-		
+
 		Label lblIntroduceDescripcion = new Label(grpCrearTransporte, SWT.NONE);
 		lblIntroduceDescripcion.setText("Introduce descripcion:");
 		lblIntroduceDescripcion.setBounds(10, 116, 140, 15);
-		
+
 		text_8 = new Text(grpCrearTransporte, SWT.BORDER);
 		text_8.setBounds(10, 137, 202, 21);
-		
+
 		Button button_2 = new Button(grpCrearTransporte, SWT.NONE);
 		button_2.setText("Crear evento");
 		button_2.setBounds(10, 280, 202, 25);
-		
+
 		text_9 = new Text(grpCrearTransporte, SWT.BORDER);
 		text_9.setBounds(10, 89, 202, 21);
-		
+
 		Group grpAsignarTransporteA = new Group(composite_5, SWT.NONE);
 		grpAsignarTransporteA.setText("Asignar transporte a grupo");
 		grpAsignarTransporteA.setBounds(228, 0, 212, 315);
-		
+
 		Label label_6 = new Label(grpAsignarTransporteA, SWT.NONE);
 		label_6.setText("Selecciona el grupo:");
 		label_6.setBounds(10, 20, 116, 15);
-		
+
 		Combo combo_5 = new Combo(grpAsignarTransporteA, SWT.NONE);
 		combo_5.setBounds(10, 41, 192, 21);
-		
-		Label lblSeleccionaElTransporte = new Label(grpAsignarTransporteA, SWT.NONE);
+
+		Label lblSeleccionaElTransporte = new Label(grpAsignarTransporteA,
+				SWT.NONE);
 		lblSeleccionaElTransporte.setText("Selecciona el transporte:");
 		lblSeleccionaElTransporte.setBounds(10, 68, 142, 15);
-		
+
 		Combo combo_6 = new Combo(grpAsignarTransporteA, SWT.NONE);
 		combo_6.setBounds(10, 89, 192, 23);
-		
+
 		Label label_9 = new Label(grpAsignarTransporteA, SWT.NONE);
 		label_9.setText("Introduce fecha inicio:");
 		label_9.setBounds(10, 119, 118, 15);
-		
+
 		DateTime dateTime_3 = new DateTime(grpAsignarTransporteA, SWT.BORDER);
 		dateTime_3.setBounds(10, 140, 80, 24);
-		
+
 		Button button_4 = new Button(grpAsignarTransporteA, SWT.NONE);
 		button_4.setText("Asignar evento a grupo");
 		button_4.setBounds(10, 280, 192, 25);
-		
+
 		Label lblIntroduceFechaFin = new Label(grpAsignarTransporteA, SWT.NONE);
 		lblIntroduceFechaFin.setText("Introduce fecha fin:");
 		lblIntroduceFechaFin.setBounds(10, 170, 118, 15);
-		
+
 		DateTime dateTime_4 = new DateTime(grpAsignarTransporteA, SWT.BORDER);
 		dateTime_4.setBounds(10, 191, 80, 24);
-		
+
 		Group grpBorrarTransporte = new Group(composite_5, SWT.NONE);
 		grpBorrarTransporte.setText("Borrar transporte");
 		grpBorrarTransporte.setBounds(446, 0, 219, 146);
-		
+
 		Group grpDesasignarTransporteA = new Group(composite_5, SWT.NONE);
 		grpDesasignarTransporteA.setText("Desasignar transporte a evento");
 		grpDesasignarTransporteA.setBounds(446, 152, 219, 163);
 
+		button_1.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				String nombre = text_4.getText();
+				String direccion = text_6.getText();
+				String instrumento = text_5.getText();
+				musicoGrupoService.crearMusico(nombre, direccion, instrumento);
+				combo_4.add(nombre);
+			}
+		});
+		
 		for (int i = 0; i < 42; i++) {
 			days[i] = new CLabel(composite, SWT.FLAT | SWT.CENTER);
 			gridData = new GridData(GridData.FILL_HORIZONTAL
@@ -579,6 +619,40 @@ public class VentanaPrincipalV2 implements MouseListener {
 		 * List<Musico> musicos = musicoGrupoService.getMusicos(); for (Musico
 		 * musico : musicos) { c2.add(musico.getNombreMusico()); }
 		 */
+
+		tabFolder.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				if (tabFolder.getItem(tabFolder.getSelectionIndex()).equals(
+						tbtmNewItem)) {
+					combo_1.removeAll();
+					List<Grupo> gruposCombo1 = eventoService.obtenerGrupos();
+					for (Grupo grupo : gruposCombo1) {
+						combo_1.add(grupo.getNombreOrquesta());
+					}
+
+					combo_2.removeAll();
+					List<Evento> eventosCombo2 = eventoService.findAllEvents();
+					for (Evento evento : eventosCombo2) {
+						combo_2.add(evento.getNombreEvento());
+					}
+
+				} else if (tabFolder.getItem(tabFolder.getSelectionIndex()).equals(
+						tbtmMusico_1)) {
+					combo_3.removeAll();
+					List<Grupo> gruposCombo3 = eventoService.obtenerGrupos();
+					for (Grupo grupo : gruposCombo3) {
+						combo_3.add(grupo.getNombreOrquesta());
+					}
+
+					combo_4.removeAll();
+					List<Musico> musicosCombo4 = musicoGrupoService.getMusicos();
+					for (Musico musico : musicosCombo4) {
+						combo_4.add(musico.getNombreMusico());
+					}
+
+				}
+			}
+		});
 
 		shell.open();
 		// shell.layout();
@@ -707,20 +781,24 @@ public class VentanaPrincipalV2 implements MouseListener {
 				fecha.set(Calendar.MONTH, month - 1);
 				fecha.set(Calendar.DATE, startday);
 				List<Evento> eventos = new ArrayList<>();
-				if (combo.getSelectionIndex() == 0) eventos = eventoService.obtenerEventosFecha(fecha);
+				if (combo.getSelectionIndex() == 0)
+					eventos = eventoService.obtenerEventosFecha(fecha);
 				else {
 					Calendar fechaFin = (Calendar) fecha.clone();
 					fechaFin.add(Calendar.DATE, 1);
 					for (Grupo grupo : grupos) {
 						if (grupo.getNombreOrquesta().equals(combo.getText())) {
 							try {
-								eventos = eventoService.obtenerEventosDeGrupoDia(grupo, fecha);
+								eventos = eventoService
+										.obtenerEventosDeGrupoDia(grupo, fecha);
 							} catch (InputValidationException e) {
-								eventos = eventoService.obtenerEventosFecha(fecha);
+								eventos = eventoService
+										.obtenerEventosFecha(fecha);
 							}
 						}
 					}
-//					eventos = eventoService.filtrarEventosGrupo(grupo, fechaInicio, fechaFin)
+					// eventos = eventoService.filtrarEventosGrupo(grupo,
+					// fechaInicio, fechaFin)
 				}
 				if (eventos.size() == 0) {
 					days[i].setBackground(display
@@ -738,7 +816,7 @@ public class VentanaPrincipalV2 implements MouseListener {
 					days[i].setBackground(display
 							.getSystemColor(SWT.COLOR_MAGENTA));
 				}
-				if (eventos.size() == 4) {
+				if (eventos.size() >= 4) {
 					days[i].setBackground(display
 							.getSystemColor(SWT.COLOR_CYAN));
 				}

@@ -18,4 +18,8 @@ public interface GrupoDao {
 	
 	public Grupo create(Connection connection, Grupo grupo) 
 			throws SQLException;
+
+	public List<Grupo> obtenerGrupos(Connection conexion);
+
+	public Grupo obtenerGrupoPorNombre(Connection conexion, String nombreGrupo) throws InstanceNotFoundException;
 }
