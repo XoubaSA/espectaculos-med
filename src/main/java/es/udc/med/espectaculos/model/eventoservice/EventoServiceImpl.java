@@ -178,5 +178,10 @@ public class EventoServiceImpl implements EventoService {
 		}
 	}
 
+	@Override
+	public List<Evento> findAllEvents() {
+		return eventoDao.findAllEvents(conexion);
+	}
+
 }
 

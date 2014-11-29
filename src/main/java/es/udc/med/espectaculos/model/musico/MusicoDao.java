@@ -2,6 +2,7 @@ package es.udc.med.espectaculos.model.musico;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 
 import es.udc.med.espectaculos.utils.InstanceNotFoundException;
 
@@ -15,5 +16,7 @@ public interface MusicoDao {
 
 	public Musico create(Connection connection, Musico musico) 
 			throws SQLException;
+	
+	public List<Musico> getMusicos(Connection connection);
 	
 }

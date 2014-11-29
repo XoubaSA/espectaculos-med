@@ -65,7 +65,7 @@ public abstract class AbstractSqlGrupoDao implements GrupoDao{
             int i = 1;
             preparedStatement.setString(i++, grupo.getNombreOrquesta());
             preparedStatement.setFloat(i++, grupo.getSalarioActuacion());
-            preparedStatement.setLong(i++, grupo.getIdGrupo());
+            preparedStatement.setInt(i++, grupo.getIdGrupo());
 
             /* Execute query. */
             int updatedRows = preparedStatement.executeUpdate();

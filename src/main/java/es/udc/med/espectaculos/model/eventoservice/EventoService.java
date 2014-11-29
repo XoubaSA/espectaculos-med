@@ -17,6 +17,8 @@ public interface EventoService {
 
 	public Grupo crearGrupo(String nombreOrquesta, float salarioActuacion);
 
+	public List<Evento> findAllEvents();
+	
 	public Evento obtenerEventoPorNombre(String nombreEvento)
 			throws InstanceNotFoundException;
 
@@ -38,5 +40,7 @@ public interface EventoService {
 	
 	public void borrarGrupoEvento(Integer idGrupoEvento) throws InstanceNotFoundException;
 
+	//TODO implementar el nuevo borrado que borre el grupo de un evento concreto.
+	
 }
 

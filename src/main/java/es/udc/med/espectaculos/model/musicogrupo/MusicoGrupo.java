@@ -2,38 +2,36 @@ package es.udc.med.espectaculos.model.musicogrupo;
 
 public class MusicoGrupo {
 
-	private Long idMusicoGrupo;
-	private Long idMusico;
-	private Long idGrupo;
+	private Integer idMusicoGrupo;
+	private Integer idMusico;
+	private Integer idGrupo;
 
-	public MusicoGrupo(Long idMusicoGrupo, Long idMusico, Long idGrupo) {
-		super();
-		this.idMusicoGrupo = idMusicoGrupo;
+	public MusicoGrupo(Integer idMusico, Integer idGrupo) {
 		this.idMusico = idMusico;
 		this.idGrupo = idGrupo;
 	}
 
-	public Long getIdMusicoGrupo() {
+	public Integer getIdMusicoGrupo() {
 		return idMusicoGrupo;
 	}
 
-	public void setIdMusicoGrupo(Long idMusicoGrupo) {
+	public void setIdMusicoGrupo(Integer idMusicoGrupo) {
 		this.idMusicoGrupo = idMusicoGrupo;
 	}
 
-	public Long getIdMusico() {
+	public Integer getIdMusico() {
 		return idMusico;
 	}
 
-	public void setIdMusico(Long idMusico) {
+	public void setIdMusico(Integer idMusico) {
 		this.idMusico = idMusico;
 	}
 
-	public Long getIdGrupo() {
+	public Integer getIdGrupo() {
 		return idGrupo;
 	}
 
-	public void setIdGrupo(Long idGrupo) {
+	public void setIdGrupo(Integer idGrupo) {
 		this.idGrupo = idGrupo;
 	}
 

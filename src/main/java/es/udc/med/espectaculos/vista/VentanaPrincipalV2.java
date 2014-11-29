@@ -301,7 +301,7 @@ public class VentanaPrincipalV2 implements MouseListener {
 		lblIntroduceFechaInicio.setBounds(10, 68, 118, 15);
 		lblIntroduceFechaInicio.setText("Introduce fecha inicio:");
 		
-		DateTime dateTime = new DateTime(grpCrearEvento, SWT.BORDER);
+		final DateTime dateTime = new DateTime(grpCrearEvento, SWT.BORDER);
 		dateTime.setBounds(10, 89, 80, 24);
 		
 		Label lblIntroduceLocalidad = new Label(grpCrearEvento, SWT.NONE);
@@ -312,6 +312,16 @@ public class VentanaPrincipalV2 implements MouseListener {
 		text_1.setBounds(10, 140, 202, 21);
 		
 		Button btnAnadirEvento = new Button(grpCrearEvento, SWT.NONE);
+		btnAnadirEvento.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {				
+				try {
+					eventoService.crearEvento(text.getText(), ConvertidorFechas.convertirDateTimeWidget(dateTime), text_1.getText());
+				} catch (InputValidationException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
 		btnAnadirEvento.setBounds(10, 280, 202, 25);
 		btnAnadirEvento.setText("Crear evento");
 		
@@ -323,7 +333,7 @@ public class VentanaPrincipalV2 implements MouseListener {
 		lblSeleccionaElGrupo.setText("Selecciona el grupo:");
 		lblSeleccionaElGrupo.setBounds(10, 20, 116, 15);
 		
-		Combo combo_1 = new Combo(grpAsignarEventoA, SWT.NONE);
+		Combo combo_1 = new Combo(grpAsignarEventoA, SWT.NONE);		
 		combo_1.setBounds(10, 41, 192, 23);
 		
 		Label lblSeleccionaElEvento = new Label(grpAsignarEventoA, SWT.NONE);
@@ -331,6 +341,10 @@ public class VentanaPrincipalV2 implements MouseListener {
 		lblSeleccionaElEvento.setBounds(10, 68, 116, 15);
 		
 		Combo combo_2 = new Combo(grpAsignarEventoA, SWT.NONE);
+		List<Evento> eventosCombo2 = eventoService.findAllEvents();
+		for(Evento evento : eventosCombo2) {
+			combo_2.add(evento.getNombreEvento());
+		}
 		combo_2.setBounds(10, 89, 192, 23);
 		
 		Label label_1 = new Label(grpAsignarEventoA, SWT.NONE);

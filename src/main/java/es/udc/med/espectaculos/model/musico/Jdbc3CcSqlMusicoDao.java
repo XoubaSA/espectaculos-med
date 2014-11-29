@@ -30,7 +30,7 @@ public class Jdbc3CcSqlMusicoDao extends AbstractSqlMusicoDao {
 			ResultSet resultados = preparedStatement.getGeneratedKeys();
 			if (!resultados.next())
 				throw new SQLException("JDBC no ha devuelto ninguna clave");
-			Long idMusico = resultados.getLong(1);
+			Integer idMusico = resultados.getInt(1);
 			musico.setIdMusico(idMusico);
 			
 			return musico;

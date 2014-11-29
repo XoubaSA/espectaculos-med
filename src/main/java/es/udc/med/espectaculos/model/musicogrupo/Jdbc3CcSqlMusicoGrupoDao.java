@@ -13,8 +13,8 @@ String queryString = "INSERT INTO MUSICO_GRUPO (ID_MUSICO, ID_GRUPO) VALUES (?, 
 		
 		try(PreparedStatement preparedStatement = conexion.prepareStatement(queryString)) {
 			int i = 1;
-			preparedStatement.setLong(i++, musicoGrupo.getIdMusico());
-			preparedStatement.setLong(i++, musicoGrupo.getIdGrupo());
+			preparedStatement.setInt(i++, musicoGrupo.getIdMusico());
+			preparedStatement.setInt(i++, musicoGrupo.getIdGrupo());
 			
 			int filasInsertadas = preparedStatement.executeUpdate();
 			
@@ -27,7 +27,7 @@ String queryString = "INSERT INTO MUSICO_GRUPO (ID_MUSICO, ID_GRUPO) VALUES (?, 
 			ResultSet resultados = preparedStatement.getGeneratedKeys();
 			if (!resultados.next())
 				throw new SQLException("JDBC no ha devuelto ninguna clave");
-			Long idMusicoGrupo = resultados.getLong(1);
+			Integer idMusicoGrupo = resultados.getInt(1);
 			musicoGrupo.setIdMusicoGrupo(idMusicoGrupo);
 
 			return musicoGrupo;

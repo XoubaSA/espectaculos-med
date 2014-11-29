@@ -21,7 +21,7 @@ public abstract class AbstractSqlEventoDao implements EventoDao {
 			throws InstanceNotFoundException {
 
 		String strDate = ConvertidorFechas.convertirCalendarString(fecha);
-		
+
 		/* Create "queryString". */
 		String queryString = "SELECT DISTINCT ID_EVENTO, NOMBRE_EVENTO, FECHA_INICIO_EVENTO,"
 				+ " LOCALIDAD FROM EVENTO WHERE FECHA_INICIO_EVENTO = ?";
@@ -41,7 +41,8 @@ public abstract class AbstractSqlEventoDao implements EventoDao {
 				int j = 1;
 				Integer eventoId = new Integer(resultSet.getInt(j++));
 				String nombre = resultSet.getString(j++);
-				Calendar fechaInicioEvento = ConvertidorFechas.convertirStringCalendar(resultSet.getString(j++));
+				Calendar fechaInicioEvento = ConvertidorFechas
+						.convertirStringCalendar(resultSet.getString(j++));
 				String localidad = resultSet.getString(j++);
 
 				eventos.add(new Evento(eventoId, nombre, fechaInicioEvento,
@@ -64,8 +65,7 @@ public abstract class AbstractSqlEventoDao implements EventoDao {
 		/* Create "queryString". */
 		String queryString = "UPDATE EVENTO"
 				+ " SET NOMBRE_EVENTO = ?, FECHA_INICIO_EVENTO = ?,"
-				+ " LOCALIDAD = ?"
-				+ " WHERE ID_EVENTO = ?";
+				+ " LOCALIDAD = ?" + " WHERE ID_EVENTO = ?";
 
 		try (PreparedStatement preparedStatement = connection
 				.prepareStatement(queryString)) {
@@ -73,7 +73,8 @@ public abstract class AbstractSqlEventoDao implements EventoDao {
 			/* Fill "preparedStatement". */
 			int i = 1;
 			preparedStatement.setString(i++, evento.getNombreEvento());
-			preparedStatement.setString(i++, ConvertidorFechas.convertirCalendarString(evento.getFechaInicioEvento()));
+			preparedStatement.setString(i++, ConvertidorFechas
+					.convertirCalendarString(evento.getFechaInicioEvento()));
 			preparedStatement.setString(i++, evento.getLocalidad());
 			preparedStatement.setLong(i++, evento.getIdEvento());
 
@@ -139,11 +140,38 @@ public abstract class AbstractSqlEventoDao implements EventoDao {
 			i = 1;
 			Integer idEvento = resultados.getInt(i++);
 			String nombre = resultados.getString(i++);
-			Calendar fechaInicioEvento = ConvertidorFechas.convertirStringCalendar(resultados.getString(i++));
+			Calendar fechaInicioEvento = ConvertidorFechas
+					.convertirStringCalendar(resultados.getString(i++));
 			String localidad = resultados.getString(i++);
 
-			return new Evento(idEvento, nombre, fechaInicioEvento,
-					localidad);
+			return new Evento(idEvento, nombre, fechaInicioEvento, localidad);
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@Override
+	public List<Evento> findAllEvents(Connection conexion) {
+
+		List<Evento> eventos = new ArrayList<Evento>();
+		String queryString = "SELECT ID_EVENTO, NOMBRE_EVENTO, FECHA_INICIO_EVENTO, LOCALIDAD FROM EVENTO";
+
+		try (PreparedStatement preparedStatement = conexion
+				.prepareStatement(queryString)) {
+
+			ResultSet resultados = preparedStatement.executeQuery();
+			while (resultados.next()) {
+				int i = 1;
+				Integer idEvento = resultados.getInt(i++);
+				String nombre = resultados.getString(i++);
+				Calendar fechaInicioEvento = ConvertidorFechas
+						.convertirStringCalendar(resultados.getString(i++));
+				String localidad = resultados.getString(i++);
+
+				eventos.add(new Evento(idEvento, nombre, fechaInicioEvento,
+						localidad));
+			}
+			return eventos;
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}

@@ -22,5 +22,7 @@ public interface EventoDao {
 			throws SQLException;
 
 	public Evento buscarEventoPorNombre(Connection conexion, String nombreEvento) throws InstanceNotFoundException;
+
+	public List<Evento> findAllEvents(Connection conexion);	
 	
 }
