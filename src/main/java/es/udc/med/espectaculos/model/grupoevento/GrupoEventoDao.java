@@ -29,3 +29,4 @@ public interface GrupoEventoDao {
 	
 	public boolean grupoAsignadoFecha(Connection conexion, Grupo grupo, String fecha);
 }
+
