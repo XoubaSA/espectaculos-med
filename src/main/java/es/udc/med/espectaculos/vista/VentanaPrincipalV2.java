@@ -577,7 +577,11 @@ public class VentanaPrincipalV2 implements MouseListener {
 				String nombre = text_4.getText();
 				String direccion = text_6.getText();
 				String instrumento = text_5.getText();
-				musicoGrupoService.crearMusico(nombre, direccion, instrumento);
+				try {
+					musicoGrupoService.crearMusico(nombre, direccion, instrumento);
+				} catch (InputValidationException e1) {
+					e1.printStackTrace();
+				}
 				combo_4.add(nombre);
 			}
 		});

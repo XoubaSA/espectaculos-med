@@ -7,16 +7,16 @@ public class Musico {
 	private String direccion;
 	private String instrumento;
 	
+	public Musico(String nombre, String direccion, String instrumento) {
+		this.nombreMusico = nombre;
+		this.direccion = direccion;
+		this.instrumento = instrumento;
+	}
+	
 	public Musico(Integer idMusico, String nombreMusico, String direccion,
 			String instrumento) {
 		this.idMusico = idMusico;
 		this.nombreMusico = nombreMusico;
-		this.direccion = direccion;
-		this.instrumento = instrumento;
-	}
-
-	public Musico(String nombre, String direccion, String instrumento) {
-		this.nombreMusico = nombre;
 		this.direccion = direccion;
 		this.instrumento = instrumento;
 	}

@@ -3,6 +3,7 @@ package es.udc.med.espectaculos.utils;
 import java.util.Calendar;
 
 import es.udc.med.espectaculos.model.evento.Evento;
+import es.udc.med.espectaculos.model.musico.Musico;
 
 public final class PropertyValidator {
 
@@ -32,6 +33,21 @@ public final class PropertyValidator {
 			throw new InputValidationException("Día anterior al actual");
 		}
 
+	}
+	
+	public static void validateMusico(Musico musico)
+			throws InputValidationException {
+		if (musico.getNombreMusico() == null
+				|| musico.getNombreMusico().equals("")) {
+			throw new InputValidationException("Nombre de músico no válido");
+		}
+		if (musico.getDireccion() == null
+				|| musico.getDireccion().equals("")) {
+			throw new InputValidationException("Direccióm no válida");
+		}
+		if (musico.getInstrumento() == null || musico.getInstrumento().equals("")) {
+			throw new InputValidationException("Instrumento no válido");
+		}
 	}
 
 }

@@ -118,7 +118,7 @@ public abstract class AbstractSqlMusicoDao implements MusicoDao {
 	@Override
 	public Musico obtenerMusicoPorNombre(Connection conexion,
 			String nombreMusico) throws InstanceNotFoundException {
-		String queryString = "SELECT ID_MUSICO, NOMBRE_MUSICO, DIRECCION, INSTRUMENTO FROM EVENTO WHERE NOMBRE_MUSICO = ?";
+		String queryString = "SELECT ID_MUSICO, NOMBRE_MUSICO, DIRECCION, INSTRUMENTO FROM MUSICO WHERE NOMBRE_MUSICO = ?";
 
 		try (PreparedStatement preparedStatement = conexion
 				.prepareStatement(queryString)) {

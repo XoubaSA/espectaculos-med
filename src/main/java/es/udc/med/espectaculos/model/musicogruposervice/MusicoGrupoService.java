@@ -14,18 +14,22 @@ public interface MusicoGrupoService {
 	public MusicoGrupo asignarMusicoGrupo(Musico musico, Grupo grupo) 
 			throws InputValidationException, MusicoAsignadoException;
 	
-	public Musico crearMusico(String nombreMusico, String direccion, String instrumento);
+	public Musico crearMusico(String nombreMusico, String direccion, String instrumento) throws InputValidationException;
 	
 	public Musico obtenerMusicoPorNombre(String nombreMusico) throws InstanceNotFoundException;
 
 	public void borrarMusico(Integer idMusico) throws InstanceNotFoundException;
 
+	public void borrarMiembro(Integer idGrupo, Integer idMusico) throws InstanceNotFoundException;
+	
+	public void borrarMusicoGrupo(Integer idMusicoGrupo) throws InstanceNotFoundException;
+	
 	public List<Musico> getMusicos();
 	
 	public List<Grupo> getGrupos();
 	
-	//TODO Falta implementar un metodo que obtenga los musicos de un grupo GetFormacion() que devuelva List<Musico>
-	
-	//TODO Falta implementar borrado de un musico en un grupo concreto
+	public List<Musico> getFormacion(Grupo grupo);
+		
+	//TODO Falta implementar borrado de un grupo entero (ON CASCADE?).
 
 }
