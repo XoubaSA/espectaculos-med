@@ -52,7 +52,7 @@ public class VentanaPrincipalV2 implements MouseListener {
 	private Shell shell;
 	private int day, month, year;
 	private String strDate;
-	private Tree tree_1, tree2, tree3;
+	private Tree tree_1, tree2, tree3, tree4;
 	private TableTree tableTree;
 	private String eventName;
 
@@ -98,8 +98,6 @@ public class VentanaPrincipalV2 implements MouseListener {
 	private Text text_10;
 	private Text text_11;
 	private Text text_12;
-	private Text text_13;
-	private Text text_15;
 	private Text text_14;
 	private Text text_16;
 	private Text text_17;
@@ -342,7 +340,9 @@ public class VentanaPrincipalV2 implements MouseListener {
 					text_12.setText(ConvertidorFechas.convertirCalendarString(eventoInfo.getFechaInicioEvento()));
 					text_11.setText(eventoInfo.getLocalidad());					
 				} catch (InstanceNotFoundException e1) {
-					e1.printStackTrace();
+					MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR);
+					messageBox.setMessage(e1.getMessage());
+					messageBox.open();
 				}
 			}
 		});
@@ -357,33 +357,37 @@ public class VentanaPrincipalV2 implements MouseListener {
 		
 		final Combo combo_8 = new Combo(grpGrupos, SWT.READ_ONLY);
 		combo_8.setBounds(10, 41, 202, 23);
-		
-		Label label_8 = new Label(grpGrupos, SWT.NONE);
-		label_8.setText("Nombre:");
-		label_8.setBounds(10, 70, 99, 15);
-		
-		text_13 = new Text(grpGrupos, SWT.BORDER | SWT.READ_ONLY);
-		text_13.setBounds(10, 91, 202, 21);
-		
-		Label lblSalario = new Label(grpGrupos, SWT.NONE);
-		lblSalario.setText("Salario:");
-		lblSalario.setBounds(10, 118, 118, 15);
-		
-		text_15 = new Text(grpGrupos, SWT.BORDER | SWT.READ_ONLY);
-		text_15.setBounds(10, 139, 202, 21);
 
 		Button btnHacerBusquedaGrupo = new Button(grpGrupos, SWT.NONE);
 		btnHacerBusquedaGrupo.setText("Hacer busqueda grupo");
 		btnHacerBusquedaGrupo.setBounds(10, 280, 202, 25);
+		
+		tree4 = new Tree(grpGrupos, SWT.BORDER);
+		tree4.setBounds(10, 70, 202, 204);
 		btnHacerBusquedaGrupo.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				try {
 					Grupo grupoInfo = eventoService.obtenerGrupoPorNombre(combo_8.getText());
-					text_13.setText(grupoInfo.getNombreOrquesta());
-					text_15.setText(Float.toString(grupoInfo.getSalarioActuacion()));
+					tree4.removeAll();
+					TreeItem nombre = new TreeItem(tree4, SWT.NONE);
+					nombre.setText("Nombre: " + grupoInfo.getNombreOrquesta());
+					TreeItem salario = new TreeItem(tree4, SWT.NONE);
+					salario.setText("Salario: " + grupoInfo.getSalarioActuacion());
+					List<Musico> musicos = musicoGrupoService.getFormacion(grupoInfo);
+					if(!musicos.isEmpty()) {
+						TreeItem formacion = new TreeItem(tree4, SWT.NONE);
+						formacion.setText("Integrantes");
+						for (Musico musico : musicos) {
+							TreeItem musicoItem = new TreeItem(formacion, SWT.NONE);
+							musicoItem.setText(musico.getNombreMusico());
+						}
+					}
+					
 				} catch (InstanceNotFoundException e1) {
-					e1.printStackTrace();
+					MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR);
+					messageBox.setMessage(e1.getMessage());
+					messageBox.open();
 				}
 			}
 		});
@@ -432,7 +436,9 @@ public class VentanaPrincipalV2 implements MouseListener {
 					text_17.setText(musicoInfo.getDireccion());
 					text_16.setText(musicoInfo.getInstrumento());
 				} catch (InstanceNotFoundException e1) {
-					e1.printStackTrace();
+					MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR);
+					messageBox.setMessage(e1.getMessage());
+					messageBox.open();
 				}
 			}
 		});
