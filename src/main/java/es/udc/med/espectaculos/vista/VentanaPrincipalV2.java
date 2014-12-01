@@ -25,6 +25,7 @@ import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
@@ -478,7 +479,9 @@ public class VentanaPrincipalV2 implements MouseListener {
 							text_1.getText());
 					VentanaPrincipalV2.this.combo_2.add(text.getText());
 				} catch (InputValidationException e1) {
-					e1.printStackTrace();
+					MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR);
+					messageBox.setMessage(e1.getMessage());
+					messageBox.open();
 				}
 			}
 		});
@@ -525,7 +528,9 @@ public class VentanaPrincipalV2 implements MouseListener {
 					eventoService.asignarGrupoEvento(grupo, evento,
 							ConvertidorFechas.convertirCalendarString(fecha));
 				} catch (InputValidationException | AsignarGrupoEventoException | InstanceNotFoundException e1) { 
-					e1.printStackTrace();
+					MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR);
+					messageBox.setMessage(e1.getMessage());
+					messageBox.open();
 				}
 			}
 		});
@@ -567,7 +572,7 @@ public class VentanaPrincipalV2 implements MouseListener {
 		Button button = new Button(group, SWT.NONE);
 		button.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e) {
+			public void widgetSelected(SelectionEvent e) {   //TODO validar los grupos al crearlos y capturar aqui la excepcion para mostrar dialogo
 				eventoService.crearGrupo(text_2.getText(),
 						Float.valueOf(text_3.getText()));
 			}
@@ -733,7 +738,9 @@ public class VentanaPrincipalV2 implements MouseListener {
 				try {
 					musicoGrupoService.crearMusico(nombre, direccion, instrumento);
 				} catch (InputValidationException e1) {				
-					e1.printStackTrace();
+					MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR);
+					messageBox.setMessage(e1.getMessage());
+					messageBox.open();
 				}
 				combo_4.add(nombre);
 			}
