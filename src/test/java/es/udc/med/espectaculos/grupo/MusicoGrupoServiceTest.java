@@ -39,6 +39,18 @@ public class MusicoGrupoServiceTest {
 		eventService = new EventoServiceImpl();
 	}
 	
+	public static void cleanAfterException(Musico musico, Grupo grupo, MusicoGrupo musicoGrupo) {
+		try {
+			if (musico != null) musicoGrupoService.borrarMusico(musico.getIdMusico());
+		} catch (InstanceNotFoundException e){}
+		try {
+			if (grupo != null) eventService.borrarGrupo(grupo.getIdGrupo());
+		} catch (InstanceNotFoundException e){}
+		try {
+			if (musicoGrupo != null) musicoGrupoService.borrarMusicoGrupo(musicoGrupo.getIdMusicoGrupo());
+		} catch (InstanceNotFoundException e){}
+	}
+	
 	private Musico createMusico(String nombre) throws InputValidationException {
 		return musicoGrupoService.crearMusico(nombre, "Calle Venecia", "Bateria");
 	}
@@ -160,7 +172,6 @@ public class MusicoGrupoServiceTest {
 			eventService.borrarGrupo(grupo.getIdGrupo());
 			musicoGrupoService.borrarMusicoGrupo(musicoGrupo.getIdMusicoGrupo());
 		} catch (InstanceNotFoundException e) {
-			e.printStackTrace();
 		}
 
 	}
@@ -169,12 +180,20 @@ public class MusicoGrupoServiceTest {
 	@Test(expected = MusicoAsignadoException.class)
 	public void asignarMusicoRepetidoTest() throws InputValidationException,
 			MusicoAsignadoException {
-		Grupo grupo = createGrupo("Grupo Test");
-		Musico musico = createMusico("Menganito");
-			
-		MusicoGrupo musicoGrupo = musicoGrupoService.asignarMusicoGrupo(musico, grupo);
-			
-		MusicoGrupo musicoGrupo2 = musicoGrupoService.asignarMusicoGrupo(musico, grupo);
+		Grupo grupo = null;
+		Musico musico = null;
+		MusicoGrupo musicoGrupo = null;
+		
+		try {
+			grupo = createGrupo("Grupo Test");
+			musico = createMusico("Menganito");
+				
+			musicoGrupo = musicoGrupoService.asignarMusicoGrupo(musico, grupo);
+				
+			MusicoGrupo musicoGrupo2 = musicoGrupoService.asignarMusicoGrupo(musico, grupo);
+		} finally {
+			cleanAfterException(musico, grupo, musicoGrupo);
+		}
 	}
 		
 	//Probamos que no se pueda insertar un musico nulo
@@ -184,12 +203,10 @@ public class MusicoGrupoServiceTest {
 		Grupo grupo = createGrupo("Grupo Test2");
 		Musico musico = null;
 			
-		MusicoGrupo musicoGrupo = musicoGrupoService.asignarMusicoGrupo(musico, grupo);
-		
 		try {
-			eventService.borrarGrupo(grupo.getIdGrupo());
-		} catch (InstanceNotFoundException e) {
-			e.printStackTrace();
+			MusicoGrupo musicoGrupo = musicoGrupoService.asignarMusicoGrupo(musico, grupo);
+		} finally {
+			cleanAfterException(musico, grupo, null);
 		}
 	}
 	
@@ -200,12 +217,10 @@ public class MusicoGrupoServiceTest {
 		Grupo grupo = null;
 		Musico musico = createMusico("Menganito2");
 			
-		MusicoGrupo musicoGrupo = musicoGrupoService.asignarMusicoGrupo(musico, grupo);
-		
 		try {
-			musicoGrupoService.borrarMusico(musico.getIdMusico());
-		} catch (InstanceNotFoundException e) {
-			e.printStackTrace();
+			MusicoGrupo musicoGrupo = musicoGrupoService.asignarMusicoGrupo(musico, grupo);
+		} finally {
+			cleanAfterException(musico, grupo, null);
 		}
 	}
 

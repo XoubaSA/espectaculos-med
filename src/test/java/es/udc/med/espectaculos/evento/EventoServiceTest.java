@@ -56,6 +56,18 @@ public class EventoServiceTest {
 		}
 	}
 
+	public static void cleanAfterException(Evento evento, Grupo grupo, GrupoEvento grupoEvento) {
+		try {
+			if (evento != null) eventService.borrarEvento(evento.getIdEvento());
+		} catch (InstanceNotFoundException e){}
+		try {
+			if (grupo != null) eventService.borrarGrupo(grupo.getIdGrupo());
+		} catch (InstanceNotFoundException e){}
+		try {
+			if (grupoEvento != null) eventService.borrarGrupoEvento(grupoEvento.getIdGrupoEvento());
+		} catch (InstanceNotFoundException e){}
+	}
+
 	private Evento createEventoInDate(Calendar fecha)
 			throws InputValidationException {
 		// lo del gettimeinmmillis es para evitarse problemas con la restriccion
@@ -264,8 +276,8 @@ public class EventoServiceTest {
 		Evento eventInNextMonth = createEventoInDate(fechaMesSiguiente);
 		Grupo group = createGrupoWithName("Orquesta Panorama");
 
-		eventService.asignarGrupoEvento(group, eventInMonth, fechaString);
-		eventService.asignarGrupoEvento(group, eventInNextMonth,
+		GrupoEvento grupoEvento = eventService.asignarGrupoEvento(group, eventInMonth, fechaString);
+		GrupoEvento grupoEvento2 = eventService.asignarGrupoEvento(group, eventInNextMonth,
 				fechaMesSiguienteString);
 
 		List<Evento> eventosMes = eventService.filtrarEventosGrupo(group,
@@ -293,6 +305,9 @@ public class EventoServiceTest {
 		try {
 			eventService.borrarEvento(eventInMonth.getIdEvento());
 			eventService.borrarEvento(eventInNextMonth.getIdEvento());
+			eventService.borrarGrupo(group.getIdGrupo());
+			eventService.borrarGrupoEvento(grupoEvento.getIdGrupoEvento());
+			eventService.borrarGrupoEvento(grupoEvento2.getIdGrupoEvento());
 		} catch (InstanceNotFoundException e) {
 		}
 
@@ -344,11 +359,10 @@ public class EventoServiceTest {
 		Evento evento = eventService.crearEvento("evento1",
 				Calendar.getInstance(), "direccion evento 1");
 		Grupo grupo = null;
-		eventService.asignarGrupoEvento(grupo, evento, fechaString);
 		try {
-			eventService.borrarEvento(evento.getIdEvento());
-		} catch (InstanceNotFoundException e) {
-			e.printStackTrace();
+			eventService.asignarGrupoEvento(grupo, evento, fechaString);
+		} finally {
+			cleanAfterException(evento, grupo, null);
 		}
 	}
 
@@ -366,12 +380,10 @@ public class EventoServiceTest {
 
 		Evento evento = null;
 		Grupo grupo = eventService.crearGrupo("grupo1", Float.valueOf(5000));
-		eventService.asignarGrupoEvento(grupo, evento, fechaString);
-
 		try {
-			eventService.borrarGrupo(grupo.getIdGrupo());
-		} catch (InstanceNotFoundException e) {
-			e.printStackTrace();
+			eventService.asignarGrupoEvento(grupo, evento, fechaString);
+		} finally {
+			cleanAfterException(evento, grupo, null);
 		}
 	}
 
@@ -386,7 +398,11 @@ public class EventoServiceTest {
 		Grupo grupo = eventService.crearGrupo("grupo11", Float.valueOf(5000));
 		GrupoEvento ge = eventService.asignarGrupoEvento(grupo, evento,
 				fechaString);
-		GrupoEvento ge2 = eventService.asignarGrupoEvento(grupo, evento,
-				fechaString);
+		try {
+			GrupoEvento ge2 = eventService.asignarGrupoEvento(grupo, evento,
+					fechaString);
+		} finally {
+			cleanAfterException(evento, grupo, ge);
+		}
 	}
 }

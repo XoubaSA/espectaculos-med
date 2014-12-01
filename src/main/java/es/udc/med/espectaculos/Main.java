@@ -30,7 +30,7 @@ public class Main {
 				GeneradorBD.insertarDatosPrueba(conn,
 						"src/main/resources/InsertarDatos.sql");
 				conn.commit();
-				conn.close();
+				
 			}
 
 			VentanaPrincipalV2 ventanaPrincipal = new VentanaPrincipalV2();
