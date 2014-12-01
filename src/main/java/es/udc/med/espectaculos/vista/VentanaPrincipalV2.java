@@ -53,6 +53,7 @@ public class VentanaPrincipalV2 implements MouseListener {
 	private int day, month, year;
 	private String strDate;
 	private Tree tree_1, tree2, tree3, tree4;
+	private DateTime dateTime;
 	private TableTree tableTree;
 	private String eventName;
 
@@ -464,7 +465,7 @@ public class VentanaPrincipalV2 implements MouseListener {
 		lblIntroduceFechaInicio.setBounds(10, 68, 118, 15);
 		lblIntroduceFechaInicio.setText("Introduce fecha inicio:");
 
-		final DateTime dateTime = new DateTime(grpCrearEvento, SWT.BORDER);
+		dateTime = new DateTime(grpCrearEvento, SWT.BORDER);
 		dateTime.setBounds(10, 89, 80, 24);
 
 		Label lblIntroduceLocalidad = new Label(grpCrearEvento, SWT.NONE);
@@ -578,9 +579,19 @@ public class VentanaPrincipalV2 implements MouseListener {
 		Button button = new Button(group, SWT.NONE);
 		button.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e) {   //TODO validar los grupos al crearlos y capturar aqui la excepcion para mostrar dialogo
-				eventoService.crearGrupo(text_2.getText(),
-						Float.valueOf(text_3.getText()));
+			public void widgetSelected(SelectionEvent e) {
+				try {
+					eventoService.crearGrupo(text_2.getText(),
+							Float.valueOf(text_3.getText()));
+				} catch (NumberFormatException e1) {
+					MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR);
+					messageBox.setMessage("El salario introducido no es válido");
+					messageBox.open();
+				} catch (InputValidationException e1) {
+					MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR);
+					messageBox.setMessage(e1.getMessage());
+					messageBox.open();
+				}
 			}
 		});
 		button.setText("Crear grupo");
@@ -1045,6 +1056,7 @@ public class VentanaPrincipalV2 implements MouseListener {
 			}
 			this.selectedDate = nowLabel.getText() + "/" + day.getText();
 			getDate();
+			dateTime.setDate(year, month - 1, this.day);
 		}
 	}
 

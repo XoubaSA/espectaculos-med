@@ -88,7 +88,7 @@ public class EventoServiceTest {
 				"Calle Falsa 123");
 	}
 
-	private Grupo createGrupoWithName(String nombre) {
+	private Grupo createGrupoWithName(String nombre) throws InputValidationException {
 		return eventService.crearGrupo(nombre, 3000);
 	}
 

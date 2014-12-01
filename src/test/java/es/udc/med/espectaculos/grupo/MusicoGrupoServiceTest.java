@@ -55,7 +55,7 @@ public class MusicoGrupoServiceTest {
 		return musicoGrupoService.crearMusico(nombre, "Calle Venecia", "Bateria");
 	}
 	
-	private Grupo createGrupo(String nombre) {
+	private Grupo createGrupo(String nombre) throws InputValidationException {
 		return eventService.crearGrupo(nombre, 3000);
 	}
 	

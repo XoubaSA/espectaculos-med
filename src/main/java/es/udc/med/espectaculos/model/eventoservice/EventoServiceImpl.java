@@ -55,7 +55,11 @@ public class EventoServiceImpl implements EventoService {
 	}
 
 	@Override
-	public Grupo crearGrupo(String nombreOrquesta, float salarioActuacion) {
+	public Grupo crearGrupo(String nombreOrquesta, float salarioActuacion) throws InputValidationException{
+		if (nombreOrquesta == null
+				|| nombreOrquesta.equals("")) {
+			throw new InputValidationException("Nombre de grupo no válido");
+		}
 		Grupo grupo = new Grupo(nombreOrquesta, salarioActuacion);
 		try {
 			try {

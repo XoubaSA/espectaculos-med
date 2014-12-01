@@ -15,7 +15,7 @@ public interface EventoService {
 	public Evento crearEvento(String nombreEvento, Calendar fechaInicio,
 			String direccion) throws InputValidationException;
 
-	public Grupo crearGrupo(String nombreOrquesta, float salarioActuacion);
+	public Grupo crearGrupo(String nombreOrquesta, float salarioActuacion) throws InputValidationException;
 
 	public List<Evento> findAllEvents();
 	
