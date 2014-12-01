@@ -178,10 +178,10 @@ public class MusicoGrupoServiceTest {
 	}
 		
 	//Probamos que no se pueda insertar un musico nulo
-	@Test(expected = MusicoAsignadoException.class)
+	@Test(expected = InputValidationException.class)
 	public void asignarMusicoNuloTest() throws InputValidationException,
 			MusicoAsignadoException {
-		Grupo grupo = createGrupo("Grupo Test");
+		Grupo grupo = createGrupo("Grupo Test2");
 		Musico musico = null;
 			
 		MusicoGrupo musicoGrupo = musicoGrupoService.asignarMusicoGrupo(musico, grupo);
@@ -194,11 +194,11 @@ public class MusicoGrupoServiceTest {
 	}
 	
 	//Probamos que no se pueda insertar en un grupo nulo
-	@Test(expected = MusicoAsignadoException.class)
+	@Test(expected = InputValidationException.class)
 	public void asignarGrupoNuloTest() throws InputValidationException,
 			MusicoAsignadoException {
 		Grupo grupo = null;
-		Musico musico = createMusico("Menganito");
+		Musico musico = createMusico("Menganito2");
 			
 		MusicoGrupo musicoGrupo = musicoGrupoService.asignarMusicoGrupo(musico, grupo);
 		

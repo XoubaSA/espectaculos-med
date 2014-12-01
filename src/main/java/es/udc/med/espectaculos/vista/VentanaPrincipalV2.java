@@ -141,7 +141,7 @@ public class VentanaPrincipalV2 implements MouseListener {
 
 		final TabFolder tabFolder = new TabFolder(shell, SWT.NONE);
 
-		TabItem tbtmCalendario = new TabItem(tabFolder, SWT.NONE);
+		final TabItem tbtmCalendario = new TabItem(tabFolder, SWT.NONE);
 		tbtmCalendario.setText("Calendario");
 
 		Composite composite_1 = new Composite(tabFolder, SWT.NONE);
@@ -730,7 +730,11 @@ public class VentanaPrincipalV2 implements MouseListener {
 				String nombre = text_4.getText();
 				String direccion = text_6.getText();
 				String instrumento = text_5.getText();
-				musicoGrupoService.crearMusico(nombre, direccion, instrumento);
+				try {
+					musicoGrupoService.crearMusico(nombre, direccion, instrumento);
+				} catch (InputValidationException e1) {				
+					e1.printStackTrace();
+				}
 				combo_4.add(nombre);
 			}
 		});
@@ -823,6 +827,9 @@ public class VentanaPrincipalV2 implements MouseListener {
 						combo_4.add(musico.getNombreMusico());
 					}
 
+				} else if (tabFolder.getItem(tabFolder.getSelectionIndex()).equals(
+						tbtmCalendario)) {
+					pinta(Calendar.getInstance(), display);
 				}
 			}
 		});
