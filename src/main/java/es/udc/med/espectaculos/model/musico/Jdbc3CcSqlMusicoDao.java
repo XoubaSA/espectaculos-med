@@ -5,12 +5,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import es.udc.med.espectaculos.utils.GrupoExisteException;
+
 public class Jdbc3CcSqlMusicoDao extends AbstractSqlMusicoDao {
 	
 	public Musico create(Connection connection, Musico musico) {
 
 		String queryString = "INSERT INTO MUSICO (NOMBRE_MUSICO, DIRECCION, INSTRUMENTO) VALUES (?, ?, ?)";
-
+		
 		try (PreparedStatement preparedStatement = connection
 				.prepareStatement(queryString)) {
 			int i = 1;

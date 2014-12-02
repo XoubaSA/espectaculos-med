@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
+import es.udc.med.espectaculos.utils.GrupoExisteException;
 import es.udc.med.espectaculos.utils.InstanceNotFoundException;
 
 public interface GrupoDao {
@@ -17,7 +18,7 @@ public interface GrupoDao {
 	public List<Grupo> getGrupos(Connection connection);
 	
 	public Grupo create(Connection connection, Grupo grupo) 
-			throws SQLException;
+			throws SQLException, GrupoExisteException;
 
 	public List<Grupo> obtenerGrupos(Connection conexion);
 

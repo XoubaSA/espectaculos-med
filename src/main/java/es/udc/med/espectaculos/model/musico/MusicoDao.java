@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
+import es.udc.med.espectaculos.utils.GrupoExisteException;
 import es.udc.med.espectaculos.utils.InstanceNotFoundException;
 
 public interface MusicoDao {

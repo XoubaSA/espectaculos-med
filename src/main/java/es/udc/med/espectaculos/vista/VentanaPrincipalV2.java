@@ -42,8 +42,11 @@ import es.udc.med.espectaculos.model.musicogruposervice.MusicoGrupoService;
 import es.udc.med.espectaculos.model.musicogruposervice.MusicoGrupoServiceImpl;
 import es.udc.med.espectaculos.utils.AsignarGrupoEventoException;
 import es.udc.med.espectaculos.utils.ConvertidorFechas;
+import es.udc.med.espectaculos.utils.EventoExisteException;
+import es.udc.med.espectaculos.utils.GrupoExisteException;
 import es.udc.med.espectaculos.utils.InputValidationException;
 import es.udc.med.espectaculos.utils.InstanceNotFoundException;
+import es.udc.med.espectaculos.utils.MusicoAsignadoException;
 
 public class VentanaPrincipalV2 implements MouseListener {
 
@@ -290,42 +293,42 @@ public class VentanaPrincipalV2 implements MouseListener {
 		lblNewLabel2.setText("Green      -> 0 events\n"
 				+ "Blue         -> 1 events\n" + "Dark Red -> 2 events\n"
 				+ "Magenta -> 3 events\n" + "Cyan        -> 4 events");
-		
+
 		final TabItem tbtmConsultas = new TabItem(tabFolder, 0);
 		tbtmConsultas.setText("Consultas");
-		
+
 		Composite composite_6 = new Composite(tabFolder, SWT.NONE);
 		tbtmConsultas.setControl(composite_6);
-		
+
 		Group grpEventos = new Group(composite_6, SWT.NONE);
 		grpEventos.setText("Eventos");
 		grpEventos.setBounds(0, 0, 222, 315);
-		
+
 		Label lblSeleccioneElEvento = new Label(grpEventos, SWT.NONE);
 		lblSeleccioneElEvento.setBounds(10, 20, 202, 15);
 		lblSeleccioneElEvento.setText("Seleccione el evento deseado:");
-		
+
 		final Combo combo_7 = new Combo(grpEventos, SWT.READ_ONLY);
 		combo_7.setBounds(10, 41, 202, 23);
-		
+
 		Label lblNombre = new Label(grpEventos, SWT.NONE);
 		lblNombre.setText("Nombre:");
 		lblNombre.setBounds(10, 70, 99, 15);
-		
+
 		text_10 = new Text(grpEventos, SWT.BORDER | SWT.READ_ONLY);
 		text_10.setBounds(10, 91, 202, 21);
-		
+
 		Label lblFechaInicio = new Label(grpEventos, SWT.NONE);
 		lblFechaInicio.setText("Fecha inicio:");
 		lblFechaInicio.setBounds(10, 118, 118, 15);
-		
+
 		Label lblLocalidad = new Label(grpEventos, SWT.NONE);
 		lblLocalidad.setText("Localidad:");
 		lblLocalidad.setBounds(10, 169, 105, 15);
-		
+
 		text_11 = new Text(grpEventos, SWT.BORDER | SWT.READ_ONLY);
 		text_11.setBounds(10, 190, 202, 21);
-		
+
 		text_12 = new Text(grpEventos, SWT.BORDER | SWT.READ_ONLY);
 		text_12.setBounds(10, 139, 202, 21);
 
@@ -336,92 +339,101 @@ public class VentanaPrincipalV2 implements MouseListener {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				try {
-					Evento eventoInfo = eventoService.obtenerEventoPorNombre(combo_7.getText());
+					Evento eventoInfo = eventoService
+							.obtenerEventoPorNombre(combo_7.getText());
 					text_10.setText(eventoInfo.getNombreEvento());
-					text_12.setText(ConvertidorFechas.convertirCalendarString(eventoInfo.getFechaInicioEvento()));
-					text_11.setText(eventoInfo.getLocalidad());					
+					text_12.setText(ConvertidorFechas
+							.convertirCalendarString(eventoInfo
+									.getFechaInicioEvento()));
+					text_11.setText(eventoInfo.getLocalidad());
 				} catch (InstanceNotFoundException e1) {
-					MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR);
-					messageBox.setMessage(e1.getMessage());
+					MessageBox messageBox = new MessageBox(shell,
+							SWT.ICON_ERROR);
+					messageBox.setMessage("No  has seleccionado ningun grupo");
 					messageBox.open();
 				}
 			}
 		});
-		
+
 		Group grpGrupos = new Group(composite_6, SWT.NONE);
 		grpGrupos.setText("Grupos");
 		grpGrupos.setBounds(228, 0, 222, 315);
-		
+
 		Label lblSeleccioneElGrupo = new Label(grpGrupos, SWT.NONE);
 		lblSeleccioneElGrupo.setText("Seleccione el grupo deseado:");
 		lblSeleccioneElGrupo.setBounds(10, 20, 202, 15);
-		
+
 		final Combo combo_8 = new Combo(grpGrupos, SWT.READ_ONLY);
 		combo_8.setBounds(10, 41, 202, 23);
 
 		Button btnHacerBusquedaGrupo = new Button(grpGrupos, SWT.NONE);
 		btnHacerBusquedaGrupo.setText("Hacer busqueda grupo");
 		btnHacerBusquedaGrupo.setBounds(10, 280, 202, 25);
-		
+
 		tree4 = new Tree(grpGrupos, SWT.BORDER);
 		tree4.setBounds(10, 70, 202, 204);
 		btnHacerBusquedaGrupo.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				try {
-					Grupo grupoInfo = eventoService.obtenerGrupoPorNombre(combo_8.getText());
+					Grupo grupoInfo = eventoService
+							.obtenerGrupoPorNombre(combo_8.getText());
 					tree4.removeAll();
 					TreeItem nombre = new TreeItem(tree4, SWT.NONE);
 					nombre.setText("Nombre: " + grupoInfo.getNombreOrquesta());
 					TreeItem salario = new TreeItem(tree4, SWT.NONE);
-					salario.setText("Salario: " + grupoInfo.getSalarioActuacion());
-					List<Musico> musicos = musicoGrupoService.getFormacion(grupoInfo);
-					if(!musicos.isEmpty()) {
+					salario.setText("Salario: "
+							+ grupoInfo.getSalarioActuacion());
+					List<Musico> musicos = musicoGrupoService
+							.getFormacion(grupoInfo);
+					if (!musicos.isEmpty()) {
 						TreeItem formacion = new TreeItem(tree4, SWT.NONE);
 						formacion.setText("Integrantes");
 						for (Musico musico : musicos) {
-							TreeItem musicoItem = new TreeItem(formacion, SWT.NONE);
+							TreeItem musicoItem = new TreeItem(formacion,
+									SWT.NONE);
 							musicoItem.setText(musico.getNombreMusico());
 						}
 					}
-					
+
 				} catch (InstanceNotFoundException e1) {
-					MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR);
+					MessageBox messageBox = new MessageBox(shell,
+							SWT.ICON_ERROR);
 					messageBox.setMessage(e1.getMessage());
 					messageBox.open();
 				}
 			}
 		});
-		
+
 		Group grpMusicos = new Group(composite_6, SWT.NONE);
 		grpMusicos.setText("Musicos");
 		grpMusicos.setBounds(456, 0, 222, 315);
-		
+
 		Label lblSeleccioneElMusico = new Label(grpMusicos, SWT.NONE);
 		lblSeleccioneElMusico.setText("Seleccione el musico deseado:");
 		lblSeleccioneElMusico.setBounds(10, 20, 202, 15);
-		
+
 		final Combo combo_9 = new Combo(grpMusicos, SWT.READ_ONLY);
 		combo_9.setBounds(10, 41, 202, 23);
-		
+
 		Label label_10 = new Label(grpMusicos, SWT.NONE);
 		label_10.setText("Nombre:");
 		label_10.setBounds(10, 70, 99, 15);
-		
+
 		text_14 = new Text(grpMusicos, SWT.BORDER | SWT.READ_ONLY);
 		text_14.setBounds(10, 91, 202, 21);
-		
+
 		Label lblDireccion = new Label(grpMusicos, SWT.NONE);
 		lblDireccion.setText("Direccion:");
 		lblDireccion.setBounds(10, 118, 118, 15);
-		
+
 		Label lblInstrumento = new Label(grpMusicos, SWT.NONE);
 		lblInstrumento.setText("Instrumento:");
 		lblInstrumento.setBounds(10, 169, 105, 15);
-		
+
 		text_16 = new Text(grpMusicos, SWT.BORDER | SWT.READ_ONLY);
 		text_16.setBounds(10, 190, 202, 21);
-		
+
 		text_17 = new Text(grpMusicos, SWT.BORDER | SWT.READ_ONLY);
 		text_17.setBounds(10, 139, 202, 21);
 
@@ -432,18 +444,20 @@ public class VentanaPrincipalV2 implements MouseListener {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				try {
-					Musico musicoInfo = musicoGrupoService.obtenerMusicoPorNombre(combo_9.getText());
+					Musico musicoInfo = musicoGrupoService
+							.obtenerMusicoPorNombre(combo_9.getText());
 					text_14.setText(musicoInfo.getNombreMusico());
 					text_17.setText(musicoInfo.getDireccion());
 					text_16.setText(musicoInfo.getInstrumento());
 				} catch (InstanceNotFoundException e1) {
-					MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR);
+					MessageBox messageBox = new MessageBox(shell,
+							SWT.ICON_ERROR);
 					messageBox.setMessage(e1.getMessage());
 					messageBox.open();
 				}
 			}
 		});
-		
+
 		final TabItem tbtmNewItem = new TabItem(tabFolder, SWT.NONE);
 		tbtmNewItem.setText("Evento");
 
@@ -486,7 +500,13 @@ public class VentanaPrincipalV2 implements MouseListener {
 							text_1.getText());
 					VentanaPrincipalV2.this.combo_2.add(text.getText());
 				} catch (InputValidationException e1) {
-					MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR);
+					MessageBox messageBox = new MessageBox(shell,
+							SWT.ICON_ERROR);
+					messageBox.setMessage(e1.getMessage());
+					messageBox.open();
+				} catch (EventoExisteException e1) {
+					MessageBox messageBox = new MessageBox(shell,
+							SWT.ICON_ERROR);
 					messageBox.setMessage(e1.getMessage());
 					messageBox.open();
 				}
@@ -534,8 +554,10 @@ public class VentanaPrincipalV2 implements MouseListener {
 
 					eventoService.asignarGrupoEvento(grupo, evento,
 							ConvertidorFechas.convertirCalendarString(fecha));
-				} catch (InputValidationException | AsignarGrupoEventoException | InstanceNotFoundException e1) { 
-					MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR);
+				} catch (InputValidationException | AsignarGrupoEventoException
+						| InstanceNotFoundException e1) {
+					MessageBox messageBox = new MessageBox(shell,
+							SWT.ICON_ERROR);
 					messageBox.setMessage(e1.getMessage());
 					messageBox.open();
 				}
@@ -584,11 +606,19 @@ public class VentanaPrincipalV2 implements MouseListener {
 					eventoService.crearGrupo(text_2.getText(),
 							Float.valueOf(text_3.getText()));
 				} catch (NumberFormatException e1) {
-					MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR);
-					messageBox.setMessage("El salario introducido no es válido");
+					MessageBox messageBox = new MessageBox(shell,
+							SWT.ICON_ERROR);
+					messageBox
+							.setMessage("El salario introducido no es válido");
 					messageBox.open();
 				} catch (InputValidationException e1) {
-					MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR);
+					MessageBox messageBox = new MessageBox(shell,
+							SWT.ICON_ERROR);
+					messageBox.setMessage(e1.getMessage());
+					messageBox.open();
+				} catch (GrupoExisteException e1) {
+					MessageBox messageBox = new MessageBox(shell,
+							SWT.ICON_ERROR);
 					messageBox.setMessage(e1.getMessage());
 					messageBox.open();
 				}
@@ -629,7 +659,7 @@ public class VentanaPrincipalV2 implements MouseListener {
 		text_5 = new Text(grpCrearMusico, SWT.BORDER);
 		text_5.setBounds(10, 137, 202, 21);
 
-		Button button_1 = new Button(grpCrearMusico, SWT.NONE);		
+		Button button_1 = new Button(grpCrearMusico, SWT.NONE);
 		button_1.setText("Crear musico");
 		button_1.setBounds(10, 280, 202, 25);
 
@@ -655,6 +685,33 @@ public class VentanaPrincipalV2 implements MouseListener {
 		combo_4.setBounds(10, 89, 192, 23);
 
 		Button button_3 = new Button(grpAsignarMusicoA, SWT.NONE);
+		button_3.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				String grupoNombre = combo_3.getText();
+				String musicoNombre = combo_4.getText();
+				try {
+					musicoGrupoService.asignarMusicoGrupo(
+							musicoGrupoService.obtenerMusicoPorNombre(musicoNombre),
+							eventoService.obtenerGrupoPorNombre(grupoNombre));
+				} catch (InputValidationException e1) {
+					MessageBox messageBox = new MessageBox(shell,
+							SWT.ICON_ERROR);
+					messageBox.setMessage(e1.getMessage());
+					messageBox.open();				
+				} catch (InstanceNotFoundException e1) {
+					MessageBox messageBox = new MessageBox(shell,
+							SWT.ICON_ERROR);
+					messageBox.setMessage("El musico o el grupo seleccionado no existe");
+					messageBox.open();
+				} catch (MusicoAsignadoException e1) {
+					MessageBox messageBox = new MessageBox(shell,
+							SWT.ICON_ERROR);
+					messageBox.setMessage(e1.getMessage());
+					messageBox.open();
+				}				
+			}
+		});
 		button_3.setText("Asignar musico a grupo");
 		button_3.setBounds(10, 280, 192, 25);
 
@@ -753,16 +810,23 @@ public class VentanaPrincipalV2 implements MouseListener {
 				String direccion = text_6.getText();
 				String instrumento = text_5.getText();
 				try {
-					musicoGrupoService.crearMusico(nombre, direccion, instrumento);
-				} catch (InputValidationException e1) {				
-					MessageBox messageBox = new MessageBox(shell, SWT.ICON_ERROR);
+					musicoGrupoService.crearMusico(nombre, direccion,
+							instrumento);
+				} catch (InputValidationException e1) {
+					MessageBox messageBox = new MessageBox(shell,
+							SWT.ICON_ERROR);
+					messageBox.setMessage(e1.getMessage());
+					messageBox.open();
+				} catch (GrupoExisteException e1) {
+					MessageBox messageBox = new MessageBox(shell,
+							SWT.ICON_ERROR);
 					messageBox.setMessage(e1.getMessage());
 					messageBox.open();
 				}
 				combo_4.add(nombre);
 			}
 		});
-		
+
 		for (int i = 0; i < 42; i++) {
 			days[i] = new CLabel(composite, SWT.FLAT | SWT.CENTER);
 			gridData = new GridData(GridData.FILL_HORIZONTAL
@@ -803,7 +867,7 @@ public class VentanaPrincipalV2 implements MouseListener {
 
 		tabFolder.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				
+
 				if (tabFolder.getItem(tabFolder.getSelectionIndex()).equals(
 						tbtmConsultas)) {
 					combo_7.removeAll();
@@ -817,14 +881,15 @@ public class VentanaPrincipalV2 implements MouseListener {
 					for (Grupo grupo : gruposCombo8) {
 						combo_8.add(grupo.getNombreOrquesta());
 					}
-					
+
 					combo_9.removeAll();
-					List<Musico> musicosCombo9 = musicoGrupoService.getMusicos();
+					List<Musico> musicosCombo9 = musicoGrupoService
+							.getMusicos();
 					for (Musico musico : musicosCombo9) {
 						combo_9.add(musico.getNombreMusico());
 					}
-				} else if (tabFolder.getItem(tabFolder.getSelectionIndex()).equals(
-						tbtmNewItem)) {
+				} else if (tabFolder.getItem(tabFolder.getSelectionIndex())
+						.equals(tbtmNewItem)) {
 					combo_1.removeAll();
 					List<Grupo> gruposCombo1 = eventoService.obtenerGrupos();
 					for (Grupo grupo : gruposCombo1) {
@@ -837,8 +902,8 @@ public class VentanaPrincipalV2 implements MouseListener {
 						combo_2.add(evento.getNombreEvento());
 					}
 
-				} else if (tabFolder.getItem(tabFolder.getSelectionIndex()).equals(
-						tbtmMusico_1)) {
+				} else if (tabFolder.getItem(tabFolder.getSelectionIndex())
+						.equals(tbtmMusico_1)) {
 					combo_3.removeAll();
 					List<Grupo> gruposCombo3 = eventoService.obtenerGrupos();
 					for (Grupo grupo : gruposCombo3) {
@@ -846,13 +911,14 @@ public class VentanaPrincipalV2 implements MouseListener {
 					}
 
 					combo_4.removeAll();
-					List<Musico> musicosCombo4 = musicoGrupoService.getMusicos();
+					List<Musico> musicosCombo4 = musicoGrupoService
+							.getMusicos();
 					for (Musico musico : musicosCombo4) {
 						combo_4.add(musico.getNombreMusico());
 					}
 
-				} else if (tabFolder.getItem(tabFolder.getSelectionIndex()).equals(
-						tbtmCalendario)) {
+				} else if (tabFolder.getItem(tabFolder.getSelectionIndex())
+						.equals(tbtmCalendario)) {
 					pinta(Calendar.getInstance(), display);
 				}
 			}

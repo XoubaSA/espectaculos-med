@@ -7,15 +7,17 @@ import es.udc.med.espectaculos.model.evento.Evento;
 import es.udc.med.espectaculos.model.grupo.Grupo;
 import es.udc.med.espectaculos.model.grupoevento.GrupoEvento;
 import es.udc.med.espectaculos.utils.AsignarGrupoEventoException;
+import es.udc.med.espectaculos.utils.EventoExisteException;
+import es.udc.med.espectaculos.utils.GrupoExisteException;
 import es.udc.med.espectaculos.utils.InputValidationException;
 import es.udc.med.espectaculos.utils.InstanceNotFoundException;
 
 public interface EventoService {
 
 	public Evento crearEvento(String nombreEvento, Calendar fechaInicio,
-			String direccion) throws InputValidationException;
+			String direccion) throws InputValidationException, EventoExisteException;
 
-	public Grupo crearGrupo(String nombreOrquesta, float salarioActuacion) throws InputValidationException;
+	public Grupo crearGrupo(String nombreOrquesta, float salarioActuacion) throws InputValidationException, GrupoExisteException;
 
 	public List<Evento> findAllEvents();
 	

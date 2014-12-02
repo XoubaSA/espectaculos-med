@@ -17,6 +17,8 @@ import es.udc.med.espectaculos.model.grupoevento.GrupoEventoDao;
 import es.udc.med.espectaculos.model.grupoevento.Jdbc3CcSqlGrupoEventoDao;
 import es.udc.med.espectaculos.utils.AsignarGrupoEventoException;
 import es.udc.med.espectaculos.utils.ConexionManager;
+import es.udc.med.espectaculos.utils.EventoExisteException;
+import es.udc.med.espectaculos.utils.GrupoExisteException;
 import es.udc.med.espectaculos.utils.InputValidationException;
 import es.udc.med.espectaculos.utils.InstanceNotFoundException;
 import es.udc.med.espectaculos.utils.PropertyValidator;
@@ -37,7 +39,7 @@ public class EventoServiceImpl implements EventoService {
 
 	@Override
 	public Evento crearEvento(String nombreEvento, Calendar fechaInicio,
-			String localidad) throws InputValidationException {
+			String localidad) throws InputValidationException, EventoExisteException {
 		Evento evento = new Evento(nombreEvento, fechaInicio, localidad);
 		PropertyValidator.validateEvent(evento);
 		try {
@@ -55,9 +57,9 @@ public class EventoServiceImpl implements EventoService {
 	}
 
 	@Override
-	public Grupo crearGrupo(String nombreOrquesta, float salarioActuacion) throws InputValidationException{
-		if (nombreOrquesta == null
-				|| nombreOrquesta.equals("")) {
+	public Grupo crearGrupo(String nombreOrquesta, float salarioActuacion)
+			throws InputValidationException, GrupoExisteException {
+		if (nombreOrquesta == null || nombreOrquesta.equals("")) {
 			throw new InputValidationException("Nombre de grupo no válido");
 		}
 		Grupo grupo = new Grupo(nombreOrquesta, salarioActuacion);
@@ -104,7 +106,7 @@ public class EventoServiceImpl implements EventoService {
 	public List<Grupo> obtenerGruposEvento(Evento evento) {
 		return grupoEventoDao.obtenerGruposEvento(conexion, evento);
 	}
-	
+
 	@Override
 	public List<Evento> obtenerEventosFecha(Calendar fecha) {
 		try {
@@ -129,9 +131,10 @@ public class EventoServiceImpl implements EventoService {
 		return grupoEventoDao.obtenerEventosGrupoFecha(conexion, grupo,
 				fechaInicio, fechaFin);
 	}
-	
+
 	@Override
-	public List<Evento> obtenerEventosDeGrupoDia(Grupo grupo, Calendar fecha) throws InputValidationException {
+	public List<Evento> obtenerEventosDeGrupoDia(Grupo grupo, Calendar fecha)
+			throws InputValidationException {
 		if ((grupo == null) || (fecha == null))
 			throw new InputValidationException(
 					"Grupo y fecha no pueden ser nulos");
@@ -199,4 +202,3 @@ public class EventoServiceImpl implements EventoService {
 	}
 
 }
-

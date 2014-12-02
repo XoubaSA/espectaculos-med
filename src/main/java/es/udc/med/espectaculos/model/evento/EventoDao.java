@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.List;
 
+import es.udc.med.espectaculos.utils.EventoExisteException;
 import es.udc.med.espectaculos.utils.InstanceNotFoundException;
 
 public interface EventoDao {
@@ -19,7 +20,7 @@ public interface EventoDao {
 			throws InstanceNotFoundException;
 
 	public Evento create(Connection connection, Evento evento)
-			throws SQLException;
+			throws SQLException, EventoExisteException;
 
 	public Evento buscarEventoPorNombre(Connection conexion, String nombreEvento) throws InstanceNotFoundException;
 

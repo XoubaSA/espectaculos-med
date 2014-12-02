@@ -24,6 +24,7 @@ import es.udc.med.espectaculos.model.musicogruposervice.MusicoGrupoService;
 import es.udc.med.espectaculos.model.musicogruposervice.MusicoGrupoServiceImpl;
 import es.udc.med.espectaculos.utils.AsignarGrupoEventoException;
 import es.udc.med.espectaculos.utils.ConvertidorFechas;
+import es.udc.med.espectaculos.utils.GrupoExisteException;
 import es.udc.med.espectaculos.utils.InputValidationException;
 import es.udc.med.espectaculos.utils.InstanceNotFoundException;
 import es.udc.med.espectaculos.utils.MusicoAsignadoException;
@@ -51,11 +52,11 @@ public class MusicoGrupoServiceTest {
 		} catch (InstanceNotFoundException e){}
 	}
 	
-	private Musico createMusico(String nombre) throws InputValidationException {
+	private Musico createMusico(String nombre) throws InputValidationException, GrupoExisteException {
 		return musicoGrupoService.crearMusico(nombre, "Calle Venecia", "Bateria");
 	}
 	
-	private Grupo createGrupo(String nombre) throws InputValidationException {
+	private Grupo createGrupo(String nombre) throws InputValidationException, GrupoExisteException {
 		return eventService.crearGrupo(nombre, 3000);
 	}
 	
@@ -63,7 +64,7 @@ public class MusicoGrupoServiceTest {
 	// Caso exitoso en el que se crea un musico y se busca por nombre
 	@Test
 	public void createAndFindMusico() throws InstanceNotFoundException,
-			InputValidationException {
+			InputValidationException, GrupoExisteException {
 
 		Musico musico = createMusico("Menganito");
 
@@ -81,10 +82,11 @@ public class MusicoGrupoServiceTest {
 		}
 	}
 	
-	/******** Probamos a crear musicos con datos nulos o vacios ********/
+	/******** Probamos a crear musicos con datos nulos o vacios 
+	 * @throws GrupoExisteException ********/
 	
 	@Test(expected = InputValidationException.class)
-	public void createMusicoWithNullName() throws InputValidationException {
+	public void createMusicoWithNullName() throws InputValidationException, GrupoExisteException {
 		Musico musico = musicoGrupoService.crearMusico(null, "Calle Venecia", "Bateria");
 
 		// Clean data base
@@ -95,7 +97,7 @@ public class MusicoGrupoServiceTest {
 	}
 	
 	@Test(expected = InputValidationException.class)
-	public void createMusicoWithEmptyName() throws InputValidationException {
+	public void createMusicoWithEmptyName() throws InputValidationException, GrupoExisteException {
 		Musico musico = musicoGrupoService.crearMusico("", "Calle Venecia", "Bateria");
 
 		// Clean data base
@@ -106,7 +108,7 @@ public class MusicoGrupoServiceTest {
 	}
 
 	@Test(expected = InputValidationException.class)
-	public void createMusicoWithNullDirection() throws InputValidationException {
+	public void createMusicoWithNullDirection() throws InputValidationException, GrupoExisteException {
 		Musico musico = musicoGrupoService.crearMusico("Menganito", null, "Bateria");
 
 		// Clean data base
@@ -117,7 +119,7 @@ public class MusicoGrupoServiceTest {
 	}
 	
 	@Test(expected = InputValidationException.class)
-	public void createMusicoWithEmptyDirection() throws InputValidationException {
+	public void createMusicoWithEmptyDirection() throws InputValidationException, GrupoExisteException {
 		Musico musico = musicoGrupoService.crearMusico("Menganito", "", "Bateria");
 
 		// Clean data base
@@ -128,7 +130,7 @@ public class MusicoGrupoServiceTest {
 	}
 	
 	@Test(expected = InputValidationException.class)
-	public void createMusicoWithNullInstrument() throws InputValidationException {
+	public void createMusicoWithNullInstrument() throws InputValidationException, GrupoExisteException {
 		Musico musico = musicoGrupoService.crearMusico("Menganito", "Calle Venecia", null);
 
 		// Clean data base
@@ -139,7 +141,7 @@ public class MusicoGrupoServiceTest {
 	}
 	
 	@Test(expected = InputValidationException.class)
-	public void createMusicoWithEmptyInstrument() throws InputValidationException {
+	public void createMusicoWithEmptyInstrument() throws InputValidationException, GrupoExisteException {
 		Musico musico = musicoGrupoService.crearMusico("Menganito", "Calle Venecia", "");
 
 		// Clean data base
@@ -158,7 +160,7 @@ public class MusicoGrupoServiceTest {
 	//Probamos caso exitoso de asignar musico a grupo
 	@Test
 	public void asignarMusicoGrupoTest() throws InputValidationException,
-			MusicoAsignadoException {
+			MusicoAsignadoException, GrupoExisteException {
 		Grupo grupo = createGrupo("Grupo Test");
 		Musico musico = createMusico("Menganito");
 		
@@ -179,7 +181,7 @@ public class MusicoGrupoServiceTest {
 	//Probamos que no se pueda insertar un miembro que ya este dentro del grupo
 	@Test(expected = MusicoAsignadoException.class)
 	public void asignarMusicoRepetidoTest() throws InputValidationException,
-			MusicoAsignadoException {
+			MusicoAsignadoException, GrupoExisteException {
 		Grupo grupo = null;
 		Musico musico = null;
 		MusicoGrupo musicoGrupo = null;
@@ -199,7 +201,7 @@ public class MusicoGrupoServiceTest {
 	//Probamos que no se pueda insertar un musico nulo
 	@Test(expected = InputValidationException.class)
 	public void asignarMusicoNuloTest() throws InputValidationException,
-			MusicoAsignadoException {
+			MusicoAsignadoException, GrupoExisteException {
 		Grupo grupo = createGrupo("Grupo Test2");
 		Musico musico = null;
 			
@@ -213,7 +215,7 @@ public class MusicoGrupoServiceTest {
 	//Probamos que no se pueda insertar en un grupo nulo
 	@Test(expected = InputValidationException.class)
 	public void asignarGrupoNuloTest() throws InputValidationException,
-			MusicoAsignadoException {
+			MusicoAsignadoException, GrupoExisteException {
 		Grupo grupo = null;
 		Musico musico = createMusico("Menganito2");
 			

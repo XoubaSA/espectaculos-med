@@ -5,11 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
-import es.udc.med.espectaculos.model.evento.Evento;
-import es.udc.med.espectaculos.utils.ConvertidorFechas;
 import es.udc.med.espectaculos.utils.InstanceNotFoundException;
 
 public abstract class AbstractSqlMusicoDao implements MusicoDao {
@@ -118,7 +115,7 @@ public abstract class AbstractSqlMusicoDao implements MusicoDao {
 	@Override
 	public Musico obtenerMusicoPorNombre(Connection conexion,
 			String nombreMusico) throws InstanceNotFoundException {
-		String queryString = "SELECT ID_MUSICO, NOMBRE_MUSICO, DIRECCION, INSTRUMENTO FROM MUSICO WHERE NOMBRE_MUSICO = ?";
+		String queryString = "SELECT ID_MUSICO, NOMBRE_MUSICO, DIRECCION, INSTRUMENTO FROM MUSICO WHERE NOMBRE_MUSICO LIKE ?";
 
 		try (PreparedStatement preparedStatement = conexion
 				.prepareStatement(queryString)) {
@@ -132,13 +129,13 @@ public abstract class AbstractSqlMusicoDao implements MusicoDao {
 						Musico.class.getName());
 
 			i = 1;
-			Integer idGrupo = resultados.getInt(i++);
+			Integer idMusico = resultados.getInt(i++);
 			String nombre = resultados.getString(i++);
 			String direccion = resultados.getString(i++);
 			String instrumento = resultados.getString(i++);
 			
 			
-			return new Musico(idGrupo, nombre, direccion, instrumento);
+			return new Musico(idMusico, nombre, direccion, instrumento);
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}

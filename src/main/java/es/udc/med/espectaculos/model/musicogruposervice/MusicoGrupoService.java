@@ -5,6 +5,7 @@ import java.util.List;
 import es.udc.med.espectaculos.model.grupo.Grupo;
 import es.udc.med.espectaculos.model.musico.Musico;
 import es.udc.med.espectaculos.model.musicogrupo.MusicoGrupo;
+import es.udc.med.espectaculos.utils.GrupoExisteException;
 import es.udc.med.espectaculos.utils.InputValidationException;
 import es.udc.med.espectaculos.utils.InstanceNotFoundException;
 import es.udc.med.espectaculos.utils.MusicoAsignadoException;
@@ -14,7 +15,7 @@ public interface MusicoGrupoService {
 	public MusicoGrupo asignarMusicoGrupo(Musico musico, Grupo grupo) 
 			throws InputValidationException, MusicoAsignadoException;
 	
-	public Musico crearMusico(String nombreMusico, String direccion, String instrumento) throws InputValidationException;
+	public Musico crearMusico(String nombreMusico, String direccion, String instrumento) throws InputValidationException, GrupoExisteException;
 	
 	public Musico obtenerMusicoPorNombre(String nombreMusico) throws InstanceNotFoundException;
 

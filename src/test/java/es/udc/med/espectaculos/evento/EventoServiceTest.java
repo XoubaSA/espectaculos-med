@@ -24,6 +24,8 @@ import es.udc.med.espectaculos.model.grupoevento.GrupoEventoDao;
 import es.udc.med.espectaculos.model.grupoevento.Jdbc3CcSqlGrupoEventoDao;
 import es.udc.med.espectaculos.utils.AsignarGrupoEventoException;
 import es.udc.med.espectaculos.utils.ConvertidorFechas;
+import es.udc.med.espectaculos.utils.EventoExisteException;
+import es.udc.med.espectaculos.utils.GrupoExisteException;
 import es.udc.med.espectaculos.utils.InputValidationException;
 import es.udc.med.espectaculos.utils.InstanceNotFoundException;
 
@@ -69,7 +71,7 @@ public class EventoServiceTest {
 	}
 
 	private Evento createEventoInDate(Calendar fecha)
-			throws InputValidationException {
+			throws InputValidationException, EventoExisteException {
 		// lo del gettimeinmmillis es para evitarse problemas con la restriccion
 		// unique
 		return eventService.crearEvento(
@@ -78,7 +80,7 @@ public class EventoServiceTest {
 
 	}
 
-	private Evento createEvento() throws InputValidationException {
+	private Evento createEvento() throws InputValidationException, EventoExisteException {
 		Calendar fechaInicio = Calendar.getInstance();
 		fechaInicio.set(Calendar.HOUR_OF_DAY, 0);
 		fechaInicio.set(Calendar.MINUTE, 0);
@@ -88,7 +90,7 @@ public class EventoServiceTest {
 				"Calle Falsa 123");
 	}
 
-	private Grupo createGrupoWithName(String nombre) throws InputValidationException {
+	private Grupo createGrupoWithName(String nombre) throws InputValidationException, GrupoExisteException {
 		return eventService.crearGrupo(nombre, 3000);
 	}
 
@@ -97,7 +99,7 @@ public class EventoServiceTest {
 	 */
 	@Test
 	public void createAndFindEvent() throws InstanceNotFoundException,
-			InputValidationException {
+			InputValidationException, EventoExisteException {
 		Calendar fechaInicio = Calendar.getInstance();
 		fechaInicio.set(Calendar.MILLISECOND, 0);
 
@@ -119,10 +121,11 @@ public class EventoServiceTest {
 		}
 	}
 
-	/******** Probamos a crear eventos con nombre/localidad nulo/a o vacio/a ********/
+	/******** Probamos a crear eventos con nombre/localidad nulo/a o vacio/a 
+	 * @throws EventoExisteException ********/
 
 	@Test(expected = InputValidationException.class)
-	public void createEventWithNullName() throws InputValidationException {
+	public void createEventWithNullName() throws InputValidationException, EventoExisteException {
 		Calendar fechaInicio = Calendar.getInstance();
 		fechaInicio.set(Calendar.MILLISECOND, 0);
 		Evento event = eventService.crearEvento(null, fechaInicio, "Localidad");
@@ -135,7 +138,7 @@ public class EventoServiceTest {
 	}
 
 	@Test(expected = InputValidationException.class)
-	public void createEventWithEmptyName() throws InputValidationException {
+	public void createEventWithEmptyName() throws InputValidationException, EventoExisteException {
 		Calendar fechaInicio = Calendar.getInstance();
 		fechaInicio.set(Calendar.MILLISECOND, 0);
 		Evento event = eventService.crearEvento("", fechaInicio, "Localidad");
@@ -148,7 +151,7 @@ public class EventoServiceTest {
 	}
 
 	@Test(expected = InputValidationException.class)
-	public void createEventWithNullPlace() throws InputValidationException {
+	public void createEventWithNullPlace() throws InputValidationException, EventoExisteException {
 		Calendar fechaInicio = Calendar.getInstance();
 		fechaInicio.set(Calendar.MILLISECOND, 0);
 		Evento event = eventService.crearEvento("Nombre evento", fechaInicio,
@@ -162,7 +165,7 @@ public class EventoServiceTest {
 	}
 
 	@Test(expected = InputValidationException.class)
-	public void createEventWithEmptyPlace() throws InputValidationException {
+	public void createEventWithEmptyPlace() throws InputValidationException, EventoExisteException {
 		Calendar fechaInicio = Calendar.getInstance();
 		fechaInicio.set(Calendar.MILLISECOND, 0);
 		Evento event = eventService.crearEvento("Nombre evento", fechaInicio,
@@ -175,14 +178,15 @@ public class EventoServiceTest {
 		}
 	}
 
-	/******************************************************************************/
+	/**
+	 * @throws EventoExisteException ****************************************************************************/
 
 	/*
 	 * Probamos el caso de crear un evento con una fecha del mes pasado
 	 */
 	@Test(expected = InputValidationException.class)
 	public void createEventWithInvalidMonthOfDate()
-			throws InputValidationException {
+			throws InputValidationException, EventoExisteException {
 		Calendar fechaInicio = Calendar.getInstance();
 		fechaInicio.set(Calendar.MONTH, fechaInicio.get(Calendar.MONTH) - 1);
 		Evento event = eventService.crearEvento("Nombre actuacion",
@@ -201,7 +205,7 @@ public class EventoServiceTest {
 	 */
 	@Test(expected = InputValidationException.class)
 	public void createEventWithInvalidDayOfDate()
-			throws InputValidationException {
+			throws InputValidationException, EventoExisteException {
 		Calendar fechaInicio = Calendar.getInstance();
 		fechaInicio.set(Calendar.DAY_OF_MONTH,
 				fechaInicio.get(Calendar.DAY_OF_MONTH) - 1);
@@ -217,7 +221,7 @@ public class EventoServiceTest {
 
 	@Test(expected = InputValidationException.class)
 	public void createEventWithInvalidDayOfDate3()
-			throws InputValidationException {
+			throws InputValidationException, EventoExisteException {
 		Calendar fechaInicio = Calendar.getInstance();
 		fechaInicio.set(Calendar.DAY_OF_MONTH,
 				fechaInicio.get(Calendar.DAY_OF_MONTH) - 1);
@@ -231,13 +235,14 @@ public class EventoServiceTest {
 		}
 	}
 
-	/*********************************************************************************/
+	/**
+	 * @throws EventoExisteException *******************************************************************************/
 
 	/*
 	 * Buscamos un evento con un año pasado
 	 */
 	@Test(expected = InputValidationException.class)
-	public void createEventWithAPastYear() throws InputValidationException {
+	public void createEventWithAPastYear() throws InputValidationException, EventoExisteException {
 		Calendar fechaInicio = Calendar.getInstance();
 		fechaInicio.add(Calendar.YEAR, -1);
 		Evento event = eventService.crearEvento("Nombre actuacion",
@@ -260,7 +265,7 @@ public class EventoServiceTest {
 
 	@Test
 	public void filterEventsByGroup() throws InputValidationException,
-			AsignarGrupoEventoException {
+			AsignarGrupoEventoException, GrupoExisteException, EventoExisteException {
 		Calendar fecha = Calendar.getInstance();
 		String fechaString = ConvertidorFechas.convertirCalendarString(fecha);
 
@@ -317,10 +322,12 @@ public class EventoServiceTest {
 	 * Test asignarGrupoEvento
 	 * 
 	 * @throws AsignarGrupoEventoException
+	 * @throws GrupoExisteException 
+	 * @throws EventoExisteException 
 	 */
 	@Test
 	public void asignarGrupoEventoTest() throws InputValidationException,
-			AsignarGrupoEventoException {
+			AsignarGrupoEventoException, GrupoExisteException, EventoExisteException {
 		Calendar fecha = Calendar.getInstance();
 		String fechaString = ConvertidorFechas.convertirCalendarString(fecha);
 
@@ -349,10 +356,11 @@ public class EventoServiceTest {
 
 	/**
 	 * Test asignarGrupoEventoNulosException
+	 * @throws EventoExisteException 
 	 */
 	@Test(expected = InputValidationException.class)
 	public void asignarGrupoEventoGrupoNuloTest()
-			throws InputValidationException, AsignarGrupoEventoException {
+			throws InputValidationException, AsignarGrupoEventoException, EventoExisteException {
 		Calendar fecha = Calendar.getInstance();
 		String fechaString = ConvertidorFechas.convertirCalendarString(fecha);
 
@@ -371,10 +379,11 @@ public class EventoServiceTest {
 	 * 
 	 * @throws InputValidationException
 	 * @throws AsignarGrupoEventoException
+	 * @throws GrupoExisteException 
 	 */
 	@Test(expected = InputValidationException.class)
 	public void asignarGrupoEventoEventoNuloTest()
-			throws InputValidationException, AsignarGrupoEventoException {
+			throws InputValidationException, AsignarGrupoEventoException, GrupoExisteException {
 		Calendar fecha = Calendar.getInstance();
 		String fechaString = ConvertidorFechas.convertirCalendarString(fecha);
 
@@ -389,7 +398,8 @@ public class EventoServiceTest {
 
 	@Test(expected = AsignarGrupoEventoException.class)
 	public void asignarGrupoVariosEventosTest()
-			throws InputValidationException, AsignarGrupoEventoException {
+			throws InputValidationException, AsignarGrupoEventoException,
+			GrupoExisteException, EventoExisteException {
 		Calendar fecha = Calendar.getInstance();
 		String fechaString = ConvertidorFechas.convertirCalendarString(fecha);
 
