@@ -12,16 +12,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import es.udc.med.espectaculos.model.evento.Evento;
-import es.udc.med.espectaculos.model.evento.EventoDao;
-import es.udc.med.espectaculos.model.evento.Jdbc3CcSqlEventoDao;
 import es.udc.med.espectaculos.model.eventoservice.EventoService;
 import es.udc.med.espectaculos.model.eventoservice.EventoServiceImpl;
 import es.udc.med.espectaculos.model.grupo.Grupo;
-import es.udc.med.espectaculos.model.grupo.GrupoDao;
-import es.udc.med.espectaculos.model.grupo.Jdbc3CcSqlGrupoDao;
 import es.udc.med.espectaculos.model.grupoevento.GrupoEvento;
-import es.udc.med.espectaculos.model.grupoevento.GrupoEventoDao;
-import es.udc.med.espectaculos.model.grupoevento.Jdbc3CcSqlGrupoEventoDao;
 import es.udc.med.espectaculos.model.musicogruposervice.MusicoGrupoService;
 import es.udc.med.espectaculos.model.musicogruposervice.MusicoGrupoServiceImpl;
 import es.udc.med.espectaculos.utils.AsignarGrupoEventoException;
@@ -35,17 +29,11 @@ public class EventoServiceTest {
 
 	private static EventoService eventService = null;
 	private static MusicoGrupoService musicoGrupoService = null;
-	private static EventoDao eventoDao = null;
-	private static GrupoDao grupoDao = null;
-	private static GrupoEventoDao grupoEventoDao = null;
 
 	@BeforeClass
 	public static void init() {
 		eventService = new EventoServiceImpl();
 		musicoGrupoService = new MusicoGrupoServiceImpl();
-		eventoDao = new Jdbc3CcSqlEventoDao();
-		grupoDao = new Jdbc3CcSqlGrupoDao();
-		grupoEventoDao = new Jdbc3CcSqlGrupoEventoDao();
 	}
 
 	@AfterClass

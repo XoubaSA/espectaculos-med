@@ -6,8 +6,6 @@ import static org.junit.Assert.assertNotNull;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import es.udc.med.espectaculos.model.eventoservice.EventoService;
-import es.udc.med.espectaculos.model.eventoservice.EventoServiceImpl;
 import es.udc.med.espectaculos.model.grupo.Grupo;
 import es.udc.med.espectaculos.model.musico.Musico;
 import es.udc.med.espectaculos.model.musicogrupo.MusicoGrupo;
@@ -21,13 +19,11 @@ import es.udc.med.espectaculos.utils.MusicoExisteException;
 
 public class MusicoGrupoServiceTest {
 
-	private static MusicoGrupoService musicoGrupoService = null;
-	private static EventoService eventService = null;
+	private static MusicoGrupoService musicoGrupoService = null;	
 
 	@BeforeClass
 	public static void init() {
-		musicoGrupoService = new MusicoGrupoServiceImpl();
-		eventService = new EventoServiceImpl();
+		musicoGrupoService = new MusicoGrupoServiceImpl();		
 	}
 
 	public static void cleanAfterException(Musico musico, Grupo grupo,
