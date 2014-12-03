@@ -151,4 +151,9 @@ public class EventoServiceImpl implements EventoService {
 		return eventoDao.findAllEvents(conexion);
 	}
 
+	@Override
+	public GrupoEvento obtenerGrupoEvento(Grupo grupo, Evento evento) {		
+		return grupoEventoDao.obtenerGrupoEvento(conexion, grupo, evento);
+	}
+
 }

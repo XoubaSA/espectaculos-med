@@ -3,6 +3,7 @@ package es.udc.med.espectaculos.model.grupoevento;
 import java.sql.Connection;
 import java.util.Calendar;
 import java.util.List;
+
 import es.udc.med.espectaculos.model.evento.Evento;
 import es.udc.med.espectaculos.model.grupo.Grupo;
 import es.udc.med.espectaculos.utils.InstanceNotFoundException;
@@ -28,5 +29,7 @@ public interface GrupoEventoDao {
 	public List<Grupo> obtenerGruposEvento(Connection conexion, Evento evento);
 	
 	public boolean grupoAsignadoFecha(Connection conexion, Grupo grupo, String fecha);
+	
+	public GrupoEvento obtenerGrupoEvento(Connection conexion, Grupo grupo, Evento evento);
 }
 

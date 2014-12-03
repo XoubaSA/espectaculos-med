@@ -15,7 +15,7 @@ public interface MusicoGrupoService {
 
 	public MusicoGrupo asignarMusicoGrupo(Musico musico, Grupo grupo)
 			throws InputValidationException, MusicoAsignadoException;
-
+	
 	public Musico crearMusico(String nombreMusico, String direccion,
 			String instrumento) throws InputValidationException,
 			MusicoExisteException;

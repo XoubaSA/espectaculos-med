@@ -109,7 +109,8 @@ public abstract class AbstractSqlGrupoEventoDao implements GrupoEventoDao {
 				Integer id = resultSet.getInt(i++);
 				String nombre = resultSet.getString(i++);
 				String fecha = resultSet.getString(i++);
-				Calendar calendar = ConvertidorFechas.convertirStringCalendar(fecha);
+				Calendar calendar = ConvertidorFechas
+						.convertirStringCalendar(fecha);
 				String localidad = resultSet.getString(i++);
 				Evento evento = new Evento(id, nombre, calendar, localidad);
 				eventos.add(evento);
@@ -120,14 +121,13 @@ public abstract class AbstractSqlGrupoEventoDao implements GrupoEventoDao {
 
 		return eventos;
 	}
-	
+
 	@Override
 	public List<Evento> obtenerEventosGrupoDia(Connection conexion,
 			Grupo grupo, Calendar dia) {
 
 		List<Evento> eventos = new ArrayList<Evento>();
-		String strDateIni = ConvertidorFechas
-				.convertirCalendarString(dia);
+		String strDateIni = ConvertidorFechas.convertirCalendarString(dia);
 
 		String queryString = "SELECT e.ID_EVENTO, e.NOMBRE_EVENTO, e.FECHA_INICIO_EVENTO, e.LOCALIDAD "
 				+ "FROM EVENTO e JOIN GRUPO_EVENTO g ON g.ID_EVENTO = e.ID_EVENTO "
@@ -145,7 +145,8 @@ public abstract class AbstractSqlGrupoEventoDao implements GrupoEventoDao {
 				Integer id = resultSet.getInt(i++);
 				String nombre = resultSet.getString(i++);
 				String fecha = resultSet.getString(i++);
-				Calendar calendar = ConvertidorFechas.convertirStringCalendar(fecha);
+				Calendar calendar = ConvertidorFechas
+						.convertirStringCalendar(fecha);
 				String localidad = resultSet.getString(i++);
 				Evento evento = new Evento(id, nombre, calendar, localidad);
 				eventos.add(evento);
@@ -158,41 +159,41 @@ public abstract class AbstractSqlGrupoEventoDao implements GrupoEventoDao {
 	}
 
 	public List<Grupo> obtenerGruposEvento(Connection conexion, Evento evento) {
-		
+
 		String queryString = "SELECT g.ID_GRUPO, g.NOMBRE_ORQUESTA, g.SALARIO_ACTUACION "
-							+ "FROM GRUPO_EVENTO ge INNER JOIN GRUPO g ON ge.ID_GRUPO = g.ID_GRUPO "
-							+ "WHERE ge.ID_EVENTO = ?";
-		
-		List <Grupo> grupos = new ArrayList<Grupo>();
-		
-		try (PreparedStatement preparedStatement = conexion.prepareStatement(queryString)) {
+				+ "FROM GRUPO_EVENTO ge INNER JOIN GRUPO g ON ge.ID_GRUPO = g.ID_GRUPO "
+				+ "WHERE ge.ID_EVENTO = ?";
+
+		List<Grupo> grupos = new ArrayList<Grupo>();
+
+		try (PreparedStatement preparedStatement = conexion
+				.prepareStatement(queryString)) {
 			int i = 1;
 			preparedStatement.setInt(i++, evento.getIdEvento());
-			
+
 			ResultSet rs = preparedStatement.executeQuery();
 			int results = 0;
 			while (rs.next()) {
 				i = 1;
 				int id = rs.getInt(i++);
 				String nombre = rs.getString(i++);
-				float salario = rs.getFloat(i++); 
+				float salario = rs.getFloat(i++);
 				Grupo grupo = new Grupo(id, nombre, salario);
 				grupos.add(grupo);
 			}
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
-		
+
 		return grupos;
 	}
-	
+
 	public boolean grupoAsignadoFecha(Connection conexion, Grupo grupo,
 			String fecha) {
 
 		String fechaSoloDia = fecha.substring(0, 10);
 
-		String queryString = "SELECT count(*)"
-				+ " FROM GRUPO_EVENTO ge"
+		String queryString = "SELECT count(*)" + " FROM GRUPO_EVENTO ge"
 				+ " WHERE (ge.ID_GRUPO = ?)"
 				+ " AND (substr(ge.FECHA_ACTUACION,1,10) LIKE ?) ";
 		try (PreparedStatement preparedStatement = conexion
@@ -200,13 +201,13 @@ public abstract class AbstractSqlGrupoEventoDao implements GrupoEventoDao {
 			int i = 1;
 			preparedStatement.setInt(i++, grupo.getIdGrupo());
 			preparedStatement.setString(i++, fechaSoloDia);
-			
+
 			ResultSet rs = preparedStatement.executeQuery();
 			int results = 0;
 			while (rs.next()) {
 				results = rs.getInt(1);
 			}
-			
+
 			if (results == 0)
 				return false;
 			else
@@ -216,5 +217,32 @@ public abstract class AbstractSqlGrupoEventoDao implements GrupoEventoDao {
 			throw new RuntimeException(e);
 		}
 	}
-}
 
+	@Override
+	public GrupoEvento obtenerGrupoEvento(Connection conexion, Grupo grupo, Evento evento) {
+
+		String queryString = "SELECT ge.ID_GRUPO_EVENTO "
+				+ "FROM GRUPo_EVENTO ge WHERE ge.ID_EVENTO = ? AND ge.ID_GRUPO = ?";		
+
+		try (PreparedStatement preparedStatement = conexion
+				.prepareStatement(queryString)) {
+			int i = 1;
+			preparedStatement.setInt(i++, evento.getIdEvento());
+			preparedStatement.setInt(i++, grupo.getIdGrupo());
+
+			ResultSet rs = preparedStatement.executeQuery();
+			int results = 0;
+			while (rs.next()) {
+				i = 1;
+				int id = rs.getInt(i++);
+				GrupoEvento grupoEvento = new GrupoEvento();
+				grupoEvento.setIdGrupoEvento(id);
+				return grupoEvento;
+			}
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}	
+		return null;
+	}
+
+}

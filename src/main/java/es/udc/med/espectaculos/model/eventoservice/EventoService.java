@@ -26,6 +26,8 @@ public interface EventoService {
 			String fecha) throws InputValidationException,
 			AsignarGrupoEventoException;
 
+	public GrupoEvento obtenerGrupoEvento(Grupo grupo, Evento evento);
+	
 	public List<Grupo> obtenerGruposEvento(Evento evento);
 
 	public List<Evento> obtenerEventosFecha(Calendar fecha);

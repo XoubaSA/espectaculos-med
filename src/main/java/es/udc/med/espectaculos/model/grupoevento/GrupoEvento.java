@@ -13,6 +13,10 @@ public class GrupoEvento {
 		this.idGrupo = idGrupo;
 	}
 
+	public GrupoEvento() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public Integer getIdGrupoEvento() {
 		return idGrupoEvento;
 	}
