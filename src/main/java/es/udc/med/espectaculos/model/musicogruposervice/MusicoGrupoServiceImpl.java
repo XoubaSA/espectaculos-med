@@ -14,10 +14,10 @@ import es.udc.med.espectaculos.model.musicogrupo.Jdbc3CcSqlMusicoGrupoDao;
 import es.udc.med.espectaculos.model.musicogrupo.MusicoGrupo;
 import es.udc.med.espectaculos.model.musicogrupo.MusicoGrupoDao;
 import es.udc.med.espectaculos.utils.ConexionManager;
-import es.udc.med.espectaculos.utils.GrupoExisteException;
 import es.udc.med.espectaculos.utils.InputValidationException;
 import es.udc.med.espectaculos.utils.InstanceNotFoundException;
 import es.udc.med.espectaculos.utils.MusicoAsignadoException;
+import es.udc.med.espectaculos.utils.MusicoExisteException;
 import es.udc.med.espectaculos.utils.PropertyValidator;
 
 public class MusicoGrupoServiceImpl implements MusicoGrupoService {
@@ -36,21 +36,26 @@ public class MusicoGrupoServiceImpl implements MusicoGrupoService {
 
 	@Override
 	public Musico crearMusico(String nombreMusico, String direccion,
-			String instrumento) throws InputValidationException {
-		Musico musico = new Musico(nombreMusico, direccion, instrumento);
-		PropertyValidator.validateMusico(musico);
+			String instrumento) throws InputValidationException, MusicoExisteException {
 		try {
+			obtenerMusicoPorNombre(nombreMusico);
+			throw new MusicoExisteException("Ya existe un músico con ese nombre");
+		} catch (InstanceNotFoundException ex) {
+			Musico musico = new Musico(nombreMusico, direccion, instrumento);
+			PropertyValidator.validateMusico(musico);
 			try {
-				musico = musicoDao.create(conexion, musico);
-				conexion.commit();
+				try {
+					musico = musicoDao.create(conexion, musico);
+					conexion.commit();
+				} catch (SQLException e) {
+					conexion.rollback();
+				}
 			} catch (SQLException e) {
-				conexion.rollback();
+				throw new RuntimeException(e);
 			}
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
+	
+			return musico;
 		}
-
-		return musico;
 	}
 
 	

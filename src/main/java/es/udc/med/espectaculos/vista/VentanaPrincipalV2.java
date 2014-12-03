@@ -47,6 +47,7 @@ import es.udc.med.espectaculos.utils.GrupoExisteException;
 import es.udc.med.espectaculos.utils.InputValidationException;
 import es.udc.med.espectaculos.utils.InstanceNotFoundException;
 import es.udc.med.espectaculos.utils.MusicoAsignadoException;
+import es.udc.med.espectaculos.utils.MusicoExisteException;
 
 public class VentanaPrincipalV2 implements MouseListener {
 
@@ -539,6 +540,18 @@ public class VentanaPrincipalV2 implements MouseListener {
 
 		final DateTime dateTime_1 = new DateTime(grpAsignarEventoA, SWT.BORDER);
 		dateTime_1.setBounds(10, 140, 80, 24);
+		
+		combo_2.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				try {
+					Evento evento = eventoService
+							.obtenerEventoPorNombre(combo_2.getText());
+					Calendar f = evento.getFechaInicioEvento();
+					dateTime_1.setDate(f.get(Calendar.YEAR), 
+							f.get(Calendar.MONTH), f.get(Calendar.DATE));
+				} catch (InstanceNotFoundException e1) {}
+			}
+		});
 
 		Button btnAsignarEventoA = new Button(grpAsignarEventoA, SWT.NONE);
 		btnAsignarEventoA.addSelectionListener(new SelectionAdapter() {
@@ -554,11 +567,15 @@ public class VentanaPrincipalV2 implements MouseListener {
 
 					eventoService.asignarGrupoEvento(grupo, evento,
 							ConvertidorFechas.convertirCalendarString(fecha));
-				} catch (InputValidationException | AsignarGrupoEventoException
-						| InstanceNotFoundException e1) {
+				} catch (InputValidationException | AsignarGrupoEventoException e1) {
 					MessageBox messageBox = new MessageBox(shell,
 							SWT.ICON_ERROR);
 					messageBox.setMessage(e1.getMessage());
+					messageBox.open();
+				} catch (InstanceNotFoundException e2) {
+					MessageBox messageBox = new MessageBox(shell,
+							SWT.ICON_ERROR);
+					messageBox.setMessage("Selecciona un grupo y un evento");
 					messageBox.open();
 				}
 			}
@@ -817,7 +834,7 @@ public class VentanaPrincipalV2 implements MouseListener {
 							SWT.ICON_ERROR);
 					messageBox.setMessage(e1.getMessage());
 					messageBox.open();
-				} catch (GrupoExisteException e1) {
+				} catch (MusicoExisteException e1) {
 					MessageBox messageBox = new MessageBox(shell,
 							SWT.ICON_ERROR);
 					messageBox.setMessage(e1.getMessage());
