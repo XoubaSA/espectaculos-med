@@ -10,15 +10,12 @@ import es.udc.med.espectaculos.model.evento.Evento;
 import es.udc.med.espectaculos.model.evento.EventoDao;
 import es.udc.med.espectaculos.model.evento.Jdbc3CcSqlEventoDao;
 import es.udc.med.espectaculos.model.grupo.Grupo;
-import es.udc.med.espectaculos.model.grupo.GrupoDao;
-import es.udc.med.espectaculos.model.grupo.Jdbc3CcSqlGrupoDao;
 import es.udc.med.espectaculos.model.grupoevento.GrupoEvento;
 import es.udc.med.espectaculos.model.grupoevento.GrupoEventoDao;
 import es.udc.med.espectaculos.model.grupoevento.Jdbc3CcSqlGrupoEventoDao;
 import es.udc.med.espectaculos.utils.AsignarGrupoEventoException;
 import es.udc.med.espectaculos.utils.ConexionManager;
 import es.udc.med.espectaculos.utils.EventoExisteException;
-import es.udc.med.espectaculos.utils.GrupoExisteException;
 import es.udc.med.espectaculos.utils.InputValidationException;
 import es.udc.med.espectaculos.utils.InstanceNotFoundException;
 import es.udc.med.espectaculos.utils.PropertyValidator;
@@ -26,20 +23,19 @@ import es.udc.med.espectaculos.utils.PropertyValidator;
 public class EventoServiceImpl implements EventoService {
 
 	private EventoDao eventoDao;
-	private GrupoDao grupoDao;
 	private GrupoEventoDao grupoEventoDao;
 
 	private Connection conexion = ConexionManager.getConnection();
 
 	public EventoServiceImpl() {
 		this.eventoDao = new Jdbc3CcSqlEventoDao();
-		this.grupoDao = new Jdbc3CcSqlGrupoDao();
 		this.grupoEventoDao = new Jdbc3CcSqlGrupoEventoDao();
 	}
 
 	@Override
 	public Evento crearEvento(String nombreEvento, Calendar fechaInicio,
-			String localidad) throws InputValidationException, EventoExisteException {
+			String localidad) throws InputValidationException,
+			EventoExisteException {
 		Evento evento = new Evento(nombreEvento, fechaInicio, localidad);
 		PropertyValidator.validateEvent(evento);
 		try {
@@ -54,27 +50,6 @@ public class EventoServiceImpl implements EventoService {
 		}
 
 		return evento;
-	}
-
-	@Override
-	public Grupo crearGrupo(String nombreOrquesta, float salarioActuacion)
-			throws InputValidationException, GrupoExisteException {
-		if (nombreOrquesta == null || nombreOrquesta.equals("")) {
-			throw new InputValidationException("Nombre de grupo no válido");
-		}
-		Grupo grupo = new Grupo(nombreOrquesta, salarioActuacion);
-		try {
-			try {
-				grupo = grupoDao.create(conexion, grupo);
-				conexion.commit();
-			} catch (SQLException e) {
-				conexion.rollback();
-			}
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		}
-
-		return grupo;
 	}
 
 	@Override
@@ -157,20 +132,6 @@ public class EventoServiceImpl implements EventoService {
 	}
 
 	@Override
-	public void borrarGrupo(Integer idGrupo) throws InstanceNotFoundException {
-		try {
-			try {
-				grupoDao.remove(conexion, idGrupo);
-				conexion.commit();
-			} catch (SQLException e) {
-				conexion.rollback();
-			}
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	@Override
 	public void borrarGrupoEvento(Integer idGrupoEvento)
 			throws InstanceNotFoundException {
 		try {
@@ -188,17 +149,6 @@ public class EventoServiceImpl implements EventoService {
 	@Override
 	public List<Evento> findAllEvents() {
 		return eventoDao.findAllEvents(conexion);
-	}
-
-	@Override
-	public List<Grupo> obtenerGrupos() {
-		return grupoDao.obtenerGrupos(conexion);
-	}
-
-	@Override
-	public Grupo obtenerGrupoPorNombre(String nombreGrupo)
-			throws InstanceNotFoundException {
-		return grupoDao.obtenerGrupoPorNombre(conexion, nombreGrupo);
 	}
 
 }

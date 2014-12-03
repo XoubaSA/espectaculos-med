@@ -8,45 +8,39 @@ import es.udc.med.espectaculos.model.grupo.Grupo;
 import es.udc.med.espectaculos.model.grupoevento.GrupoEvento;
 import es.udc.med.espectaculos.utils.AsignarGrupoEventoException;
 import es.udc.med.espectaculos.utils.EventoExisteException;
-import es.udc.med.espectaculos.utils.GrupoExisteException;
 import es.udc.med.espectaculos.utils.InputValidationException;
 import es.udc.med.espectaculos.utils.InstanceNotFoundException;
 
 public interface EventoService {
 
 	public Evento crearEvento(String nombreEvento, Calendar fechaInicio,
-			String direccion) throws InputValidationException, EventoExisteException;
-
-	public Grupo crearGrupo(String nombreOrquesta, float salarioActuacion) throws InputValidationException, GrupoExisteException;
+			String direccion) throws InputValidationException,
+			EventoExisteException;
 
 	public List<Evento> findAllEvents();
-	
+
 	public Evento obtenerEventoPorNombre(String nombreEvento)
 			throws InstanceNotFoundException;
-	
-	public Grupo obtenerGrupoPorNombre(String nombreGrupo) throws InstanceNotFoundException;
 
-	public GrupoEvento asignarGrupoEvento(Grupo grupo, Evento evento, String fecha) throws InputValidationException, AsignarGrupoEventoException;
+	public GrupoEvento asignarGrupoEvento(Grupo grupo, Evento evento,
+			String fecha) throws InputValidationException,
+			AsignarGrupoEventoException;
 
-	public List<Grupo> obtenerGrupos();
-	
 	public List<Grupo> obtenerGruposEvento(Evento evento);
-	
+
 	public List<Evento> obtenerEventosFecha(Calendar fecha);
 
 	public List<Calendar> getDates(String mes, Integer grupo_id);
 
-	public List<Evento> filtrarEventosGrupo(Grupo grupo, Calendar fechaInicio, Calendar fechaFin) throws InputValidationException;
-	
-	public List<Evento> obtenerEventosDeGrupoDia(Grupo grupo, Calendar fecha) throws InputValidationException;
-	
+	public List<Evento> filtrarEventosGrupo(Grupo grupo, Calendar fechaInicio,
+			Calendar fechaFin) throws InputValidationException;
+
+	public List<Evento> obtenerEventosDeGrupoDia(Grupo grupo, Calendar fecha)
+			throws InputValidationException;
+
 	public void borrarEvento(Integer idEvento) throws InstanceNotFoundException;
-	
-	public void borrarGrupo(Integer idGrupo) throws InstanceNotFoundException;
-	
-	public void borrarGrupoEvento(Integer idGrupoEvento) throws InstanceNotFoundException;
 
-	//TODO implementar el nuevo borrado que borre el grupo de un evento concreto.
-	
+	public void borrarGrupoEvento(Integer idGrupoEvento)
+			throws InstanceNotFoundException;
+
 }
-

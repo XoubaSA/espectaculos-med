@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 import es.udc.med.espectaculos.utils.ConexionManager;
 import es.udc.med.espectaculos.utils.GeneradorBD;
-import es.udc.med.espectaculos.vista.VentanaPrincipalV2;
+import es.udc.med.espectaculos.vista.VentanaPrincipal;
 
 /**
  * Hello world!
@@ -33,7 +33,7 @@ public class Main {
 				
 			}
 
-			VentanaPrincipalV2 ventanaPrincipal = new VentanaPrincipalV2();
+			VentanaPrincipal ventanaPrincipal = new VentanaPrincipal();
 			ventanaPrincipal.open();
 		} catch (SQLException e) {
 			e.printStackTrace();			
