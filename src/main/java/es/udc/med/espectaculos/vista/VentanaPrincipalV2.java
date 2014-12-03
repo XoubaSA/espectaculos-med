@@ -350,7 +350,7 @@ public class VentanaPrincipalV2 implements MouseListener {
 				} catch (InstanceNotFoundException e1) {
 					MessageBox messageBox = new MessageBox(shell,
 							SWT.ICON_ERROR);
-					messageBox.setMessage("No  has seleccionado ningun grupo");
+					messageBox.setMessage("No  has seleccionado ningun evento");
 					messageBox.open();
 				}
 			}
@@ -400,7 +400,7 @@ public class VentanaPrincipalV2 implements MouseListener {
 				} catch (InstanceNotFoundException e1) {
 					MessageBox messageBox = new MessageBox(shell,
 							SWT.ICON_ERROR);
-					messageBox.setMessage(e1.getMessage());
+					messageBox.setMessage("No  has seleccionado ningun grupo");
 					messageBox.open();
 				}
 			}
@@ -453,7 +453,7 @@ public class VentanaPrincipalV2 implements MouseListener {
 				} catch (InstanceNotFoundException e1) {
 					MessageBox messageBox = new MessageBox(shell,
 							SWT.ICON_ERROR);
-					messageBox.setMessage(e1.getMessage());
+					messageBox.setMessage("No  has seleccionado ningun músico");
 					messageBox.open();
 				}
 			}
