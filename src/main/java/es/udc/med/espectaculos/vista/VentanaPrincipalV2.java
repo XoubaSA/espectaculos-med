@@ -586,12 +586,41 @@ public class VentanaPrincipalV2 implements MouseListener {
 		Group grpBorrarEvento = new Group(composite_2, SWT.NONE);
 		grpBorrarEvento.setText("Borrar evento");
 		grpBorrarEvento.setBounds(446, 0, 219, 146);
+		
+		Label label_7 = new Label(grpBorrarEvento, SWT.NONE);
+		label_7.setText("Selecciona el evento:");
+		label_7.setBounds(10, 20, 116, 15);
+		
+		final Combo combo_10 = new Combo(grpBorrarEvento, SWT.READ_ONLY);
+		combo_10.setBounds(10, 41, 199, 23);
+		
+		Button btnNewButton = new Button(grpBorrarEvento, SWT.NONE);
+		btnNewButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				try {
+					Evento evento = eventoService
+							.obtenerEventoPorNombre(combo_10.getText());
+					eventoService.borrarEvento(evento.getIdEvento());
+					combo_2.remove(combo_10.getText());
+					combo_10.remove(combo_10.getText());
+				} catch (InstanceNotFoundException e) {
+					MessageBox messageBox = new MessageBox(shell,
+							SWT.ICON_ERROR);
+					messageBox.setMessage("Selecciona un evento");
+					messageBox.open();
+				}
+				
+			}
+		});
+		btnNewButton.setBounds(10, 111, 199, 25);
+		btnNewButton.setText("Borrar evento");
 
 		Group grpDesasignarGrupoA = new Group(composite_2, SWT.NONE);
 		grpDesasignarGrupoA.setText("Desasignar grupo a evento");
 		grpDesasignarGrupoA.setBounds(446, 152, 219, 163);
 
-		TabItem tbtmMusico = new TabItem(tabFolder, 0);
+		final TabItem tbtmMusico = new TabItem(tabFolder, 0);
 		tbtmMusico.setText("Grupo");
 
 		Composite composite_3 = new Composite(tabFolder, SWT.NONE);
@@ -647,6 +676,32 @@ public class VentanaPrincipalV2 implements MouseListener {
 		Group group_1 = new Group(composite_3, SWT.NONE);
 		group_1.setText("Borrar grupo");
 		group_1.setBounds(324, 0, 342, 315);
+		
+		Label label_8 = new Label(group_1, SWT.NONE);
+		label_8.setText("Selecciona el grupo:");
+		label_8.setBounds(10, 20, 112, 15);
+		
+		final Combo combo_11 = new Combo(group_1, SWT.READ_ONLY);
+		combo_11.setBounds(10, 41, 322, 23);
+		
+		Button btnBorrarGrupo = new Button(group_1, SWT.NONE);
+		btnBorrarGrupo.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				try {
+					eventoService.borrarGrupo(eventoService
+							.obtenerGrupoPorNombre(combo_11.getText()).getIdGrupo());
+					combo_11.remove(combo_11.getText());
+				} catch (InstanceNotFoundException e) {
+					MessageBox messageBox = new MessageBox(shell,
+							SWT.ICON_ERROR);
+					messageBox.setMessage("Selecciona un grupo");
+					messageBox.open();
+				}
+			}
+		});
+		btnBorrarGrupo.setBounds(10, 280, 322, 25);
+		btnBorrarGrupo.setText("Borrar Grupo");
 
 		final TabItem tbtmMusico_1 = new TabItem(tabFolder, 0);
 		tbtmMusico_1.setText("Musico");
@@ -735,10 +790,90 @@ public class VentanaPrincipalV2 implements MouseListener {
 		Group grpBorrarMusico = new Group(composite_4, SWT.NONE);
 		grpBorrarMusico.setText("Borrar musico");
 		grpBorrarMusico.setBounds(446, 0, 219, 146);
+		
+		Label label_11 = new Label(grpBorrarMusico, SWT.NONE);
+		label_11.setText("Selecciona el musico:");
+		label_11.setBounds(10, 20, 116, 15);
+		
+		final Combo combo_12 = new Combo(grpBorrarMusico, SWT.READ_ONLY);
+		combo_12.setBounds(10, 41, 199, 23);
+		
+		Button btnBorrarMusico = new Button(grpBorrarMusico, SWT.NONE);
+		btnBorrarMusico.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				try {
+					musicoGrupoService.borrarMusico(musicoGrupoService
+							.obtenerMusicoPorNombre(combo_12.getText()).getIdMusico());
+					combo_4.remove(combo_12.getText());
+					combo_12.remove(combo_12.getText());
+				} catch (InstanceNotFoundException e) {
+					MessageBox messageBox = new MessageBox(shell,
+							SWT.ICON_ERROR);
+					messageBox.setMessage("Selecciona un músico");
+					messageBox.open();
+				}
+			}
+		});
+		btnBorrarMusico.setBounds(10, 111, 199, 25);
+		btnBorrarMusico.setText("Borrar musico");
 
 		Group grpDesasignarMusicoA = new Group(composite_4, SWT.NONE);
-		grpDesasignarMusicoA.setText("Desasignar musico a evento");
+		grpDesasignarMusicoA.setText("Desasignar musico de grupo");
 		grpDesasignarMusicoA.setBounds(446, 152, 219, 163);
+		
+		Label label_12 = new Label(grpDesasignarMusicoA, SWT.NONE);
+		label_12.setText("Selecciona el grupo:");
+		label_12.setBounds(10, 20, 199, 15);
+		
+		final Combo combo_13 = new Combo(grpDesasignarMusicoA, SWT.READ_ONLY);
+		combo_13.setBounds(10, 41, 199, 23);
+		
+		Label label_13 = new Label(grpDesasignarMusicoA, SWT.NONE);
+		label_13.setText("Selecciona el musico:");
+		label_13.setBounds(10, 68, 199, 15);
+		
+		final Combo combo_14 = new Combo(grpDesasignarMusicoA, SWT.READ_ONLY);
+		combo_14.setBounds(10, 89, 199, 23);
+		
+		combo_13.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				try {
+					combo_14.removeAll();
+					Grupo grupo = eventoService.obtenerGrupoPorNombre(combo_13.getText());
+					List<Musico> formacion = musicoGrupoService.getFormacion(grupo);
+					for (Musico musico : formacion) {
+						combo_14.add(musico.getNombreMusico());
+					}
+				} catch (InstanceNotFoundException ex) {
+				}
+				
+			}
+		});
+		
+		Button btnDesasignarMusico = new Button(grpDesasignarMusicoA, SWT.NONE);
+		btnDesasignarMusico.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				try {
+					Grupo grupo = eventoService.obtenerGrupoPorNombre(combo_13.getText());
+					Musico musico = musicoGrupoService.obtenerMusicoPorNombre(combo_14.getText());
+					musicoGrupoService.borrarMiembro(grupo.getIdGrupo(), musico.getIdMusico());
+					combo_14.removeAll();
+					List<Musico> formacion = musicoGrupoService.getFormacion(grupo);
+					for (Musico m : formacion) {
+						combo_14.add(m.getNombreMusico());
+					}
+				} catch (InstanceNotFoundException e) {
+					MessageBox messageBox = new MessageBox(shell,
+							SWT.ICON_ERROR);
+					messageBox.setMessage("Selecciona un grupo y luego un integrante");
+					messageBox.open();
+				}
+			}
+		});
+		btnDesasignarMusico.setText("Desasignar musico");
+		btnDesasignarMusico.setBounds(10, 128, 199, 25);
 
 		TabItem tbtmTransporte = new TabItem(tabFolder, 0);
 		tbtmTransporte.setText("Transporte");
@@ -914,24 +1049,38 @@ public class VentanaPrincipalV2 implements MouseListener {
 					}
 
 					combo_2.removeAll();
+					combo_10.removeAll();
 					List<Evento> eventosCombo2 = eventoService.findAllEvents();
 					for (Evento evento : eventosCombo2) {
 						combo_2.add(evento.getNombreEvento());
+						combo_10.add(evento.getNombreEvento());
 					}
 
+				} else if(tabFolder.getItem(tabFolder.getSelectionIndex())
+						.equals(tbtmMusico)) {
+					combo_11.removeAll();
+					List<Grupo> gruposCombo11 = eventoService.obtenerGrupos();
+					for (Grupo grupo : gruposCombo11) {
+						combo_11.add(grupo.getNombreOrquesta());
+					}
+					
 				} else if (tabFolder.getItem(tabFolder.getSelectionIndex())
 						.equals(tbtmMusico_1)) {
 					combo_3.removeAll();
+					combo_13.removeAll();
 					List<Grupo> gruposCombo3 = eventoService.obtenerGrupos();
 					for (Grupo grupo : gruposCombo3) {
 						combo_3.add(grupo.getNombreOrquesta());
+						combo_13.add(grupo.getNombreOrquesta());
 					}
 
 					combo_4.removeAll();
+					combo_12.removeAll();
 					List<Musico> musicosCombo4 = musicoGrupoService
 							.getMusicos();
 					for (Musico musico : musicosCombo4) {
 						combo_4.add(musico.getNombreMusico());
+						combo_12.add(musico.getNombreMusico());
 					}
 
 				} else if (tabFolder.getItem(tabFolder.getSelectionIndex())
